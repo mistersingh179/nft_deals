@@ -1,0 +1,99 @@
+import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
+import React, {useEffect, useState} from "react";
+import { utils } from "ethers";
+import { SyncOutlined } from "@ant-design/icons";
+
+import { Address, Balance, Events } from "../components";
+import {useContractReader} from "eth-hooks";
+
+export default function TheBestNFT({
+  purpose,
+  address,
+  mainnetProvider,
+  localProvider,
+  yourLocalBalance,
+  price,
+  tx,
+  readContracts,
+  writeContracts,
+}) {
+  const [newPurpose, setNewPurpose] = useState("loading...");
+
+  const nftBalance = useContractReader(
+    readContracts,
+    "TheBestNft",
+    "balanceOf",
+    [address],
+    undefined,
+    (val) => val.toString()
+  );
+
+  const mintNft = async () => {
+    console.log("inside mintNft");
+    const result = await tx(writeContracts.TheBestNft.mint(address));
+    console.log("result is: ", result);
+    console.log("finished mintNft");
+  }
+
+  const [nftUrls, setNftUrls] = useState([]);
+
+  useEffect(async () => {
+    console.log("in effect to get NFT's")
+    let tokenId, tokenUri, tokenObj;
+    const arr = []
+    if(readContracts && readContracts.TheBestNft && readContracts.TheBestNft){
+      for(let i=nftBalance-1;i >=0;i--){
+        tokenId = await readContracts.TheBestNft.tokenOfOwnerByIndex(address, i);
+        tokenId = tokenId.toString();
+        console.log(tokenId);
+        tokenUri = await readContracts.TheBestNft.tokenURI(tokenId);
+        // console.log(tokenUri);
+        tokenUri = tokenUri.replace('data:application/json;base64,', '')
+        tokenObj = JSON.parse(atob(tokenUri))
+        console.log(tokenObj);
+        arr.push({url: tokenObj.image, id: tokenId});
+      }
+      setNftUrls(arr);
+    }
+  }, [nftBalance]);
+
+  return (
+    <div>
+      {/*
+        ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
+      */}
+      <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
+        <h2>The Best NFT</h2>
+        <Divider />
+        <div style={{ margin: 8 }}>
+          Your NFT Balance: {nftBalance}
+          <Divider />
+          <Button style={{margin: 8}} onClick={mintNft}>
+            Mint me a NFT
+          </Button>
+        </div>
+        <Divider />
+        <ul>
+          {nftUrls.map(item => {
+            return <li>
+              <img width={100} height={100} src={item.url} /><br/>
+              Token Id: {item.id}
+            </li>;
+          })}
+        </ul>
+      </div>
+
+
+
+      {/*<Events*/}
+      {/*  contracts={readContracts}*/}
+      {/*  contractName="TheBestNft"*/}
+      {/*  eventName="Transfer"*/}
+      {/*  localProvider={localProvider}*/}
+      {/*  mainnetProvider={mainnetProvider}*/}
+      {/*  startBlock={1}*/}
+      {/*/>*/}
+
+    </div>
+  );
+}
