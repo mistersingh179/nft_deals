@@ -5,10 +5,15 @@ import "./Auction.sol";
 
 contract AuctionFactory {
     Auction[] public auctions;
-    mapping(address => Auction[]) public auctionsByOwner;
-    mapping(address => uint) public auctionSizeByOwner;
+    uint public auctionsCount;
+    mapping(address => Auction[]) public auctionsByLister;
+    mapping(address => uint) public auctionSizeByLister;
 
-    event AuctionGenerated(address auctionContractAddress);
+    function getAuction(uint index) public view returns(Auction){
+        return auctions[index];
+    }
+
+    event AuctionGenerated(address _nftListerAddress, address auctionContractAddress);
 
     function createAuction(
         uint tokenId,
@@ -30,13 +35,14 @@ contract AuctionFactory {
             0x0000000000000000000000000000000000000000, // chrome // _platformOwnerAddress // TODO
             _nftListerAddress // chrome // _nftListerAddress
         );
-        _saveNewAuction(pennyAuction);
+        _saveNewAuction(_nftListerAddress, pennyAuction);
     }
 
-    function _saveNewAuction(Auction pennyAuction) private {
+    function _saveNewAuction(address _nftListerAddress, Auction pennyAuction) private {
         auctions.push(pennyAuction);
-        auctionsByOwner[msg.sender].push(pennyAuction);
-        auctionSizeByOwner[msg.sender] += 1;
-        emit AuctionGenerated(address(pennyAuction));
+        auctionsCount += 1;
+        auctionsByLister[_nftListerAddress].push(pennyAuction);
+        auctionSizeByLister[_nftListerAddress] += 1;
+        emit AuctionGenerated(_nftListerAddress, address(pennyAuction));
     }
 }

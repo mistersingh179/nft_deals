@@ -32,9 +32,10 @@ export default function Events({ contracts, contractName, eventName, localProvid
         renderItem={item => {
           return (
             <List.Item key={item.blockNumber + "_" + item.args.sender + "_" + item.args.purpose}>
-              {eventName} :
-              <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
-              {item.args[1]}
+              Event Name: {eventName}<br/>
+              Honorable – <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} /><br/>
+              has created auction –{' '}
+              <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
             </List.Item>
           );
         }}

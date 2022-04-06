@@ -29,7 +29,16 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph, BestNFT, AuctionFactory } from "./views";
+import {
+  Home,
+  ExampleUI,
+  Hints,
+  Subgraph,
+  BestNFT,
+  AuctionFactory,
+  Auction,
+  AuctionList,
+} from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -167,9 +176,9 @@ function App(props) {
   ]);
 
   // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts, "YourContract", "purpose");
+  const purpose = useContractReader(readContracts, "", "purpose");
 
-  /*
+  /*YourContract
   const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
   console.log("🏷 Resolved austingriffith.eth as:",addressFromENS)
   */
@@ -263,6 +272,12 @@ function App(props) {
         <Menu.Item key="/AuctionFactory">
           <Link to="/AuctionFactory">AuctionFactory</Link>
         </Menu.Item>
+        <Menu.Item key="/AuctionList">
+          <Link to="/AuctionList">AuctionList</Link>
+        </Menu.Item>
+        <Menu.Item key="/Auction">
+          <Link to="/Auction">Auction</Link>
+        </Menu.Item>
         <Menu.Item key="/">
           <Link to="/">App Home</Link>
         </Menu.Item>
@@ -316,7 +331,46 @@ function App(props) {
             blockExplorer={blockExplorer}
           />
         </Route>
+        <Route exact path="/Auction">
+          <Auction
+            address={address}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            localProvider={localProvider}
+            yourLocalBalance={yourLocalBalance}
+            price={price}
+            tx={tx}
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            purpose={purpose}
+            blockExplorer={blockExplorer}
+          />
+        </Route>
+        <Route exact path="/AuctionList">
+          <AuctionList
+            address={address}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            localProvider={localProvider}
+            yourLocalBalance={yourLocalBalance}
+            price={price}
+            tx={tx}
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            purpose={purpose}
+            blockExplorer={blockExplorer}
+          />
+        </Route>
         <Route exact path="/debug">
+          <Contract
+            name="Auction"
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
           <Contract
             name="AuctionFactory"
             price={price}
@@ -326,15 +380,6 @@ function App(props) {
             blockExplorer={blockExplorer}
             contractConfig={contractConfig}
           />
-          {/*<Contract*/}
-          {/*  name="Auction"*/}
-          {/*  price={price}*/}
-          {/*  signer={userSigner}*/}
-          {/*  provider={localProvider}*/}
-          {/*  address={address}*/}
-          {/*  blockExplorer={blockExplorer}*/}
-          {/*  contractConfig={contractConfig}*/}
-          {/*/>*/}
           <Contract
             name="BestNft"
             price={price}

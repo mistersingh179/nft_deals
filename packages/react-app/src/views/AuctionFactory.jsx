@@ -60,7 +60,8 @@ export default function AuctionFactory({
 
   useEffect(() => {
     if(readContracts && readContracts.AuctionFactory) {
-      setAuctionFactoryAddress(readContracts.AuctionFactory.address)
+      // setAuctionFactoryAddress(deployedContracts.AuctionFactory.address)
+      setAuctionFactoryAddress('0x0000000000000000000000000000000000000000')
     }
   }, [readContracts])
 
