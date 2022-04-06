@@ -29,7 +29,7 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph, TheBestNFT } from "./views";
+import { Home, ExampleUI, Hints, Subgraph, BestNFT, AuctionFactory } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -257,8 +257,11 @@ function App(props) {
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
       <Menu style={{ textAlign: "center", marginTop: 40 }} selectedKeys={[location.pathname]} mode="horizontal">
-        <Menu.Item key="/theBestNft">
-          <Link to="/theBestNft">The Best NFT</Link>
+        <Menu.Item key="/BestNft">
+          <Link to="/BestNft">Best NFT</Link>
+        </Menu.Item>
+        <Menu.Item key="/AuctionFactory">
+          <Link to="/AuctionFactory">AuctionFactory</Link>
         </Menu.Item>
         <Menu.Item key="/">
           <Link to="/">App Home</Link>
@@ -285,8 +288,8 @@ function App(props) {
           {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
           <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
         </Route>
-        <Route exact path="/theBestNft">
-          <TheBestNFT
+        <Route exact path="/BestNft">
+          <BestNFT
             address={address}
             userSigner={userSigner}
             mainnetProvider={mainnetProvider}
@@ -298,9 +301,42 @@ function App(props) {
             readContracts={readContracts}
             purpose={purpose}/>
         </Route>
+        <Route exact path="/AuctionFactory">
+          <AuctionFactory
+            address={address}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            localProvider={localProvider}
+            yourLocalBalance={yourLocalBalance}
+            price={price}
+            tx={tx}
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            purpose={purpose}
+            blockExplorer={blockExplorer}
+          />
+        </Route>
         <Route exact path="/debug">
           <Contract
-            name="TheBestNft"
+            name="AuctionFactory"
+            price={price}
+            signer={userSigner}
+            provider={localProvider}
+            address={address}
+            blockExplorer={blockExplorer}
+            contractConfig={contractConfig}
+          />
+          {/*<Contract*/}
+          {/*  name="Auction"*/}
+          {/*  price={price}*/}
+          {/*  signer={userSigner}*/}
+          {/*  provider={localProvider}*/}
+          {/*  address={address}*/}
+          {/*  blockExplorer={blockExplorer}*/}
+          {/*  contractConfig={contractConfig}*/}
+          {/*/>*/}
+          <Contract
+            name="BestNft"
             price={price}
             signer={userSigner}
             provider={localProvider}

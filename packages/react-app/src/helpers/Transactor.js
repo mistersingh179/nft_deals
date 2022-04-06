@@ -56,7 +56,6 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
       if (network.chainId === 100) {
         etherscanTxUrl = "https://blockscout.com/poa/xdai/tx/";
       }
-
       try {
         let result;
         if (tx instanceof Promise) {

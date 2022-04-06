@@ -797,5 +797,5 @@ module.exports = {
         abi: ERC20ABI,
       },
     },
-  },
+  }
 };

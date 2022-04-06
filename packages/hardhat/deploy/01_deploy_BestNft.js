@@ -1,4 +1,4 @@
-// deploy/01_deploy_theBestNft.js
+// deploy/01_deploy_BestNft.js
 
 const { ethers } = require("hardhat");
 
@@ -14,15 +14,15 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     console.warn("This is not local hardhat chain. beware.");
   }
   // deploy options https://github.com/wighawag/hardhat-deploy#deploymentsdeployname-options
-  await deploy("TheBestNft", {
+  await deploy("BestNft", {
     from: deployer,
     log: true,
     waitConfirmations: 5,
   });
 
-  const theBestNftContract = await ethers.getContract("TheBestNft", deployer);
+  const theBestNftContract = await ethers.getContract("BestNft", deployer);
   console.log(
-    "deployed TheBestNft contract here: ",
+    "deployed BestNft contract here: ",
     theBestNftContract.address
   );
 
@@ -52,9 +52,10 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
   try {
     if (chainId !== localChainId) {
+      console.log("will verify");
       await run("verify:verify", {
         address: theBestNftContract.address,
-        contract: "contracts/TheBestNft.sol:TheBestNft",
+        contract: "contracts/BestNft.sol:BestNft",
         constructorArguments: [],
       });
     }
@@ -62,4 +63,4 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     console.error(error);
   }
 };
-module.exports.tags = ["TheBestNft"];
+module.exports.tags = ["BestNft"];
