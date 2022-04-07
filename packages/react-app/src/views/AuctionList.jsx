@@ -73,6 +73,13 @@ export default function AuctionList({
     }
   }, [readContracts, auctionsCount]);
 
+  const startAuction = async (auctionContractAddress, e) => {
+    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      await tx(auctionWriter.startAuction(), update => console.log(update));
+    }
+  }
+
   const columns = [
   {
     title: 'NFT Contract Address',
@@ -110,10 +117,13 @@ export default function AuctionList({
     render: (text, record) => (
       <Space size="middle">
         <Link to={`/Auction/${record.key}`}>Open Auction</Link>
+        <Button onClick={startAuction.bind(this, record.key)}>
+          Start Auction
+        </Button>
       </Space>
     ),
   },
-];
+  ];
 
   return (
     <div>

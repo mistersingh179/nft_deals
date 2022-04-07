@@ -1,10 +1,15 @@
-import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
+import {Button, Card, DatePicker, Divider, Input, Progress, Slider, Space, Spin, Switch} from "antd";
 import React, { useState, useEffect } from "react";
+import {
+  useParams
+} from "react-router-dom";
 import {ethers, utils} from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
 import { Address, Balance, Events } from "../components";
 import {useContractReader} from "eth-hooks";
+import NftImage from "../components/NftImage";
+import {useBlockNumber} from "eth-hooks";
 
 export default function Auction({
   purpose,
@@ -19,41 +24,68 @@ export default function Auction({
   writeContracts,
   blockExplorer
 }) {
-  const [auctionContractAddress, setAuctionContractAddress] = useState("0x24B3c7704709ed1491473F30393FFc93cFB0FC34");
+  let { slug } = useParams();
+  console.log('slug:', slug);
+  const auctionContractAddress = slug
 
+  const [tokenId, setTokenId] = useState("")
+  const [nftContractAddress, setNftContractAddress] = useState("")
   useEffect(async () => {
     if(readContracts && readContracts.Auction && readContracts.Auction.interface){
-      const auctionAbi = readContracts.Auction.interface.format(utils.FormatTypes.full)
-      if(auctionContractAddress){
-        console.log('we got auctionContractAddress as: ', auctionContractAddress);
-        const auction = new ethers.Contract(
-          auctionContractAddress,
-          auctionAbi,
-          userSigner
-        );
-        const secondsLeftInAuction = await auction.secondsLeftInAuction();
-        console.log('seconds left: ', secondsLeftInAuction.toString());
-        const _weHavePossessionOfNft = await auction._weHavePossessionOfNft();
-        console.log('_weHavePossessionOfNft', _weHavePossessionOfNft.toString());
-        const nftContract = await auction.nftContract();
-        console.log('nftContract', nftContract.toString());
-        const nftContract2 = await readContracts.Auction.nftContract();
-        console.log('nftContract2', nftContract2.toString());
-        const newAuction = readContracts.Auction.attach(auctionContractAddress);
-        const nftContract3 = await newAuction.nftContract();
-        console.log('nftContract3', nftContract3.toString());
-      }
+      const auctionReader = readContracts.Auction.attach(auctionContractAddress);
+      const nftContractAddress = await auctionReader.nftContract();
+      setNftContractAddress(nftContractAddress.toString())
+      const tokenId = await auctionReader.tokenId()
+      setTokenId(tokenId.toString())
     }
-  }, [readContracts, auctionContractAddress] )
+    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      // await tx(auctionWriter.doEmptyTransaction(), update => console.log(update));
+    }
+  }, [writeContracts, readContracts, auctionContractAddress])
+
+  const [auctionOptions, setAuctionOptions] = useState({
+    winningAddress: '',
+    highestBid: '',
+    expiration: '',
+  });
+  const updateAuctionOptions = (name, value) => {
+    setAuctionOptions(prev => {
+      return {...prev, [name]: value}
+    })
+  }
+  useEffect(async () => {
+    if(readContracts && readContracts.Auction && readContracts.Auction.interface){
+      const auctionReader = readContracts.Auction.attach(auctionContractAddress);
+      const winningAddress = await auctionReader.winningAddress();
+      const highestBid = await auctionReader.highestBid();
+      const expiration = await auctionReader.expiration();
+      updateAuctionOptions('winningAddress', winningAddress)
+      updateAuctionOptions('highestBid', highestBid.toString())
+      updateAuctionOptions('expiration', expiration.toString())
+    }
+  }, [readContracts, auctionContractAddress]);
+
+  const approve = () => { }
+  const bid = async () => {
+    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      await tx(
+        auctionWriter.bid({value: auctionOptions.highestBid + (300000000000000 * 10)}),
+        update => console.log(update)
+      );
+    }
+  }
+  const fundsApproved = true
+
+  const blockNumber = useBlockNumber(localProvider);
+
   return (
     <div>
-      {/*
-        ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
-      */}
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
         <h2>Auction</h2>
         <Divider />
-        Auction Factory Contract Address:
+        Auction Address: {' '}
         <Address
           address={auctionContractAddress}
           ensProvider={mainnetProvider}
@@ -61,160 +93,24 @@ export default function Auction({
           blockExplorer={blockExplorer}
         />
         <Divider />
-        Your Address:
-        <Address address={address} ensProvider={mainnetProvider} fontSize={16} />
+        <NftImage {...{nftContractAddress, tokenId, localProvider}} width={200} height={200}/>
         <Divider />
-        ENS Address Example:
-        <Address
-          address="0x34aA3F359A9D614239015126635CE7732c18fDF3" /* this will show as austingriffith.eth */
-          ensProvider={mainnetProvider}
-          fontSize={16}
-        />
+        Current Highest Bid: {auctionOptions.highestBid}
         <Divider />
-        {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
-        <div>OR</div>
-        <Balance address={address} provider={localProvider} price={price} />
+        Current Winner: {auctionOptions.winningAddress}
         <Divider />
-        <div>🐳 Example Whale Balance:</div>
-        <Balance balance={utils.parseEther("1000")} provider={localProvider} price={price} />
+        Expiration: {auctionOptions.expiration}
         <Divider />
-        {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
+        {/*<Button type={'primary'} onClick={approve} disabled={fundsApproved? false: true}>*/}
+        {/*  Approve*/}
+        {/*</Button>*/}
+        {/*<Space style={{marginLeft:5, marginRight: 5}}>&nbsp;</Space>*/}
+        <Button type={'primary'} onClick={bid}>
+          Place Bid
+        </Button>
         <Divider />
-        Your Contract Address:
-        <Address
-          address={readContracts && readContracts.YourContract ? readContracts.YourContract.address : null}
-          ensProvider={mainnetProvider}
-          fontSize={16}
-        />
+        Block Number: {blockNumber}
         <Divider />
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* look how you call setPurpose on your contract: */
-              tx(writeContracts.YourContract.setPurpose("🍻 Cheers"));
-            }}
-          >
-            Set Purpose to &quot;🍻 Cheers&quot;
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /*
-              you can also just craft a transaction and send it to the tx() transactor
-              here we are sending value straight to the contract's address:
-            */
-              tx({
-                to: writeContracts.YourContract.address,
-                value: utils.parseEther("0.001"),
-              });
-              /* this should throw an error about "no fallback nor receive function" until you add it */
-            }}
-          >
-            Send Value
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* look how we call setPurpose AND send some value along */
-              tx(
-                writeContracts.YourContract.setPurpose("💵 Paying for this one!", {
-                  value: utils.parseEther("0.001"),
-                }),
-              );
-              /* this will fail until you make the setPurpose function payable */
-            }}
-          >
-            Set Purpose With Value
-          </Button>
-        </div>
-        <div style={{ margin: 8 }}>
-          <Button
-            onClick={() => {
-              /* you can also just craft a transaction and send it to the tx() transactor */
-              tx({
-                to: writeContracts.YourContract.address,
-                value: utils.parseEther("0.001"),
-                data: writeContracts.YourContract.interface.encodeFunctionData("setPurpose(string)", [
-                  "🤓 Whoa so 1337!",
-                ]),
-              });
-              /* this should throw an error about "no fallback nor receive function" until you add it */
-            }}
-          >
-            Another Example
-          </Button>
-        </div>
-      </div>
-
-      {/*
-        📑 Maybe display a list of events?
-          (uncomment the event and emit line in YourContract.sol! )
-      */}
-      <Events
-        contracts={readContracts}
-        contractName="YourContract"
-        eventName="SetPurpose"
-        localProvider={localProvider}
-        mainnetProvider={mainnetProvider}
-        startBlock={1}
-      />
-
-      <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 256 }}>
-        <Card>
-          Check out all the{" "}
-          <a
-            href="https://github.com/austintgriffith/scaffold-eth/tree/master/packages/react-app/src/components"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📦 components
-          </a>
-        </Card>
-
-        <Card style={{ marginTop: 32 }}>
-          <div>
-            There are tons of generic components included from{" "}
-            <a href="https://ant.design/components/overview/" target="_blank" rel="noopener noreferrer">
-              🐜 ant.design
-            </a>{" "}
-            too!
-          </div>
-
-          <div style={{ marginTop: 8 }}>
-            <Button type="primary">Buttons</Button>
-          </div>
-
-          <div style={{ marginTop: 8 }}>
-            <SyncOutlined spin /> Icons
-          </div>
-
-          <div style={{ marginTop: 8 }}>
-            Date Pickers?
-            <div style={{ marginTop: 2 }}>
-              <DatePicker onChange={() => {}} />
-            </div>
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Slider range defaultValue={[20, 50]} onChange={() => {}} />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Switch defaultChecked onChange={() => {}} />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Progress percent={50} status="active" />
-          </div>
-
-          <div style={{ marginTop: 32 }}>
-            <Spin />
-          </div>
-        </Card>
       </div>
     </div>
   );

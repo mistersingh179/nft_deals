@@ -60,8 +60,7 @@ export default function AuctionFactory({
 
   useEffect(() => {
     if(readContracts && readContracts.AuctionFactory) {
-      // setAuctionFactoryAddress(deployedContracts.AuctionFactory.address)
-      setAuctionFactoryAddress('0x0000000000000000000000000000000000000000')
+      setAuctionFactoryAddress(readContracts.AuctionFactory.address)
     }
   }, [readContracts])
 
@@ -89,7 +88,8 @@ export default function AuctionFactory({
         setNftOwner(nftOwner);
 
         let nftApproval = await myErc721.getApproved(nftTokenId);
-        console.log('nft approval is with: ', nftApproval);
+        console.log('nft approval is with: ', nftApproval)
+        console.log('auctionFactory address is: ', auctionFactoryAddress)
         setNftApproved(nftApproval == auctionFactoryAddress)
 
       }catch(err){
@@ -187,6 +187,10 @@ export default function AuctionFactory({
         </Space>
 
         <Divider />
+
+        Step 1. create auction
+        Step 2. approve NFT transfer
+        step 3. start auction
 
         <Space style={{ marginTop: 8 }}>
           <Button type={'primary'} onClick={approve} disabled={nftApproved? true: false}>

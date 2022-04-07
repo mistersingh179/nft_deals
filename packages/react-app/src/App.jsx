@@ -275,9 +275,6 @@ function App(props) {
         <Menu.Item key="/AuctionList">
           <Link to="/AuctionList">AuctionList</Link>
         </Menu.Item>
-        <Menu.Item key="/Auction">
-          <Link to="/Auction">Auction</Link>
-        </Menu.Item>
         <Menu.Item key="/">
           <Link to="/">App Home</Link>
         </Menu.Item>
@@ -331,7 +328,7 @@ function App(props) {
             blockExplorer={blockExplorer}
           />
         </Route>
-        <Route exact path="/Auction">
+        <Route exact path="/Auction/:slug">
           <Auction
             address={address}
             userSigner={userSigner}
