@@ -1,4 +1,5 @@
-import { Button, Col, Menu, Row } from "antd";
+import {Button, Col, Menu, Row, Tabs} from "antd";
+
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -252,6 +253,7 @@ function App(props) {
   }, [loadWeb3Modal]);
 
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
+  const { TabPane } = Tabs;
 
   return (
     <div className="App">
@@ -275,23 +277,8 @@ function App(props) {
         <Menu.Item key="/AuctionList">
           <Link to="/AuctionList">AuctionList</Link>
         </Menu.Item>
-        <Menu.Item key="/">
-          <Link to="/">App Home</Link>
-        </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
-        </Menu.Item>
-        <Menu.Item key="/hints">
-          <Link to="/hints">Hints</Link>
-        </Menu.Item>
-        <Menu.Item key="/exampleui">
-          <Link to="/exampleui">ExampleUI</Link>
-        </Menu.Item>
-        <Menu.Item key="/mainnetdai">
-          <Link to="/mainnetdai">Mainnet DAI</Link>
-        </Menu.Item>
-        <Menu.Item key="/subgraph">
-          <Link to="/subgraph">Subgraph</Link>
         </Menu.Item>
       </Menu>
 
@@ -359,33 +346,42 @@ function App(props) {
           />
         </Route>
         <Route exact path="/debug">
-          <Contract
-            name="Auction"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-          <Contract
-            name="AuctionFactory"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
-          <Contract
-            name="BestNft"
-            price={price}
-            signer={userSigner}
-            provider={localProvider}
-            address={address}
-            blockExplorer={blockExplorer}
-            contractConfig={contractConfig}
-          />
+          <Tabs defaultActiveKey="1" centered>
+            <TabPane tab="Auction" key="1">
+              <Contract
+                name="Auction"
+                price={price}
+                signer={userSigner}
+                provider={localProvider}
+                address={address}
+                blockExplorer={blockExplorer}
+                contractConfig={contractConfig}
+              />
+            </TabPane>
+            <TabPane tab="Auction Factory" key="2">
+              <Contract
+                name="AuctionFactory"
+                price={price}
+                signer={userSigner}
+                provider={localProvider}
+                address={address}
+                blockExplorer={blockExplorer}
+                contractConfig={contractConfig}
+              />
+            </TabPane>
+            <TabPane tab="BestNft" key="3">
+              <Contract
+                name="BestNft"
+                price={price}
+                signer={userSigner}
+                provider={localProvider}
+                address={address}
+                blockExplorer={blockExplorer}
+                contractConfig={contractConfig}
+              />
+            </TabPane>
+          </Tabs>
+
         </Route>
         <Route path="/hints">
           <Hints

@@ -31,7 +31,6 @@ export default function AuctionFactory({
   const [nftTokenUrl, setNftTokenUrl] = useState("");
   const [nftOwner, setNftOwner] = useState("");
   const [listerAddress, setListerAddress] = useState("");
-  const [nftApproved, setNftApproved] = useState(false);
   const [auctionOptions, setAuctionOptions] = useState({
     startingBid: '',
     initialAuctionLength: '',
@@ -52,7 +51,7 @@ export default function AuctionFactory({
         auctionOptions.minimumBidIncrement,
         listerAddress
       ), update => {
-        console.log('create auction: ', update);
+        console.log('*** create auction: ', update);
       }
     )
 
@@ -84,18 +83,17 @@ export default function AuctionFactory({
         console.log(tokenUri.image);
         setNftTokenUrl(tokenUri.image);
 
-        let nftOwner = await myErc721.ownerOf(nftTokenId);
-        setNftOwner(nftOwner);
-
-        let nftApproval = await myErc721.getApproved(nftTokenId);
-        console.log('nft approval is with: ', nftApproval)
-        console.log('auctionFactory address is: ', auctionFactoryAddress)
-        setNftApproved(nftApproval == auctionFactoryAddress)
+        // let nftOwner = await myErc721.ownerOf(nftTokenId);
+        // setNftOwner(nftOwner);
+        //
+        // let nftApproval = await myErc721.getApproved(nftTokenId);
+        // console.log('nft approval is with: ', nftApproval)
+        // console.log('auctionFactory address is: ', auctionFactoryAddress)
+        // setNftApproved(nftApproval == auctionFactoryAddress)
 
       }catch(err){
         setNftTokenUrl('https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg');
-        setNftOwner('');
-        setNftApproved(false);
+        // setNftOwner('');
       }
     }
   }, [nftContractAddress, nftTokenId])
@@ -112,7 +110,7 @@ export default function AuctionFactory({
       console.log(result);
       let nftApproval = await myErc721.getApproved(nftTokenId);
       console.log('nft approval is with: ', nftApproval);
-      setNftApproved(nftApproval == auctionFactoryAddress)
+      // setNftApproved(nftApproval == auctionFactoryAddress)
       }catch(err){
         console.error('error while getting approval');
         console.error(err);
@@ -188,28 +186,11 @@ export default function AuctionFactory({
 
         <Divider />
 
-        Step 1. create auction
-        Step 2. approve NFT transfer
-        step 3. start auction
-
         <Space style={{ marginTop: 8 }}>
-          <Button type={'primary'} onClick={approve} disabled={nftApproved? true: false}>
-            Approve
-          </Button>
-          <Button type={'primary'}  disabled={nftApproved? false: true} onClick={createAuction}>
+          <Button type={'primary'} onClick={createAuction}>
             Create Auction
           </Button>
         </Space>
-        <Divider />
-        <div>
-            <Text type={nftApproved ?  "success": "warning"}>Platform has approval: {nftApproved ? 'Yes' : 'No'}</Text>
-        </div>
-
-         <Divider />
-        <div>
-          My Auctions:
-        </div>
-
          <Divider />
       </div>
       <Events

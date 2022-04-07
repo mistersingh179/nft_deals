@@ -17,7 +17,7 @@ export default function Header({link, title, subTitle}) {
 
 
 Header.defaultProps = {
-  link: "https://github.com/austintgriffith/scaffold-eth",
-  title: "🏗 scaffold-eth",
-  subTitle: "forkable Ethereum dev stack focused on fast product iteration",
+  link: "https://https://nftdeals.xyz/",
+  title: "NFTDeals.xyz",
+  subTitle: "Get premium NFT's for less as our auctions have no reserve and start at $1",
 }

@@ -106,9 +106,9 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
             }, 500);
           }
         }
-
+        let receipt;
         if (typeof result.wait === "function") {
-          await result.wait();
+          receipt = await result.wait();
         }
 
         return result;
