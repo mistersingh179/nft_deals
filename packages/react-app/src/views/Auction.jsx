@@ -46,12 +46,15 @@ export default function Auction({
     }
   }, [writeContracts, readContracts, auctionContractAddress])
 
+  const blockNumber = useBlockNumber(localProvider);
   const [auctionOptions, setAuctionOptions] = useState({
     winningAddress: '',
     highestBid: '',
     expiration: '',
     minimumBidIncrement: '',
-    pendingRefund: 0
+    pendingRefund: 0,
+    extraPaymentRefunds: 0,
+    _weHavePossessionOfNft: false
   });
   const updateAuctionOptions = (name, value) => {
     setAuctionOptions(prev => {
@@ -67,17 +70,19 @@ export default function Auction({
       const minimumBidIncrement = await auctionReader.minimumBidIncrement();
       const pendingRefunds = await auctionReader.pendingRefunds(address);
       const extraPaymentRefunds = await auctionReader.extraPaymentRefunds(address);
+      const _weHavePossessionOfNft = await auctionReader._weHavePossessionOfNft();
       updateAuctionOptions('extraPaymentRefunds', extraPaymentRefunds.toString())
       updateAuctionOptions('pendingRefunds', pendingRefunds.toString())
       updateAuctionOptions('winningAddress', winningAddress)
       updateAuctionOptions('highestBid', highestBid.toString())
       updateAuctionOptions('expiration', expiration.toString())
       updateAuctionOptions('minimumBidIncrement', minimumBidIncrement.toString())
+      updateAuctionOptions('_weHavePossessionOfNft', _weHavePossessionOfNft)
     }
   }
   useEffect(async () => {
     setupAuctionOptions()
-  }, [readContracts, auctionContractAddress]);
+  }, [readContracts, auctionContractAddress, blockNumber]);
 
   const approve = () => { }
   const bid = async () => {
@@ -124,7 +129,6 @@ export default function Auction({
   }
   const fundsApproved = true
 
-  const blockNumber = useBlockNumber(localProvider);
   return (
     <div>
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 32 }}>
@@ -142,7 +146,11 @@ export default function Auction({
         <Divider />
         Current Highest Bid: {auctionOptions.highestBid}
         <Divider />
-        Current Winner: {auctionOptions.winningAddress}
+        Current Winner: {auctionOptions.winningAddress}<br/>
+        <Text mark>
+          {auctionOptions.winningAddress == address ? "This is you! :=)": "Not you :-("}
+        </Text>
+
         <Divider />
         Expiration: {moment(auctionOptions.expiration, 'X').fromNow()}
         <br/>
@@ -154,13 +162,19 @@ export default function Auction({
         {/*  Approve*/}
         {/*</Button>*/}
         {/*<Space style={{marginLeft:5, marginRight: 5}}>&nbsp;</Space>*/}
-        <Button type={'primary'} onClick={bid}>
+        <Button
+          disabled={moment().unix() > auctionOptions.expiration ? true: false}
+          type={'primary'} onClick={bid}>
           Place Bid
         </Button>
         <Divider />
         Block Number: {blockNumber}
         <Divider />
         <Button
+          disabled={
+          (auctionOptions._weHavePossessionOfNft == false) || (auctionOptions.winningAddress != address) ?
+            true: false
+        }
           style={{marginBottom:4}}
           onClick={claimNft}>
           Claim Nft upon Winning

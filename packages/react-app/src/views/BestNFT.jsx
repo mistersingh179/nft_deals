@@ -4,7 +4,7 @@ import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
 import { Address, Balance, Events } from "../components";
-import {useContractReader} from "eth-hooks";
+import {useBlockNumber, useContractReader} from "eth-hooks";
 
 export default function BestNFT({
   purpose,
@@ -18,6 +18,7 @@ export default function BestNFT({
   writeContracts,
 }) {
   const [newPurpose, setNewPurpose] = useState("loading...");
+  const blockNumber = useBlockNumber(localProvider);
 
   const nftBalance = useContractReader(
     readContracts,
@@ -55,7 +56,7 @@ export default function BestNFT({
       }
       setNftUrls(arr);
     }
-  }, [nftBalance]);
+  }, [nftBalance, blockNumber]);
 
   return (
     <div>

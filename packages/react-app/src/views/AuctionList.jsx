@@ -11,8 +11,6 @@ import {Link} from "react-router-dom";
 import NftImage from "../components/NftImage";
 import moment from "moment";
 
-console.log(ERC721PresetMinterPauserAutoIdABI);
-
 const { ethers } = require("ethers");
 
 export default function AuctionList({
@@ -90,7 +88,7 @@ export default function AuctionList({
 
   useEffect( async () => {
     setupAuctionsData()
-  }, [readContracts, auctionsCount]);
+  }, [readContracts, auctionsCount, blockNumber]);
 
   const startAuction = async (auctionContractAddress, e) => {
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){

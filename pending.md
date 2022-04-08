@@ -15,6 +15,7 @@
 
 # NFT
 - different images
+- what happens when it dissapers
 
 # Auction
 - used wrapped eth
