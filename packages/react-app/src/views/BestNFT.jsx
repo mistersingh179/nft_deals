@@ -20,15 +20,6 @@ export default function BestNFT({
   const [newPurpose, setNewPurpose] = useState("loading...");
   const blockNumber = useBlockNumber(localProvider);
 
-  const nftBalance = useContractReader(
-    readContracts,
-    "BestNft",
-    "balanceOf",
-    [address],
-    undefined,
-    (val) => val.toString()
-  );
-
   const mintNft = async () => {
     console.log("inside mintNft");
     const result = await tx(writeContracts.BestNft.mint(address));
@@ -37,12 +28,15 @@ export default function BestNFT({
   }
 
   const [nftUrls, setNftUrls] = useState([]);
+  const [nftBalance, setNftBalance] = useState([]);
 
   useEffect(async () => {
     console.log("in effect to get NFT's")
     let tokenId, tokenUri, tokenObj;
     const arr = []
     if(readContracts && readContracts.BestNft && readContracts.BestNft){
+      const nftBalance = await readContracts.BestNft.balanceOf(address);
+      setNftBalance(nftBalance.toString())
       for(let i=nftBalance-1;i >=0;i--){
         tokenId = await readContracts.BestNft.tokenOfOwnerByIndex(address, i);
         tokenId = tokenId.toString();
@@ -56,7 +50,7 @@ export default function BestNFT({
       }
       setNftUrls(arr);
     }
-  }, [nftBalance, blockNumber]);
+  }, [blockNumber]);
 
   return (
     <div>
@@ -67,14 +61,12 @@ export default function BestNFT({
         <h2>Best NFT</h2>
         <Divider />
         <div style={{ margin: 8 }}>
-          Your Contract Address:
+          NFT Contract Address:{' '}
           <Address
             address={readContracts && readContracts.BestNft ? readContracts.BestNft.address : null}
             ensProvider={mainnetProvider}
             fontSize={16}
           />
-          <Divider />
-          Your NFT Balance: {nftBalance}
           <Divider />
           <Button style={{margin: 8}} onClick={mintNft}>
             Mint me a NFT
@@ -89,9 +81,10 @@ export default function BestNFT({
             </li>;
           })}
         </ul>
+        <Divider />
+        Your NFT Balance: {nftBalance}
+        <Divider />
       </div>
-
-
 
       {/*<Events*/}
       {/*  contracts={readContracts}*/}

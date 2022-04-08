@@ -27,18 +27,25 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract Auction is IERC721Receiver, Ownable {
+
+contract Auction is IERC721Receiver, Ownable, AccessControl {
     using Strings for uint;
+
+    bytes32 public constant CASHIER_ROLE = keccak256("CASHIER_ROLE");
+    address public constant _rodAddress = 0x44791F3A984982499Dc582633D2b5BFc8F9850c5;
+    address public constant _sandeepAddress = 0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283;
+    uint public constant platformFeeInBasisPoints = 100;
 
     IERC721 public immutable nftContract;
     uint public immutable tokenId;
+
     bool public _weHavePossessionOfNft;
     address public nftListerAddress;
 
     uint public expiration;
     uint public minimumBidIncrement;
-    uint public platformFeeInBasisPoints;
     uint public auctionTimeIncrementOnBid;
     uint public initialAuctionLength;
 
@@ -57,21 +64,22 @@ contract Auction is IERC721Receiver, Ownable {
         address _nftContractAddress,
         uint _tokenId,
         uint startBidAmount,
-        uint _platformFeeInBasisPoints,
         uint _initialAuctionLength,
         uint _auctionTimeIncrementOnBid,
         uint _minimumBidIncrement,
-        address _platformOwnerAddress,
         address _nftListerAddress){
             nftContract = IERC721(_nftContractAddress);
-            _transferOwnership(_platformOwnerAddress);
             tokenId = _tokenId;
             nftListerAddress = _nftListerAddress;
             initialAuctionLength = _initialAuctionLength;
             highestBid = startBidAmount;
-            platformFeeInBasisPoints = _platformFeeInBasisPoints;
             auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;
             minimumBidIncrement = _minimumBidIncrement;
+
+            _setupRole(DEFAULT_ADMIN_ROLE, _rodAddress);
+            _setupRole(DEFAULT_ADMIN_ROLE, _sandeepAddress);
+            _setupRole(CASHIER_ROLE, _rodAddress);
+            _setupRole(CASHIER_ROLE, _sandeepAddress);
     }
 
     function startAuction() youAreTheNftLister external{
@@ -181,7 +189,7 @@ contract Auction is IERC721Receiver, Ownable {
             _transfer();
     }
 
-    function claimPlatformFees() onlyOwner external {
+    function claimPlatformFees() onlyRole(CASHIER_ROLE) external {
         uint amountToSend = _platformFeesAccumulated;
         _platformFeesAccumulated = 0;
         _sendMoney(amountToSend);
@@ -225,7 +233,7 @@ contract Auction is IERC721Receiver, Ownable {
         emit MoneyOut(msg.sender, amount);
     }
 
-    function shutdown() onlyOwner external {
+    function shutdown() onlyRole(DEFAULT_ADMIN_ROLE) external {
         selfdestruct(payable(msg.sender));
     }
 
@@ -239,6 +247,4 @@ contract Auction is IERC721Receiver, Ownable {
         emit NftIn(from, tokenId);
         return IERC721Receiver.onERC721Received.selector;
     }
-
-    function renounceOwnership() public virtual override onlyOwner { }
 }

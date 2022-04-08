@@ -40,6 +40,10 @@ export default function AuctionList({
       try{
         for(var i=0;i<auctionsCount;i++){
           const auctionContractAddress = await readContracts.AuctionFactory.auctions(i);
+          const auctionCode = await localProvider.getCode(auctionContractAddress);
+          if(auctionCode == '0x'){
+            continue
+          }
           auctions.push(auctionContractAddress);
           const auction = readContracts.Auction.attach(auctionContractAddress);
           const nftContract = await auction.nftContract();

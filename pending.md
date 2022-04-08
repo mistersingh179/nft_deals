@@ -2,6 +2,7 @@
 - big int
 - static variables 
 - withdrawl permissions
+- listerFee
 
 # Auction Factory
 - get stats from auctionFactory and show on front end
@@ -10,6 +11,7 @@
 - show past auctions in front end with link to auction page
 - give tokens per block
 - verify that they do have that nft
+- after created, do something, so they know it is done.
 
 # Auction Listing
 - start it

@@ -24,11 +24,9 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
       "0x5FbDB2315678afecb367f032d93F642f64180aa3", // _nftContractAddress
       6, // tokenId
       "10000000000000000000", // 10 eth // startBidAmount
-      100, // 1% // _platformFeeInBasisPoints
       5 * 60, // 5 minutes // _initialAuctionLength
       60, // 1 minute // _auctionTimeIncrementOnBid
       "100000000000000000", // 0.1 eth // _minimumBidIncrement
-      "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283", // chrome // _platformOwnerAddress
       "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283", // chrome // _nftListerAddress
     ],
     log: true,
