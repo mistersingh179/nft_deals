@@ -83,14 +83,8 @@ export default function AuctionFactory({
         console.log(tokenUri.image);
         setNftTokenUrl(tokenUri.image);
 
-        // let nftOwner = await myErc721.ownerOf(nftTokenId);
-        // setNftOwner(nftOwner);
-        //
-        // let nftApproval = await myErc721.getApproved(nftTokenId);
-        // console.log('nft approval is with: ', nftApproval)
-        // console.log('auctionFactory address is: ', auctionFactoryAddress)
-        // setNftApproved(nftApproval == auctionFactoryAddress)
-
+        let nftOwner = await myErc721.ownerOf(nftTokenId);
+        setNftOwner(nftOwner);
       }catch(err){
         setNftTokenUrl('https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg');
         // setNftOwner('');
@@ -143,15 +137,23 @@ export default function AuctionFactory({
             onChange={e => setNftTokenId(e.target.value)}
           />
           <img src={nftTokenUrl} height={200}/>
+          {nftOwner && nftOwner == address &&
+            <div>Currently owned by you:
+              <Address
+                address={nftOwner}
+                ensProvider={mainnetProvider}
+                fontSize={16} />
+            </div>
+          }
+          {nftOwner && nftOwner != address &&
+            <div>FYI – Currently <Text mark>not owned by you</Text> <br /> instead owned by:
+              <Address
+                address={nftOwner}
+                ensProvider={mainnetProvider}
+                fontSize={16} />
+            </div>
+          }
         </Space>
-        {nftOwner ? <Space direction="horizontal" style={{margin: 8}}>
-          NFT's current owner:
-          <Address
-          address={nftOwner}
-          ensProvider={mainnetProvider}
-          fontSize={16} />
-        </Space> : ''}
-
         <Divider />
 
         <Space direction={'vertical'} style={{marginTop: 8}}>
