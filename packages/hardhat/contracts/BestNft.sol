@@ -11,18 +11,26 @@ contract BestNft is ERC721PresetMinterPauserAutoId {
     using Counters for Counters.Counter;
     Counters.Counter public tokenIdTracker;
 
-    function image_url(uint tokenId) private view returns (string memory) {
-        return "https://cdn.lifestyleasia.com/wp-content/uploads/sites/2/2022/01/14164042/ape-007.jpeg";
-    }
+    string[] public image_urls = [
+        'https://itsblockchain.com/wp-content/uploads/2021/08/https___bucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com_public_images_52d339b8-5254-4182-b519-2c404df70dd1_609x462-1.jpeg',
+        'https://www.ledgerinsights.com/wp-content/uploads/2021/12/adidas-nft-bored-ape-810x524.jpg',
+        'https://cryptopotato.com/wp-content/uploads/2022/01/img5_bayc.jpg',
+        'https://miro.medium.com/max/319/1*39_OwfoRHASp1f1YgZgJJA.png',
+        "https://cdn.lifestyleasia.com/wp-content/uploads/sites/2/2022/01/14164042/ape-007.jpeg",
+        'https://openingrealm.b-cdn.net/wp-content/uploads/2021/11/BAYC-PFP-2-1024x1024.png',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUpqEDxbfPr5DM3LKSBvSFiGuLuykYa61oOj4hTSIPnWTuxiN6hhQIw-8bZCibYfXw72g&usqp=CAU',
+        'https://cdn.coingape.com/wp-content/uploads/2022/03/17194826/unnamed-122.png'
+    ];
 
     // https://docs.opensea.io/docs/metadata-standards
     function tokenURI(uint256 tokenId) override public view returns (string memory) {
         require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        string memory image_url = image_urls[tokenId % image_urls.length];
         string memory json = Base64.encode(
           bytes(
               string(
                   abi.encodePacked(
-                      '{"name": "Best NFT", "description": "for testing", "image": "', image_url(tokenId), '"}'
+                      '{"name": "Best NFT", "description": "for testing", "image": "', image_url, '"}'
                   )
               )
           )

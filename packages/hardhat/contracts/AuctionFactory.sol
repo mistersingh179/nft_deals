@@ -32,7 +32,7 @@ contract AuctionFactory {
             _initialAuctionLength, // 5 minutes // _initialAuctionLength
             _auctionTimeIncrementOnBid, // 1 minute // _auctionTimeIncrementOnBid
             _minimumBidIncrement, // 0.1 eth // _minimumBidIncrement
-            0x0000000000000000000000000000000000000000, // chrome // _platformOwnerAddress // TODO
+            0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283, // chrome // _platformOwnerAddress // TODO
             _nftListerAddress // chrome // _nftListerAddress
         );
         _saveNewAuction(_nftListerAddress, pennyAuction);

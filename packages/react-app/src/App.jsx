@@ -1,4 +1,4 @@
-import {Button, Col, Menu, Row, Tabs} from "antd";
+import {Button, Col, Input, Menu, Row, Tabs} from "antd";
 
 import "antd/dist/antd.css";
 import {
@@ -255,6 +255,25 @@ function App(props) {
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
   const { TabPane } = Tabs;
 
+  const [auctionContract, setAuctionContract] = useState('')
+
+  const handleAuctionIdChange = (auctionId) => {
+    if(!auctionId || !ethers.utils.isAddress(auctionId)) {
+      setAuctionContract('')
+      return;
+    }
+    try {
+      if(readContracts && readContracts.Auction){
+        const auctionContract = new ethers.Contract(
+          auctionId,
+          readContracts.Auction.interface.format(ethers.utils.FormatTypes.full),
+          userSigner
+        )
+        setAuctionContract(auctionContract);
+      }
+    }catch(e){console.log('*** handled it', e)}
+  }
+
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
@@ -267,7 +286,7 @@ function App(props) {
         logoutOfWeb3Modal={logoutOfWeb3Modal}
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
-      <Menu style={{ textAlign: "center", marginTop: 40 }} selectedKeys={[location.pathname]} mode="horizontal">
+      <Menu style={{ textAlign: "center"}} selectedKeys={[location.pathname]} mode="horizontal">
         <Menu.Item key="/BestNft">
           <Link to="/BestNft">Best NFT</Link>
         </Menu.Item>
@@ -348,7 +367,11 @@ function App(props) {
         <Route exact path="/debug">
           <Tabs defaultActiveKey="1" centered>
             <TabPane tab="Auction" key="1">
+              <Input placeholder={'an auction id'}
+                     onChange={e => handleAuctionIdChange(e.target.value)}
+                    style={{width: 400}}/>
               <Contract
+                customContract={auctionContract}
                 name="Auction"
                 price={price}
                 signer={userSigner}

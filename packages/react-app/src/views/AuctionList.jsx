@@ -9,6 +9,7 @@ import Text from "antd/es/typography/Text";
 import {useBlockNumber, useContractReader} from "eth-hooks";
 import {Link} from "react-router-dom";
 import NftImage from "../components/NftImage";
+import moment from "moment";
 
 console.log(ERC721PresetMinterPauserAutoIdABI);
 
@@ -54,7 +55,11 @@ export default function AuctionList({
           const tokenId = await auction.tokenId();
           const expiration = await auction.expiration();
           const highestBid = await auction.highestBid();
+          const winningAddress = await auction.winningAddress();
+          const _weHavePossessionOfNft = await auction._weHavePossessionOfNft();
+          const _platformFeesAccumulated = await auction._platformFeesAccumulated();
           const minimumBidIncrement = await auction.minimumBidIncrement();
+          const balance = await localProvider.getBalance(auctionContractAddress);
           const myErc721 = new ethers.Contract(
             nftContract,
             ERC721PresetMinterPauserAutoIdABI,
@@ -63,7 +68,9 @@ export default function AuctionList({
           const nftApproval = await myErc721.getApproved(tokenId.toString());
           const weHaveApproval = (nftApproval == auctionContractAddress)
           const data = { nftContract, tokenId, expiration,
-            highestBid, minimumBidIncrement, weHaveApproval}
+            highestBid, minimumBidIncrement, weHaveApproval,
+          _weHavePossessionOfNft, winningAddress,
+            balance, _platformFeesAccumulated }
           auctionsDataByAddress[auctionContractAddress] = { ...data}
           auctionsArray.push({
             ...data, key: auctionContractAddress
@@ -89,6 +96,30 @@ export default function AuctionList({
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
       await tx(auctionWriter.startAuction(), update => console.log(update));
+      setupAuctionsData()
+    }
+  };
+
+  const claimNftWhenNoAction = async (auctionContractAddress, e) => {
+    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      await tx(auctionWriter.claimNftWhenNoAction(), update => console.log(update));
+      setupAuctionsData()
+    }
+  };
+
+  const claimFinalBidAmount = async (auctionContractAddress, e) => {
+    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      await tx(auctionWriter.claimFinalBidAmount(), update => console.log(update));
+      setupAuctionsData()
+    }
+  };
+
+  const claimNftUponWinning = async (auctionContractAddress, e) => {
+    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      await tx(auctionWriter.claimNftWhenNoAction(), update => console.log(update));
       setupAuctionsData()
     }
   };
@@ -122,10 +153,22 @@ export default function AuctionList({
         render: (elem) => <Address address={elem} fontSize={14}></Address>
   },
   {
-    title: 'Auction Address',
+    title: 'Address',
     dataIndex: 'key',
     key: 'key',
-        render: (elem) => <Address address={elem} fontSize={14}></Address>
+    render: (elem) => <Address address={elem} fontSize={14}></Address>
+  },
+  {
+    title: 'Balance',
+    dataIndex: 'key',
+    key: 'key',
+    render: (elem, record) => record.balance.toString()
+  },
+  {
+    title: 'Platform Fees',
+    dataIndex: '_platformFeesAccumulated',
+    key: '_platformFeesAccumulated',
+    render: (elem) => elem.toString()
   },
   {
     title: 'tokenId',
@@ -146,7 +189,7 @@ export default function AuctionList({
     title: 'Expiraton',
     dataIndex: 'expiration',
     key: 'expiration',
-    render: (elem) => elem.toString()
+    render: (elem) => moment(parseInt(elem), 'X').fromNow()
   },
   {
     title: 'Highest Bid',
@@ -178,8 +221,19 @@ export default function AuctionList({
         </Button>
         <br/>
         <Link to={`/Auction/${record.key}`}>
-          <Button disabled={record.expiration == 0 ? true : false}>Open Auction</Button>
+          <Button style={{marginBottom:4}} disabled={record.expiration == 0 ? true : false}>Open Auction</Button>
         </Link>
+        <br/>
+        <Button disabled={(record.expiration > 0) && (record._weHavePossessionOfNft == true) ? false: true}
+          style={{marginBottom:4}}
+          onClick={claimNftWhenNoAction.bind(this, record.key)}>
+          Claim Nft Back
+        </Button>
+        <br/>
+        <Button disabled={(record.expiration > 0) ? false: true}
+          onClick={claimFinalBidAmount.bind(this, record.key)}>
+          Claim Final Winning Bid
+        </Button>
       </div>
     ),
   },
@@ -187,7 +241,7 @@ export default function AuctionList({
 
   return (
     <div>
-      <div style={{ border: "1px solid #cccccc", padding: 16, width: 1500, margin: "auto", marginTop:64 }}>
+      <div style={{ border: "1px solid #cccccc", padding: 16, width: 1500, margin: "auto", marginTop:32 }}>
         <h2>Auction List</h2>
         <Divider />
         <Table dataSource={auctionsArray} columns={columns} />

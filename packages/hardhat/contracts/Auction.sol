@@ -2,6 +2,7 @@ pragma solidity ^0.8.4;
 // SPDX-License-Identifier: GPL-3.0
 
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "hardhat/console.sol";
 
 // someones deploy us [contract] with nft contract address
 // lister approves us [contract] to take nft or take all of their nfts
@@ -44,6 +45,7 @@ contract Auction is IERC721Receiver, Ownable {
     address public winningAddress;
     uint public highestBid;
     mapping(address => uint) public pendingRefunds; // biddersAddress => theirBidAmount
+    mapping(address => uint) public extraPaymentRefunds; // biddersAddress => theirExtraBidAmount
     uint public _platformFeesAccumulated;
 
     event Bid(address from, uint amount);
@@ -125,19 +127,36 @@ contract Auction is IERC721Receiver, Ownable {
     }
 
     function bid() auctionHasStarted auctionHasNotEnded external payable {
+        console.log(msg.value);
         uint totalNextBid = highestBid + minimumBidIncrement;
-        require(msg.value == totalNextBid,
-            string(abi.encodePacked("the required bid amount is: ", totalNextBid.toString()))
-        );
-
-        uint platformFee = calculatePlatformFee(totalNextBid, platformFeeInBasisPoints);
-        _platformFeesAccumulated += platformFee;
-
-        pendingRefunds[winningAddress] += highestBid; // current highest bid
-        highestBid = totalNextBid; // new highest bid
-        winningAddress = msg.sender;
-        expiration = block.timestamp + auctionTimeIncrementOnBid;
+        console.log(totalNextBid);
+        uint platformFee;
+        if (msg.value >= totalNextBid){ // a good bad
+            console.log('good bid');
+            extraPaymentRefunds[msg.sender] += msg.value - totalNextBid; // extra money which came in
+            console.log('extraPaymentRefunds');
+            console.log(msg.value - totalNextBid);
+            platformFee = calculatePlatformFee(totalNextBid, platformFeeInBasisPoints);
+            console.log('platformFee');
+            console.log(platformFee);
+            _platformFeesAccumulated += platformFee;
+            console.log("_platformFeesAccumulated");
+            console.log(_platformFeesAccumulated);
+            pendingRefunds[winningAddress] += highestBid; // current highest bid
+            console.log(3);
+            highestBid = totalNextBid; // new highest bid
+            console.log(4);
+            winningAddress = msg.sender;
+            console.log(5);
+            expiration = block.timestamp + auctionTimeIncrementOnBid;
+            console.log(6);
+        } else if(msg.value < totalNextBid){ // a loosing bid
+            platformFee = calculatePlatformFee(msg.value, platformFeeInBasisPoints);
+            _platformFeesAccumulated += platformFee;
+            pendingRefunds[msg.sender] += msg.value;
+        }
         emit Bid(msg.sender, totalNextBid);
+        console.log('success');
     }
 
     function secondsLeftInAuction() external view returns(uint) {
@@ -170,6 +189,7 @@ contract Auction is IERC721Receiver, Ownable {
 
     function claimFinalBidAmount() auctionHasStarted auctionHasEnded
         thereIsAWinner youAreTheNftLister public {
+            require(highestBid != 0, 'the highest bid is 0');
             uint bidAmount = highestBid;
             uint platformFee = calculatePlatformFee(bidAmount, platformFeeInBasisPoints);
             bidAmount -= platformFee;
@@ -183,6 +203,13 @@ contract Auction is IERC721Receiver, Ownable {
         uint platformFee = calculatePlatformFee(bidAmount, platformFeeInBasisPoints);
         bidAmount -= platformFee;
         pendingRefunds[msg.sender] = 0;
+        _sendMoney(bidAmount);
+    }
+
+    function claimExtraPayments() external {
+        require(extraPaymentRefunds[msg.sender] > 0, "you have no refund due");
+        uint bidAmount = extraPaymentRefunds[msg.sender];
+        extraPaymentRefunds[msg.sender] = 0;
         _sendMoney(bidAmount);
     }
 

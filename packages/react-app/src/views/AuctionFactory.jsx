@@ -164,7 +164,7 @@ export default function AuctionFactory({
           />
           <Input
             value={auctionOptions.startingBid}
-            placeholder="Enter starting bid amount in ethers"
+            placeholder="Enter starting bid amount in wei"
             onChange={e => updateAuctionOptions('startingBid', e.target.value)}
           />
           <Input
@@ -179,7 +179,7 @@ export default function AuctionFactory({
           />
           <Input
             value={auctionOptions.minimumBidIncrement}
-            placeholder="Minimum increment of bid in ethers"
+            placeholder="Minimum increment of bid in wei"
             onChange={e => updateAuctionOptions('minimumBidIncrement', e.target.value)}
           />
         </Space>

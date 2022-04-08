@@ -17,7 +17,7 @@ export default function Header({link, title, subTitle}) {
 
 
 Header.defaultProps = {
-  link: "https://https://nftdeals.xyz/",
+  link: "https://nftdeals.xyz/",
   title: "NFTDeals.xyz",
-  subTitle: "Get premium NFT's for less as our auctions have no reserve and start at $1",
+  subTitle: "Premium NFT's for less as auctions start at $1 and have no reserve",
 }
