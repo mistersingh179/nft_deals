@@ -27,20 +27,13 @@ export default function AuctionList({
   blockExplorer,
 }) {
   const blockNumber = useBlockNumber(localProvider);
-  const auctionsCount = useContractReader(
-    readContracts,
-    "AuctionFactory",
-    "auctionsCount",
-    [],
-    undefined,
-    (val) => val.toString()
-  );
   const [auctions, setAuctions] = useState([]);
   const [auctionsDataByAddress, setAuctionsDataByAddress] = useState({});
   const [auctionsArray, setAuctionsArray] = useState([]);
 
   const setupAuctionsData = async () => {
-    if(readContracts && readContracts.AuctionFactory && readContracts.AuctionFactory.auctions){
+    if(readContracts && readContracts.AuctionFactory && readContracts.AuctionFactory){
+      const auctionsCount = await readContracts.AuctionFactory.auctionsCount()
       const auctions = [];
       const auctionsDataByAddress = {};
       const auctionsArray = [];
@@ -88,7 +81,7 @@ export default function AuctionList({
 
   useEffect( async () => {
     setupAuctionsData()
-  }, [readContracts, auctionsCount, blockNumber]);
+  }, [readContracts, blockNumber]);
 
   const startAuction = async (auctionContractAddress, e) => {
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){

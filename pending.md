@@ -1,3 +1,8 @@
+# Must
+- big int
+- static variables 
+- withdrawl permissions
+
 # Auction Factory
 - get stats from auctionFactory and show on front end
 - take care of constants in auctionFactory
