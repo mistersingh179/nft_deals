@@ -5,6 +5,7 @@ import Blockies from "react-blockies";
 import { useLookupAddress } from "eth-hooks/dapps/ens";
 import {ethers} from "ethers";
 import ERC721PresetMinterPauserAutoIdABI from "../abis/ERC721PresetMinterPauserAutoIdABI.json";
+import {Address} from "./index";
 
 const { Text } = Typography;
 
@@ -39,6 +40,10 @@ export default function NftImage(props) {
   }, [nftContractAddress, localProvider, tokenId])
 
   return (
-    <img src={nftTokenUrl} width={width} height={height} />
+    <div>
+      <img src={nftTokenUrl} width={width} height={height} /><br/><br/>
+      <Address address={nftContractAddress} fontSize={14}></Address>{}<br/><br/>
+      Token Id: {tokenId.toString()}
+    </div>
   );
 }

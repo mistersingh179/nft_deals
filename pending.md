@@ -1,5 +1,4 @@
 # Must
-- big int
 - static variables 
 - withdrawl permissions
 - listerFee

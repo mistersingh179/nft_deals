@@ -4,7 +4,7 @@ import moment from 'moment';
 import {
   useParams
 } from "react-router-dom";
-import {ethers, utils} from "ethers";
+import {ethers, utils, BigNumber} from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
 import { Address, Balance, Events } from "../components";
@@ -88,7 +88,8 @@ export default function Auction({
   const bid = async () => {
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
-      const amountToSend = parseInt(auctionOptions.highestBid) + (parseInt(auctionOptions.minimumBidIncrement) * 10)
+      const amountToSend = (BigNumber.from(auctionOptions.minimumBidIncrement).mul(10)).
+        add(BigNumber.from(auctionOptions.highestBid))
       console.log('amountToSend: ', amountToSend);
       await tx(
         auctionWriter.bid({value: amountToSend}),
@@ -144,7 +145,7 @@ export default function Auction({
         <Divider />
         <NftImage {...{nftContractAddress, tokenId, localProvider}} width={200} height={200}/>
         <Divider />
-        Current Highest Bid: {auctionOptions.highestBid}
+        Current Highest Bid: Ξ{auctionOptions.highestBid && utils.formatEther(auctionOptions.highestBid)}
         <Divider />
         Current Winner: {auctionOptions.winningAddress}<br/>
         <Text mark>
@@ -180,14 +181,14 @@ export default function Auction({
           Claim Nft upon Winning
         </Button>
         <Divider />
-        Pending Refund: {auctionOptions.pendingRefunds} Wei
+        Pending Refund: Ξ{auctionOptions.pendingRefunds && utils.formatEther(auctionOptions.pendingRefunds)}
         <br/>
         <Button disabled={auctionOptions.pendingRefunds == 0 ? true : false}
           onClick={claimRefunds}>
           Claim Loosing Bids
         </Button>
         <Divider />
-        Extra Payments Refund: {auctionOptions.extraPaymentRefunds} Wei
+        Extra Payments Refund: Ξ{auctionOptions.extraPaymentRefunds && utils.formatEther(auctionOptions.extraPaymentRefunds)}
         <br/>
         <Button disabled={auctionOptions.extraPaymentRefunds == 0 ? true : false}
           onClick={claimExtraPayments}>

@@ -141,12 +141,7 @@ export default function AuctionList({
   }
 
   const columns = [
-  {
-    title: 'NFT Contract Address',
-    dataIndex: 'nftContract',
-    key: 'nftContract',
-        render: (elem) => <Address address={elem} fontSize={14}></Address>
-  },
+
   {
     title: 'Address',
     dataIndex: 'key',
@@ -154,31 +149,26 @@ export default function AuctionList({
     render: (elem) => <Address address={elem} fontSize={14}></Address>
   },
   {
+  title: 'Nft Image',
+  dataIndex: 'tokenId',
+  key: 'tokenId',
+  render: (elem, record) => <NftImage
+      nftContractAddress={record.nftContract} tokenId={record.tokenId}
+      localProvider={localProvider} width={50} height={50}
+    />
+  },
+  {
     title: 'Balance',
     dataIndex: 'key',
     key: 'key',
-    render: (elem, record) => record.balance.toString()
+    render: (elem, record) => <span>Ξ {utils.formatEther(record.balance.toString())}</span>
   },
   {
     title: 'Platform Fees',
     dataIndex: '_platformFeesAccumulated',
     key: '_platformFeesAccumulated',
-    render: (elem) => elem.toString()
-  },
-  {
-    title: 'tokenId',
-    dataIndex: 'tokenId',
-    key: 'tokenId',
-    render: (elem) => elem.toString()
-  },
-  {
-    title: 'Nft Image',
-    dataIndex: 'tokenId',
-    key: 'tokenId',
-    render: (elem, record) => <NftImage
-      nftContractAddress={record.nftContract} tokenId={record.tokenId}
-      localProvider={localProvider} width={50} height={50}
-    />
+    render: (elem) => <span>Ξ{utils.formatEther(elem.toString())}</span>
+
   },
   {
     title: 'Expiraton',
@@ -190,13 +180,13 @@ export default function AuctionList({
     title: 'Highest Bid',
     dataIndex: 'highestBid',
     key: 'highestBid',
-    render: (elem) => elem.toString()
+    render: (elem) => <span>Ξ{utils.formatEther(elem.toString())}</span>
   },
   {
     title: 'Min Bid Increment',
     dataIndex: 'minimumBidIncrement',
     key: 'minimumBidIncrement',
-    render: (elem) => elem.toString()
+    render: (elem) => <span>Ξ{utils.formatEther(elem.toString())}</span>
   },
   {
     title: 'Action',
