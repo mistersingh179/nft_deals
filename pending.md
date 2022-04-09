@@ -1,7 +1,6 @@
-# Must
-- static variables 
-- withdrawl permissions
+# Must 
 - listerFee
+- deploy env
 
 # Auction Factory
 - get stats from auctionFactory and show on front end
@@ -11,6 +10,7 @@
 - give tokens per block
 - verify that they do have that nft
 - after created, do something, so they know it is done.
+- pass in env and load variables via library accordingly
 
 # Auction Listing
 - start it
@@ -34,5 +34,6 @@
 - show claimed
 - update all numbers on every block
 - claim nft, only when we have nft
+- suspension, pausing, etc.
 
 

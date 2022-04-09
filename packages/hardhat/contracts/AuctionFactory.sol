@@ -22,7 +22,8 @@ contract AuctionFactory {
         uint _initialAuctionLength,
         uint _auctionTimeIncrementOnBid,
         uint _minimumBidIncrement,
-        address _nftListerAddress
+        address _nftListerAddress,
+        uint _listerFeeInBasisPoints
     ) external{
         Auction pennyAuction = new Auction(
             nftContract, // _nftContractAddress
@@ -31,7 +32,8 @@ contract AuctionFactory {
             _initialAuctionLength, // 5 minutes // _initialAuctionLength
             _auctionTimeIncrementOnBid, // 1 minute // _auctionTimeIncrementOnBid
             _minimumBidIncrement, // 0.1 eth // _minimumBidIncrement
-            _nftListerAddress // chrome // _nftListerAddress
+            _nftListerAddress, // chrome // _nftListerAddress
+            _listerFeeInBasisPoints // 100 basis points // 1%
         );
         _saveNewAuction(_nftListerAddress, pennyAuction);
     }

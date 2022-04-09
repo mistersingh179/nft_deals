@@ -53,6 +53,7 @@ export default function AuctionList({
           const winningAddress = await auction.winningAddress();
           const _weHavePossessionOfNft = await auction._weHavePossessionOfNft();
           const _platformFeesAccumulated = await auction._platformFeesAccumulated();
+          const _listerFeesAccumulated = await auction._listerFeesAccumulated();
           const minimumBidIncrement = await auction.minimumBidIncrement();
           const balance = await localProvider.getBalance(auctionContractAddress);
           const myErc721 = new ethers.Contract(
@@ -65,7 +66,7 @@ export default function AuctionList({
           const data = { nftContract, tokenId, expiration,
             highestBid, minimumBidIncrement, weHaveApproval,
           _weHavePossessionOfNft, winningAddress,
-            balance, _platformFeesAccumulated }
+            balance, _platformFeesAccumulated, _listerFeesAccumulated }
           auctionsDataByAddress[auctionContractAddress] = { ...data}
           auctionsArray.push({
             ...data, key: auctionContractAddress
@@ -91,7 +92,6 @@ export default function AuctionList({
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
       await tx(auctionWriter.startAuction(), update => console.log(update));
-      setupAuctionsData()
     }
   };
 
@@ -99,7 +99,6 @@ export default function AuctionList({
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
       await tx(auctionWriter.claimNftWhenNoAction(), update => console.log(update));
-      setupAuctionsData()
     }
   };
 
@@ -107,7 +106,13 @@ export default function AuctionList({
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
       await tx(auctionWriter.claimFinalBidAmount(), update => console.log(update));
-      setupAuctionsData()
+    }
+  };
+
+  const claimListerFees = async (auctionContractAddress, e) => {
+    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      await tx(auctionWriter.claimListerFees(), update => console.log(update));
     }
   };
 
@@ -115,7 +120,6 @@ export default function AuctionList({
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
       await tx(auctionWriter.claimNftWhenNoAction(), update => console.log(update));
-      setupAuctionsData()
     }
   };
 
@@ -161,14 +165,18 @@ export default function AuctionList({
     title: 'Balance',
     dataIndex: 'key',
     key: 'key',
-    render: (elem, record) => <span>Ξ {utils.formatEther(record.balance.toString())}</span>
+    render: (elem, record) => <span>Ξ{utils.formatEther(record.balance.toString())}</span>
   },
   {
     title: 'Platform Fees',
     dataIndex: '_platformFeesAccumulated',
     key: '_platformFeesAccumulated',
-    render: (elem) => <span>Ξ{utils.formatEther(elem.toString())}</span>
-
+    render: (elem, record) => {return (
+      <div>
+        <div>Platform Fees: Ξ{utils.formatEther(record._platformFeesAccumulated.toString())}</div>
+        <div>Lister Fees: Ξ{utils.formatEther(record._listerFeesAccumulated.toString())}</div>
+      </div>
+    )}
   },
   {
     title: 'Expiraton',
@@ -216,8 +224,14 @@ export default function AuctionList({
         </Button>
         <br/>
         <Button disabled={(record.expiration > 0) ? false: true}
+          style={{marginBottom:4}}
           onClick={claimFinalBidAmount.bind(this, record.key)}>
           Claim Final Winning Bid
+        </Button>
+        <br/>
+        <Button disabled={(record.expiration > 0) ? false: true}
+          onClick={claimListerFees.bind(this, record.key)}>
+          Claim Lister Fees
         </Button>
       </div>
     ),

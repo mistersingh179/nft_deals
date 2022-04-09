@@ -35,8 +35,9 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
 
     bytes32 public constant CASHIER_ROLE = keccak256("CASHIER_ROLE");
     address public constant _rodAddress = 0x44791F3A984982499Dc582633D2b5BFc8F9850c5;
-    address public constant _sandeepAddress = 0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283;
+    address public constant _sandeepAddress = 0x6B09B3C63B72fF54Bcb7322B607E304a13Fba72B;
     uint public constant platformFeeInBasisPoints = 100;
+    uint public immutable listerFeeInBasisPoints;
 
     IERC721 public immutable nftContract;
     uint public immutable tokenId;
@@ -54,6 +55,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     mapping(address => uint) public pendingRefunds; // biddersAddress => theirBidAmount
     mapping(address => uint) public extraPaymentRefunds; // biddersAddress => theirExtraBidAmount
     uint public _platformFeesAccumulated;
+    uint public _listerFeesAccumulated;
 
     event Bid(address from, uint amount);
     event MoneyOut(address to, uint amount);
@@ -67,10 +69,12 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         uint _initialAuctionLength,
         uint _auctionTimeIncrementOnBid,
         uint _minimumBidIncrement,
-        address _nftListerAddress){
+        address _nftListerAddress,
+        uint _listerFeeInBasisPoints){
             nftContract = IERC721(_nftContractAddress);
             tokenId = _tokenId;
             nftListerAddress = _nftListerAddress;
+            listerFeeInBasisPoints = _listerFeeInBasisPoints;
             initialAuctionLength = _initialAuctionLength;
             highestBid = startBidAmount;
             auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;
@@ -130,7 +134,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         _;
     }
 
-    function calculatePlatformFee(uint amount, uint bp) pure public returns(uint){
+    function calculateFee(uint amount, uint bp) pure public returns(uint){
         return (amount * bp) / 10000;
     }
 
@@ -139,28 +143,22 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         uint totalNextBid = highestBid + minimumBidIncrement;
         console.log(totalNextBid);
         uint platformFee;
+        uint listerFee;
         if (msg.value >= totalNextBid){ // a good bad
-            console.log('good bid');
             extraPaymentRefunds[msg.sender] += msg.value - totalNextBid; // extra money which came in
-            console.log('extraPaymentRefunds');
-            console.log(msg.value - totalNextBid);
-            platformFee = calculatePlatformFee(totalNextBid, platformFeeInBasisPoints);
-            console.log('platformFee');
-            console.log(platformFee);
+            platformFee = calculateFee(totalNextBid, platformFeeInBasisPoints);
+            listerFee = calculateFee(totalNextBid, listerFeeInBasisPoints);
             _platformFeesAccumulated += platformFee;
-            console.log("_platformFeesAccumulated");
-            console.log(_platformFeesAccumulated);
+            _listerFeesAccumulated += listerFee;
             pendingRefunds[winningAddress] += highestBid; // current highest bid
-            console.log(3);
             highestBid = totalNextBid; // new highest bid
-            console.log(4);
             winningAddress = msg.sender;
-            console.log(5);
             expiration = block.timestamp + auctionTimeIncrementOnBid;
-            console.log(6);
         } else if(msg.value < totalNextBid){ // a loosing bid
-            platformFee = calculatePlatformFee(msg.value, platformFeeInBasisPoints);
+            platformFee = calculateFee(msg.value, platformFeeInBasisPoints);
+            listerFee = calculateFee(msg.value, listerFeeInBasisPoints);
             _platformFeesAccumulated += platformFee;
+            _listerFeesAccumulated += listerFee;
             pendingRefunds[msg.sender] += msg.value;
         }
         emit Bid(msg.sender, totalNextBid);
@@ -195,12 +193,20 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         _sendMoney(amountToSend);
     }
 
+    function claimListerFees() youAreTheNftLister external {
+        uint amountToSend = _listerFeesAccumulated;
+        _listerFeesAccumulated = 0;
+        _sendMoney(amountToSend);
+    }
+
     function claimFinalBidAmount() auctionHasStarted auctionHasEnded
         thereIsAWinner youAreTheNftLister public {
             require(highestBid != 0, 'the highest bid is 0');
             uint bidAmount = highestBid;
-            uint platformFee = calculatePlatformFee(bidAmount, platformFeeInBasisPoints);
+            uint platformFee = calculateFee(highestBid, platformFeeInBasisPoints);
+            uint listerFee = calculateFee(highestBid, listerFeeInBasisPoints);
             bidAmount -= platformFee;
+            bidAmount -= listerFee;
             highestBid = 0;
             _sendMoney(bidAmount);
     }
@@ -208,8 +214,10 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     function claimLoosingBids() external {
         require(pendingRefunds[msg.sender] > 0, "you have no refund due");
         uint bidAmount = pendingRefunds[msg.sender];
-        uint platformFee = calculatePlatformFee(bidAmount, platformFeeInBasisPoints);
+        uint platformFee = calculateFee(bidAmount, platformFeeInBasisPoints);
+        uint listerFee = calculateFee(bidAmount, listerFeeInBasisPoints);
         bidAmount -= platformFee;
+        bidAmount -= listerFee;
         pendingRefunds[msg.sender] = 0;
         _sendMoney(bidAmount);
     }

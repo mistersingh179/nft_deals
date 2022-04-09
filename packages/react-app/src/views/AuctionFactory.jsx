@@ -35,7 +35,8 @@ export default function AuctionFactory({
     startingBid: '',
     initialAuctionLength: '',
     auctionTimeIncrementOnBid: '',
-    minimumBidIncrement: ''
+    minimumBidIncrement: '',
+    listerFeeInBasisPoints: ''
   });
   const [auctionFactoryAddress, setAuctionFactoryAddress] = useState('');
   const blockNumber = useBlockNumber(localProvider);
@@ -49,7 +50,8 @@ export default function AuctionFactory({
         auctionOptions.initialAuctionLength,
         auctionOptions.auctionTimeIncrementOnBid,
         auctionOptions.minimumBidIncrement,
-        listerAddress
+        listerAddress,
+        auctionOptions.listerFeeInBasisPoints
       ), update => {
         console.log('*** create auction: ', update);
       }
@@ -163,6 +165,11 @@ export default function AuctionFactory({
             placeholder="Enter Lister Address"
             value={listerAddress}
             onChange={setListerAddress}
+          />
+          <Input
+            value={auctionOptions.listerFeeInBasisPoints}
+            placeholder="Enter lister fee in basis points"
+            onChange={e => updateAuctionOptions('listerFeeInBasisPoints', e.target.value)}
           />
           <Input
             value={auctionOptions.startingBid}

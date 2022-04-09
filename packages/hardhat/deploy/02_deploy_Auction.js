@@ -28,6 +28,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
       60, // 1 minute // _auctionTimeIncrementOnBid
       "100000000000000000", // 0.1 eth // _minimumBidIncrement
       "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283", // chrome // _nftListerAddress
+      "100", // 100 bp // 1% // listerFeeInBasisPoints
     ],
     log: true,
     waitConfirmations: 5,
