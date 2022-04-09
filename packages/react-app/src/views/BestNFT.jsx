@@ -35,19 +35,21 @@ export default function BestNFT({
     let tokenId, tokenUri, tokenObj;
     const arr = []
     if(readContracts && readContracts.BestNft && readContracts.BestNft){
-      const nftBalance = await readContracts.BestNft.balanceOf(address);
-      setNftBalance(nftBalance.toString())
-      for(let i=nftBalance-1;i >=0;i--){
-        tokenId = await readContracts.BestNft.tokenOfOwnerByIndex(address, i);
-        tokenId = tokenId.toString();
-        console.log(tokenId);
-        tokenUri = await readContracts.BestNft.tokenURI(tokenId);
-        // console.log(tokenUri);
-        tokenUri = tokenUri.replace('data:application/json;base64,', '')
-        tokenObj = JSON.parse(atob(tokenUri))
-        console.log(tokenObj);
-        arr.push({url: tokenObj.image, id: tokenId});
-      }
+      try {
+        const nftBalance = await readContracts.BestNft.balanceOf(address);
+        setNftBalance(nftBalance.toString())
+        for (let i = nftBalance - 1; i >= 0; i--) {
+          tokenId = await readContracts.BestNft.tokenOfOwnerByIndex(address, i);
+          tokenId = tokenId.toString();
+          console.log(tokenId);
+          tokenUri = await readContracts.BestNft.tokenURI(tokenId);
+          // console.log(tokenUri);
+          tokenUri = tokenUri.replace('data:application/json;base64,', '')
+          tokenObj = JSON.parse(atob(tokenUri))
+          console.log(tokenObj);
+          arr.push({url: tokenObj.image, id: tokenId});
+        }
+      }catch(e){console.error('getting nfts failed', e)}
       setNftUrls(arr);
     }
   }, [blockNumber]);

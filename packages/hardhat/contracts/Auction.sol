@@ -2,7 +2,6 @@ pragma solidity ^0.8.4;
 // SPDX-License-Identifier: GPL-3.0
 
 import "@openzeppelin/contracts/utils/Strings.sol";
-import "hardhat/console.sol";
 
 // someones deploy us [contract] with nft contract address
 // lister approves us [contract] to take nft or take all of their nfts
@@ -139,9 +138,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     }
 
     function bid() auctionHasStarted auctionHasNotEnded external payable {
-        console.log(msg.value);
         uint totalNextBid = highestBid + minimumBidIncrement;
-        console.log(totalNextBid);
         uint platformFee;
         uint listerFee;
         if (msg.value >= totalNextBid){ // a good bad
@@ -162,7 +159,6 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             pendingRefunds[msg.sender] += msg.value;
         }
         emit Bid(msg.sender, totalNextBid);
-        console.log('success');
     }
 
     function secondsLeftInAuction() external view returns(uint) {

@@ -68,8 +68,8 @@ const initialNetwork = NETWORKS.localhost; // <------- select your target fronte
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = true; // toggle burner wallet feature
-const USE_NETWORK_SELECTOR = false;
+const USE_BURNER_WALLET = false; // toggle burner wallet feature
+const USE_NETWORK_SELECTOR = true;
 
 const web3Modal = Web3ModalSetup();
 
@@ -486,9 +486,9 @@ function App(props) {
             blockExplorer={blockExplorer}
           />
         </div>
-        {yourLocalBalance.lte(ethers.BigNumber.from("0")) && (
-          <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
-        )}
+        {/*{yourLocalBalance.lte(ethers.BigNumber.from("0")) && (*/}
+        {/*  <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />*/}
+        {/*)}*/}
       </div>
 
       {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}

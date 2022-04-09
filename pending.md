@@ -1,6 +1,7 @@
 # Must 
-- listerFee
 - deploy env
+- read values without metamask 
+- message that metamask is not connected
 
 # Auction Factory
 - get stats from auctionFactory and show on front end
