@@ -33,5 +33,30 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     log: true,
     waitConfirmations: 5,
   });
+
+  const theAuctionContract = await ethers.getContract("Auction", deployer);
+  console.log("deployed Auction contract here: ", theAuctionContract.address);
+
+  try {
+    if (chainId !== localChainId) {
+      console.log("will verify");
+      await run("verify:verify", {
+        address: theAuctionContract.address,
+        contract: "contracts/Auction.sol:Auction",
+        constructorArguments: [
+          "0x5FbDB2315678afecb367f032d93F642f64180aa3", // _nftContractAddress
+          6, // tokenId
+          "10000000000000000000", // 10 eth // startBidAmount
+          5 * 60, // 5 minutes // _initialAuctionLength
+          60, // 1 minute // _auctionTimeIncrementOnBid
+          "100000000000000000", // 0.1 eth // _minimumBidIncrement
+          "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283", // chrome // _nftListerAddress
+          "100", // 100 bp // 1% // listerFeeInBasisPoints
+        ],
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 module.exports.tags = ["YourContract"];

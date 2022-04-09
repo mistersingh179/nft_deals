@@ -4,6 +4,10 @@
 yarn deploy --watch
 yarn chain
 yarn start
+yarn build
+yarn deploy
+yarn deploy --network rinkeby
+yarn verify --network rinkeby
 ```
 
 # questions
