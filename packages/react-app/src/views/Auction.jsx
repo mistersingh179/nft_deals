@@ -62,7 +62,7 @@ export default function Auction({
     })
   }
   const setupAuctionOptions = async () => {
-    if(readContracts && readContracts.Auction && readContracts.Auction.interface){
+    if(address && readContracts && readContracts.Auction && readContracts.Auction.interface){
       const auctionReader = readContracts.Auction.attach(auctionContractAddress);
       const winningAddress = await auctionReader.winningAddress();
       const highestBid = await auctionReader.highestBid();
@@ -82,7 +82,7 @@ export default function Auction({
   }
   useEffect(async () => {
     setupAuctionOptions()
-  }, [readContracts, auctionContractAddress, blockNumber]);
+  }, [readContracts, auctionContractAddress, blockNumber, address]);
 
   const approve = () => { }
   const bid = async () => {
@@ -129,7 +129,6 @@ export default function Auction({
     }
   }
   const fundsApproved = true
-
   return (
     <div>
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 32 }}>
@@ -149,7 +148,7 @@ export default function Auction({
         <Divider />
         Current Winner: {auctionOptions.winningAddress}<br/>
         <Text mark>
-          {auctionOptions.winningAddress == address ? "This is you! :=)": "Not you :-("}
+          {(address) && (auctionOptions.winningAddress == address) ? "This is you! :=)": "Not you :-("}
         </Text>
 
         <Divider />
