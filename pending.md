@@ -1,7 +1,27 @@
+- splash modal, select rinkeby
+- figure out infuria requests
+
 # Must 
 - deploy env
 - read values without metamask 
 - message that metamask is not connected
+
+# best practice
+- pause (circuit breaker)
+- suspend ( circuit breaker)
+- put limits ( how much money can go in and how fast etc. )
+  - should we be required to make withdraws, and if withdraws missing  then it limits
+  - does it require a pulse from us to stay active or it limits
+- upgrade & bug fix strategy
+- modularize
+- rollout? 
+  - limit users 
+  - limit award
+  - increase slowly
+- external contract calls
+  - we only do this when refunding money & that is pull based.
+- use check-effect-interact pattern, need to double check everywhere for it.
+
 
 # Auction Factory
 - get stats from auctionFactory and show on front end
