@@ -37,43 +37,39 @@ export default function AuctionList({
       const auctions = [];
       const auctionsDataByAddress = {};
       const auctionsArray = [];
-      try{
-        for(var i=0;i<auctionsCount;i++){
-          const auctionContractAddress = await readContracts.AuctionFactory.auctions(i);
-          const auctionCode = await localProvider.getCode(auctionContractAddress);
-          if(auctionCode == '0x'){
-            continue
-          }
-          auctions.push(auctionContractAddress);
-          const auction = readContracts.Auction.attach(auctionContractAddress);
-          const nftContract = await auction.nftContract();
-          const tokenId = await auction.tokenId();
-          const expiration = await auction.expiration();
-          const highestBid = await auction.highestBid();
-          const winningAddress = await auction.winningAddress();
-          const _weHavePossessionOfNft = await auction._weHavePossessionOfNft();
-          const _platformFeesAccumulated = await auction._platformFeesAccumulated();
-          const _listerFeesAccumulated = await auction._listerFeesAccumulated();
-          const minimumBidIncrement = await auction.minimumBidIncrement();
-          const balance = await localProvider.getBalance(auctionContractAddress);
-          const myErc721 = new ethers.Contract(
-            nftContract,
-            ERC721PresetMinterPauserAutoIdABI,
-            userSigner
-          );
-          const nftApproval = await myErc721.getApproved(tokenId.toString());
-          const weHaveApproval = (nftApproval == auctionContractAddress)
-          const data = { nftContract, tokenId, expiration,
-            highestBid, minimumBidIncrement, weHaveApproval,
-          _weHavePossessionOfNft, winningAddress,
-            balance, _platformFeesAccumulated, _listerFeesAccumulated }
-          auctionsDataByAddress[auctionContractAddress] = { ...data}
-          auctionsArray.push({
-            ...data, key: auctionContractAddress
-          })
+      for(var i=0;i<auctionsCount;i++){
+        const auctionContractAddress = await readContracts.AuctionFactory.auctions(i);
+        const auctionCode = await localProvider.getCode(auctionContractAddress);
+        if(auctionCode == '0x'){
+          continue
         }
-      }catch(e){
-        console.error('unable to get auction: ', e)
+        auctions.push(auctionContractAddress);
+        const auction = readContracts.Auction.attach(auctionContractAddress);
+        const nftContract = await auction.nftContract();
+        const tokenId = await auction.tokenId();
+        const expiration = await auction.expiration();
+        const highestBid = await auction.highestBid();
+        const winningAddress = await auction.winningAddress();
+        const _weHavePossessionOfNft = await auction._weHavePossessionOfNft();
+        const _platformFeesAccumulated = await auction._platformFeesAccumulated();
+        const _listerFeesAccumulated = await auction._listerFeesAccumulated();
+        const minimumBidIncrement = await auction.minimumBidIncrement();
+        const balance = await localProvider.getBalance(auctionContractAddress);
+        const myErc721 = new ethers.Contract(
+          nftContract,
+          ERC721PresetMinterPauserAutoIdABI,
+          userSigner
+        );
+        const nftApproval = await myErc721.getApproved(tokenId.toString());
+        const weHaveApproval = (nftApproval == auctionContractAddress)
+        const data = { nftContract, tokenId, expiration,
+          highestBid, minimumBidIncrement, weHaveApproval,
+        _weHavePossessionOfNft, winningAddress,
+          balance, _platformFeesAccumulated, _listerFeesAccumulated }
+        auctionsDataByAddress[auctionContractAddress] = { ...data}
+        auctionsArray.push({
+          ...data, key: auctionContractAddress
+        })
       }
       setAuctionsDataByAddress(auctionsDataByAddress);
       setAuctionsArray(auctionsArray);
@@ -85,7 +81,12 @@ export default function AuctionList({
   }
 
   useEffect( async () => {
-    setupAuctionsData()
+    try{
+      setupAuctionsData()
+    }catch(e){
+      console.error('error getting auction data');
+      console.error(e);
+    }
   }, [readContracts, blockNumber]);
 
   const startAuction = async (auctionContractAddress, e) => {

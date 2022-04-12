@@ -7,6 +7,7 @@ import {Address, Balance, Events, AddressInput, EtherInput} from "../components"
 import ERC721PresetMinterPauserAutoIdABI from "../abis/ERC721PresetMinterPauserAutoIdABI.json"
 import Text from "antd/es/typography/Text";
 import {useBlockNumber, useContractReader} from "eth-hooks";
+import NftImage from "../components/NftImage";
 
 console.log(ERC721PresetMinterPauserAutoIdABI);
 
@@ -28,7 +29,6 @@ export default function AuctionFactory({
   const [newPurpose, setNewPurpose] = useState("loading...");
   const [nftContractAddress, setNftContractAddress] = useState("");
   const [nftTokenId, setNftTokenId] = useState("");
-  const [nftTokenUrl, setNftTokenUrl] = useState("");
   const [nftOwner, setNftOwner] = useState("");
   const [listerAddress, setListerAddress] = useState("");
   const [auctionOptions, setAuctionOptions] = useState({
@@ -59,58 +59,53 @@ export default function AuctionFactory({
 
   }
 
-  useEffect(() => {
-    if(readContracts && readContracts.AuctionFactory) {
-      setAuctionFactoryAddress(readContracts.AuctionFactory.address)
-    }
-  }, [readContracts])
-
   const updateAuctionOptions = (name, value) => {
     setAuctionOptions(prev => {
       return {...prev, [name]: value}
     })
   }
 
-  useEffect(async () => {
-    if(nftContractAddress && nftTokenId){
+  const setupNftOwner = async (addr, id) => {
+    if(addr && id){
+      const myErc721 = new ethers.Contract(
+        addr,
+        ERC721PresetMinterPauserAutoIdABI,
+        localProvider
+      );
       try{
-        const myErc721 = new ethers.Contract(
-          nftContractAddress,
-          ERC721PresetMinterPauserAutoIdABI,
-          localProvider
-        );
-        let tokenUri = await myErc721.tokenURI(nftTokenId)
-        tokenUri = tokenUri.replace('data:application/json;base64,', '')
-        tokenUri = JSON.parse(atob(tokenUri))
-        console.log(tokenUri.image);
-        setNftTokenUrl(tokenUri.image);
-
-        let nftOwner = await myErc721.ownerOf(nftTokenId);
+        let nftOwner = await myErc721.ownerOf(id);
         setNftOwner(nftOwner);
-      }catch(err){
-        setNftTokenUrl('https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg');
-        // setNftOwner('');
+      }catch(e) {
+        setNftOwner('')
       }
+    }
+  }
+
+  useEffect(async () => {
+    try{
+      await setupNftOwner(nftContractAddress, nftTokenId);
+    }catch(e){
+      console.error('unable to get nft owner');
+      console.error(e);
     }
   }, [nftContractAddress, nftTokenId])
 
   const approve = async () => {
     try{
-      const myErc721 = new ethers.Contract(
-        nftContractAddress,
-        ERC721PresetMinterPauserAutoIdABI,
-        userSigner
-      );
-      console.log('calling approve for tokenId:', nftTokenId, 'at contract: ', auctionFactoryAddress);
-      const result = await myErc721.approve(auctionFactoryAddress, nftTokenId);
-      console.log(result);
-      let nftApproval = await myErc721.getApproved(nftTokenId);
-      console.log('nft approval is with: ', nftApproval);
-      // setNftApproved(nftApproval == auctionFactoryAddress)
-      }catch(err){
-        console.error('error while getting approval');
-        console.error(err);
+      if(readContracts && readContracts.AuctionFactory && readContracts.AuctionFactory.address){
+        const myErc721 = new ethers.Contract(
+          nftContractAddress,
+          ERC721PresetMinterPauserAutoIdABI,
+          userSigner
+        );
+        const result = await myErc721.approve(readContracts.AuctionFactory.address, nftTokenId);
+        let nftApproval = await myErc721.getApproved(nftTokenId);
+        console.log('nft approval is with: ', nftApproval);
       }
+    }catch(err){
+      console.error('error while getting approval');
+      console.error(err);
+    }
   }
 
   return (
@@ -120,7 +115,7 @@ export default function AuctionFactory({
         <Divider />
         Auction Factory Contract Address:
         <Address
-          address={auctionFactoryAddress}
+          address={readContracts && readContracts.AuctionFactory && readContracts.AuctionFactory.address}
           ensProvider={mainnetProvider}
           fontSize={16}
           blockExplorer={blockExplorer}
@@ -138,7 +133,10 @@ export default function AuctionFactory({
             value={nftTokenId}
             onChange={e => setNftTokenId(e.target.value)}
           />
-          <img src={nftTokenUrl} height={200}/>
+          <NftImage nftContractAddress={nftContractAddress}
+                    tokenId={nftTokenId}
+                    localProvider={localProvider}
+                    height={200} />
           {nftOwner && nftOwner == address &&
             <div>Currently owned by you:
               <Address

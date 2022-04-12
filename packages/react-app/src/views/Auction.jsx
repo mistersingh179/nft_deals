@@ -32,7 +32,7 @@ export default function Auction({
 
   const [tokenId, setTokenId] = useState("")
   const [nftContractAddress, setNftContractAddress] = useState("")
-  useEffect(async () => {
+  const setupNftAddressAndId = async () => {
     if(readContracts && readContracts.Auction && readContracts.Auction.interface){
       const auctionReader = readContracts.Auction.attach(auctionContractAddress);
       const nftContractAddress = await auctionReader.nftContract();
@@ -40,11 +40,16 @@ export default function Auction({
       const tokenId = await auctionReader.tokenId()
       setTokenId(tokenId.toString())
     }
-    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
-      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
-      // await tx(auctionWriter.doEmptyTransaction(), update => console.log(update));
+  }
+
+  useEffect(async () => {
+    try{
+      await setupNftAddressAndId()
+    }catch(e){
+      console.error('error getting nft address and id')
+      console.error(e)
     }
-  }, [writeContracts, readContracts, auctionContractAddress])
+  }, [readContracts, auctionContractAddress])
 
   const blockNumber = useBlockNumber(localProvider);
   const [auctionOptions, setAuctionOptions] = useState({
@@ -81,10 +86,14 @@ export default function Auction({
     }
   }
   useEffect(async () => {
-    setupAuctionOptions()
+    try{
+      await setupAuctionOptions()
+    }catch(e){
+      console.error('error getting auction options')
+      console.error(e)
+    }
   }, [readContracts, auctionContractAddress, blockNumber, address]);
 
-  const approve = () => { }
   const bid = async () => {
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);

@@ -1,10 +1,11 @@
-import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
+import {Button, Card, DatePicker, Divider, Input, List, Progress, Slider, Spin, Switch} from "antd";
 import React, {useEffect, useState} from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
 import { Address, Balance, Events } from "../components";
 import {useBlockNumber, useContractReader} from "eth-hooks";
+import NftImage from "../components/NftImage";
 
 export default function BestNFT({
   purpose,
@@ -19,7 +20,7 @@ export default function BestNFT({
 }) {
   const [newPurpose, setNewPurpose] = useState("loading...");
   const blockNumber = useBlockNumber(localProvider);
-
+  console.log('*** address: ', address)
   const mintNft = async () => {
     console.log("inside mintNft");
     const result = await tx(writeContracts.BestNft.mint(address));
@@ -27,30 +28,32 @@ export default function BestNFT({
     console.log("finished mintNft");
   }
 
-  const [nftUrls, setNftUrls] = useState([]);
   const [nftBalance, setNftBalance] = useState([]);
+  const [nftTokens, setNftTokens] = useState([]);
 
-  useEffect(async () => {
-    console.log("in effect to get NFT's")
+  const getNftBalanceAndTokens = async () => {
     let tokenId, tokenUri, tokenObj;
     const arr = []
     if(readContracts && readContracts.BestNft && readContracts.BestNft){
-      try {
-        const nftBalance = await readContracts.BestNft.balanceOf(address);
-        setNftBalance(nftBalance.toString())
-        for (let i = nftBalance - 1; i >= 0; i--) {
-          tokenId = await readContracts.BestNft.tokenOfOwnerByIndex(address, i);
-          tokenId = tokenId.toString();
-          console.log(tokenId);
-          tokenUri = await readContracts.BestNft.tokenURI(tokenId);
-          // console.log(tokenUri);
-          tokenUri = tokenUri.replace('data:application/json;base64,', '')
-          tokenObj = JSON.parse(atob(tokenUri))
-          console.log(tokenObj);
-          arr.push({url: tokenObj.image, id: tokenId});
-        }
-      }catch(e){console.error('getting nfts failed', e)}
-      setNftUrls(arr);
+      const nftBalance = await readContracts.BestNft.balanceOf(address);
+      setNftBalance(nftBalance.toString())
+
+      for (let i = nftBalance - 1; i >= 0; i--) {
+        tokenId = await readContracts.BestNft.tokenOfOwnerByIndex(address, i);
+        tokenId = tokenId.toString();
+        arr.push(tokenId);
+      }
+      setNftTokens(arr);
+    }
+  }
+
+  useEffect(async () => {
+    try {
+      await getNftBalanceAndTokens()
+    }
+    catch(e){
+      console.error('unable to get nft urls and balance')
+      console.error(e)
     }
   }, [blockNumber]);
 
@@ -65,7 +68,7 @@ export default function BestNFT({
         <div style={{ margin: 8 }}>
           NFT Contract Address:{' '}
           <Address
-            address={readContracts && readContracts.BestNft ? readContracts.BestNft.address : null}
+            address={readContracts && readContracts.BestNft && readContracts.BestNft.address}
             ensProvider={mainnetProvider}
             fontSize={16}
           />
@@ -75,14 +78,22 @@ export default function BestNFT({
           </Button>
         </div>
         <Divider />
-        <ul>
-          {nftUrls.map(item => {
-            return <li key={item.id}>
-              <img width={100} height={100} src={item.url} /><br/>
-              Token Id: {item.id}
-            </li>;
-          })}
-        </ul>
+        <List
+          header={<div>Your NFT's</div>}
+          footer={''}
+          bordered
+          dataSource={nftTokens}
+          renderItem={item => (
+            <List.Item>
+              <NftImage nftContractAddress={readContracts && readContracts.BestNft && readContracts.BestNft.address}
+                tokenId={item}
+                localProvider={localProvider}
+                height={100}
+                style={{margin: 'auto'}}
+              />
+            </List.Item>
+          )}
+        />
         <Divider />
         Your NFT Balance: {nftBalance}
         <Divider />

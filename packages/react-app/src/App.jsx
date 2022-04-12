@@ -70,6 +70,7 @@ const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <----
 const DEBUG = true;
 const NETWORKCHECK = true;
 const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET; // toggle burner wallet feature
+console.log('*** USE_BURNER_WALLET', USE_BURNER_WALLET);
 const USE_NETWORK_SELECTOR = true;
 
 const web3Modal = Web3ModalSetup();

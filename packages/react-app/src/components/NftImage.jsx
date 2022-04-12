@@ -15,35 +15,44 @@ export default function NftImage(props) {
     tokenId,
     localProvider,
     width,
-    height
+    height,
+    style
   } = props
 
   const [nftTokenUrl, setNftTokenUrl] = useState("");
 
-  useEffect(async () => {
+  const setupTokeUrl = async () => {
     if(nftContractAddress && localProvider && tokenId){
-      try{
-        const myErc721 = new ethers.Contract(
-          nftContractAddress,
-          ERC721PresetMinterPauserAutoIdABI,
-          localProvider
-        );
-        let tokenUri = await myErc721.tokenURI(tokenId)
-        tokenUri = tokenUri.replace('data:application/json;base64,', '')
-        tokenUri = JSON.parse(atob(tokenUri))
-        console.log(tokenUri.image);
-        setNftTokenUrl(tokenUri.image);
-      }catch(e){
-        setNftTokenUrl('https://www.publicdomainpictures.net/pictures/280000/nahled/not-found-image-15383864787lu.jpg');
-      }
+      const myErc721 = new ethers.Contract(
+        nftContractAddress,
+        ERC721PresetMinterPauserAutoIdABI,
+        localProvider
+      );
+      let tokenUri = await myErc721.tokenURI(tokenId)
+      tokenUri = tokenUri.replace('data:application/json;base64,', '')
+      tokenUri = JSON.parse(atob(tokenUri))
+      setNftTokenUrl(tokenUri.image);
     }
+  }
+
+  useEffect(async () => {
+    try{
+      await setupTokeUrl()
+    }catch(e){
+      console.error('unable to get nft token URL')
+      setNftTokenUrl('')
+    }
+
   }, [nftContractAddress, localProvider, tokenId])
 
+  if(!nftTokenUrl){
+    return <Skeleton />
+  }
+
   return (
-    <div>
+    <div style={style}>
       <img src={nftTokenUrl} width={width} height={height} /><br/><br/>
-      <Address address={nftContractAddress} fontSize={14}></Address>{}<br/><br/>
-      Token Id: {tokenId.toString()}
+      <Address address={nftContractAddress} fontSize={14}></Address> Token Id: {tokenId && tokenId.toString()}
     </div>
   );
 }
