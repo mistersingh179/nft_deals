@@ -63,12 +63,13 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const initialNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+console.log('***process.env.REACT_APP_INITIAL_NETWORK: ', process.env.REACT_APP_INITIAL_NETWORK)
+const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = false; // toggle burner wallet feature
+const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = true;
 
 const web3Modal = Web3ModalSetup();

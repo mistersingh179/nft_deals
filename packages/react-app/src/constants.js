@@ -1,13 +1,13 @@
 // MY INFURA_ID, SWAP IN YOURS FROM https://infura.io/dashboard/ethereum
-export const INFURA_ID = "4dd76a24cb4540f0aa51b55a3f9a4529";
+export const INFURA_ID = process.env.REACT_APP_INFURA_PROJECT_ID;
 
 // MY ETHERSCAN_ID, SWAP IN YOURS FROM https://etherscan.io/myapikey
-export const ETHERSCAN_KEY = "4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK";
+export const ETHERSCAN_KEY = process.env.REACT_APP_ETHER_SCAN_API_KEY_TOKEN;
 
 // BLOCKNATIVE ID FOR Notify.js:
-export const BLOCKNATIVE_DAPPID = "1cb4a0b8-24d7-411d-a85d-4f95285b5578";
+export const BLOCKNATIVE_DAPPID = process.env.REACT_APP_BLOCKNATIVE_KEY;
 
-export const ALCHEMY_KEY = "FHWz7t5dvoYzhr2mnPSFY2K6xivzKo-e";
+export const ALCHEMY_KEY = process.env.REACT_APP_ALCHEMY_API_KEY;
 
 export const NETWORKS = {
   localhost: {

@@ -18,4 +18,16 @@ yarn verify --network rinkeby
 # notes
 - there is no servie worker here, and we are using direct urls to nested routes. since no server to redirect to index.html we host `200.html` and that is rendered by `surge.sh`, but urls in `index.html` are relative due to `"homepage": "."` in `package.json`, which means a nested route will give `200.html` which will have realative paths to load javascript assets and fail. one way to solve it is to remove nested urls and the index.html will load from `/`. other way is redirect all unknown urls to `index.html`.
 https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routing
-- 
+
+# faq
+
+## why so many infura calls?
+
+- if `REACT_APP_PROVIDER` is present, we will use that as our local provider. we had this set to infura rinkeby and that is what was being used. so I have removed the variable from `.env`. now it will pick up provider from constants.js `NETWORK` object. and this is selected from the switch. so our switch will now decide what provider url is. 
+- in development, we may optionally have `REACT_APP_PROVIDER` setup to always go to one url, as with this setup, then network switch is not selecting the injected url. going to leave this out for now to avoid confusion.
+  
+## what is alchemy doing here?
+
+- we are using it for `mainnet` provider in app.jsx
+- we are also using it for `mainnet` in web3ModalSetup
+

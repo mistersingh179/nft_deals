@@ -1,5 +1,13 @@
-- splash modal, select rinkeby
 - figure out infuria requests
+- splash modal, select rinkeby
+- env variable to complete shift between local, rinkeby & mainnet, had to take our react env
+- metamask chain error Internal JSON-RPC error.
+- disable buttons while waiting for tx
+- previous bids with address & amount & tx id
+- countdown timer
+
+ERC20
+reward
 
 # Must 
 - deploy env
