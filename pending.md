@@ -1,6 +1,3 @@
-- env variable to complete shift between local, rinkeby & mainnet, had to take our react env
-- metamask chain error Internal JSON-RPC error.
-- occasionally getting out of gas error from metamask
 - make platform fee match lister fee
 - make platform fee have floor
 - make custom method to override pltform fee

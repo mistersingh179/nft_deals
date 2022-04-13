@@ -100,8 +100,9 @@ export default function Auction({
       const amountToSend = (BigNumber.from(auctionOptions.minimumBidIncrement).mul(10)).
         add(BigNumber.from(auctionOptions.highestBid))
       console.log('amountToSend: ', amountToSend);
+      const estimate = await auctionWriter.estimateGas.bid({value: amountToSend});
       await tx(
-        auctionWriter.bid({value: amountToSend}),
+        auctionWriter.bid({value: amountToSend, gasLimit: estimate.mul(13).div(10)}),
         update => console.log(update)
       );
       setupAuctionOptions()
