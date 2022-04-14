@@ -70,8 +70,7 @@ const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <----
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
-// const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET; // toggle burner wallet feature
-const USE_BURNER_WALLET = true
+const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET; // toggle burner wallet feature
 console.log('*** USE_BURNER_WALLET', USE_BURNER_WALLET);
 const USE_NETWORK_SELECTOR = true;
 
