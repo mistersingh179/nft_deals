@@ -240,9 +240,9 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         console.log(amount);
         bool result = weth.transfer(recipient, amount);
         if(result == true){
-            emit FailedToSendMoney(recipient, amount);
-        }else{
             emit MoneyOut(recipient, amount);
+        }else{
+            emit FailedToSendMoney(recipient, amount);
         }
     }
 
