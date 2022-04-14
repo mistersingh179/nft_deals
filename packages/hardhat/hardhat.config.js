@@ -73,7 +73,7 @@ module.exports = {
       */
     },
     rinkeby: {
-      url: `https://rinkeby.infura.io/v3/{process.env.RINKEBY_INFURA_KEY}`,
+      url: `https://rinkeby.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
       //    url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/eth/rinkeby", // <---- YOUR MORALIS ID! (not limited to infura)
       accounts: {
         mnemonic: mnemonic(),
@@ -87,7 +87,7 @@ module.exports = {
       },
     },
     mainnet: {
-      url: `https://rinkeby.infura.io/v3/{process.env.RINKEBY_INFURA_KEY}`,
+      url: `https://rinkeby.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
       //      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXXXX/eth/mainnet", // <---- YOUR MORALIS ID! (not limited to infura)
       gasPrice: mainnetGwei * 1000000000,
       accounts: {
