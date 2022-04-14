@@ -63,7 +63,7 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
           result = await tx;
         } else {
           if (!tx.gasPrice) {
-            tx.gasPrice = gasPrice || ethers.utils.parseUnits("4.1", "gwei");
+            tx.gasPrice = gasPrice || ethers.utils.parseUnits("50", "gwei");
           }
           if (!tx.gasLimit) {
             tx.gasLimit = ethers.utils.hexlify(120000);

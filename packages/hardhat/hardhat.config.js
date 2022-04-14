@@ -73,7 +73,7 @@ module.exports = {
       */
     },
     rinkeby: {
-      url: "https://rinkeby.infura.io/v3/4dd76a24cb4540f0aa51b55a3f9a4529", // <---- YOUR INFURA ID! (or it won't work)
+      url: `https://rinkeby.infura.io/v3/{process.env.RINKEBY_INFURA_KEY}`,
       //    url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/eth/rinkeby", // <---- YOUR MORALIS ID! (not limited to infura)
       accounts: {
         mnemonic: mnemonic(),
@@ -87,7 +87,7 @@ module.exports = {
       },
     },
     mainnet: {
-      url: "https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
+      url: `https://rinkeby.infura.io/v3/{process.env.RINKEBY_INFURA_KEY}`,
       //      url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXXXX/eth/mainnet", // <---- YOUR MORALIS ID! (not limited to infura)
       gasPrice: mainnetGwei * 1000000000,
       accounts: {
@@ -287,6 +287,15 @@ module.exports = {
           },
         },
       },
+      {
+        version: "0.4.18",
+        settings: {
+          optimizer: {
+            enabled: false,
+            runs: 0,
+          },
+        },
+      },
     ],
   },
   ovm: {
@@ -299,8 +308,8 @@ module.exports = {
   },
   etherscan: {
     apiKey: {
-      mainnet: "4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK",
-      rinkeby: "4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK",
+      mainnet: process.env.ETHER_SCAN_API_KEY_TOKEN,
+      rinkeby: process.env.ETHER_SCAN_API_KEY_TOKEN,
       // add other network's API key here
     },
   },

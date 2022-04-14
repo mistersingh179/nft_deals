@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useBalance } from "eth-hooks";
+import {useBalance, useContractReader} from "eth-hooks";
 
 const { utils } = require("ethers");
 
@@ -30,9 +30,18 @@ const { utils } = require("ethers");
 **/
 
 export default function Balance(props) {
-  const [dollarMode, setDollarMode] = useState(true);
+  const [dollarMode, setDollarMode] = useState(false);
 
-  const balance = useBalance(props.provider, props.address);
+  //const balance = useBalance(props.provider, props.address);
+  const balance = useContractReader(
+    props.readContracts,
+    "WETH",
+    "balanceOf",
+    [props.address]
+  );
+
+  // console.log('*** WETH', balance && utils.formatEther(balance), ' at :', props.address, props.readContracts)
+
   let floatBalance = parseFloat("0.00");
   let usingBalance = balance;
 
@@ -45,7 +54,7 @@ export default function Balance(props) {
     floatBalance = parseFloat(etherBalance);
   }
 
-  let displayBalance = floatBalance.toFixed(4);
+  let displayBalance = "WETH " + floatBalance.toFixed(4);
 
   const price = props.price || props.dollarMultiplier || 1;
 

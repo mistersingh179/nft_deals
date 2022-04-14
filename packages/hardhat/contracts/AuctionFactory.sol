@@ -8,6 +8,11 @@ contract AuctionFactory {
     uint public auctionsCount;
     mapping(address => Auction[]) public auctionsByLister;
     mapping(address => uint) public auctionSizeByLister;
+    address public immutable wethAddress;
+
+    constructor(address _addr){
+        wethAddress = _addr;
+    }
 
     function getAuction(uint index) public view returns(Auction){
         return auctions[index];
@@ -33,7 +38,8 @@ contract AuctionFactory {
             _auctionTimeIncrementOnBid, // 1 minute // _auctionTimeIncrementOnBid
             _minimumBidIncrement, // 0.1 eth // _minimumBidIncrement
             _nftListerAddress, // chrome // _nftListerAddress
-            _listerFeeInBasisPoints // 100 basis points // 1%
+            _listerFeeInBasisPoints, // 100 basis points // 1%
+            wethAddress // address given to us when constructed per chain.
         );
         _saveNewAuction(_nftListerAddress, pennyAuction);
     }

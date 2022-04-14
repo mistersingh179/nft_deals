@@ -796,6 +796,18 @@ module.exports = {
         address: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
         abi: ERC20ABI,
       },
+      WETH: {
+        address: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+        abi: ERC20ABI,
+      }
     },
+  },
+  4: {
+    contracts: {
+      WETH: {
+        address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
+        abi: ERC20ABI,
+      }
+    }
   }
 };

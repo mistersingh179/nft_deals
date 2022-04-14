@@ -36,6 +36,7 @@ import {
   Hints,
   Subgraph,
   BestNFT,
+  WETH,
   AuctionFactory,
   Auction,
   AuctionList,
@@ -69,7 +70,8 @@ const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <----
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET; // toggle burner wallet feature
+// const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET; // toggle burner wallet feature
+const USE_BURNER_WALLET = true
 console.log('*** USE_BURNER_WALLET', USE_BURNER_WALLET);
 const USE_NETWORK_SELECTOR = true;
 
@@ -179,8 +181,9 @@ function App(props) {
   ]);
 
   // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts, "", "purpose");
-
+  const purpose = useContractReader(readContracts, "YourContract", "purpose");
+  // const wethBalance = useContractReader(readContracts, "WETH", "balanceOf", [address]);
+  // console.log('*** WETH', wethBalance && wethBalance.toString(), ' at :', address)
   /*YourContract
   const addressFromENS = useResolveName(mainnetProvider, "austingriffith.eth");
   console.log("🏷 Resolved austingriffith.eth as:",addressFromENS)
@@ -259,15 +262,15 @@ function App(props) {
 
   const [auctionContract, setAuctionContract] = useState('')
 
-  const handleAuctionIdChange = (auctionId) => {
-    if(!auctionId || !ethers.utils.isAddress(auctionId)) {
+  const handleAuctionAddressChange = (auctionAddress) => {
+    if(!auctionAddress || !ethers.utils.isAddress(auctionAddress)) {
       setAuctionContract('')
       return;
     }
     try {
       if(readContracts && readContracts.Auction){
         const auctionContract = new ethers.Contract(
-          auctionId,
+          auctionAddress,
           readContracts.Auction.interface.format(ethers.utils.FormatTypes.full),
           userSigner
         )
@@ -292,6 +295,9 @@ function App(props) {
         <Menu.Item key="/BestNft">
           <Link to="/BestNft">Best NFT</Link>
         </Menu.Item>
+        <Menu.Item key="/WETH">
+          <Link to="/WETH">WETH</Link>
+        </Menu.Item>
         <Menu.Item key="/AuctionFactory">
           <Link to="/AuctionFactory">AuctionFactory</Link>
         </Menu.Item>
@@ -309,6 +315,19 @@ function App(props) {
         </Route>
         <Route exact path="/BestNft">
           <BestNFT
+            address={address}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            localProvider={localProvider}
+            yourLocalBalance={yourLocalBalance}
+            price={price}
+            tx={tx}
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            purpose={purpose}/>
+        </Route>
+        <Route exact path="/WETH">
+          <WETH
             address={address}
             userSigner={userSigner}
             mainnetProvider={mainnetProvider}
@@ -368,8 +387,8 @@ function App(props) {
         <Route exact path="/debug">
           <Tabs defaultActiveKey="1" centered>
             <TabPane tab="Auction" key="1">
-              <Input placeholder={'an auction id'}
-                     onChange={e => handleAuctionIdChange(e.target.value)}
+              <Input placeholder={'an auction address'}
+                     onChange={e => handleAuctionAddressChange(e.target.value)}
                     style={{width: 400}}/>
               <Contract
                 customContract={auctionContract}
@@ -380,6 +399,7 @@ function App(props) {
                 address={address}
                 blockExplorer={blockExplorer}
                 contractConfig={contractConfig}
+                readContracts={readContracts}
               />
             </TabPane>
             <TabPane tab="Auction Factory" key="2">
@@ -402,6 +422,18 @@ function App(props) {
                 address={address}
                 blockExplorer={blockExplorer}
                 contractConfig={contractConfig}
+              />
+            </TabPane>
+            <TabPane tab="WETH" key="4">
+              <Contract
+                name="WETH"
+                price={price}
+                signer={userSigner}
+                provider={localProvider}
+                address={address}
+                blockExplorer={blockExplorer}
+                contractConfig={contractConfig}
+                customContract={readContracts && readContracts.DAI}
               />
             </TabPane>
           </Tabs>
@@ -486,6 +518,7 @@ function App(props) {
             loadWeb3Modal={loadWeb3Modal}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
             blockExplorer={blockExplorer}
+            readContracts={readContracts}
           />
         </div>
         {/*{yourLocalBalance.lte(ethers.BigNumber.from("0")) && (*/}

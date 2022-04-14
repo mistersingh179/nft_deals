@@ -32,7 +32,12 @@ export default function AuctionList({
   const [auctionsArray, setAuctionsArray] = useState([]);
 
   const setupAuctionsData = async () => {
-    if(readContracts && readContracts.AuctionFactory && readContracts.AuctionFactory){
+    if(readContracts && readContracts.AuctionFactory){
+      const auctionFactoryCode = await localProvider.getCode(readContracts.AuctionFactory.address)
+      if(auctionFactoryCode == '0x'){
+        console.log('not getting auctions data as auction factory is not there!')
+        return
+      }
       const auctionsCount = await readContracts.AuctionFactory.auctionsCount()
       const auctions = [];
       const auctionsDataByAddress = {};
@@ -54,7 +59,8 @@ export default function AuctionList({
         const _platformFeesAccumulated = await auction._platformFeesAccumulated();
         const _listerFeesAccumulated = await auction._listerFeesAccumulated();
         const minimumBidIncrement = await auction.minimumBidIncrement();
-        const balance = await localProvider.getBalance(auctionContractAddress);
+        // const balance = await localProvider.getBalance(auctionContractAddress);
+        const balance = await readContracts.WETH.balanceOf(auctionContractAddress);
         const myErc721 = new ethers.Contract(
           nftContract,
           ERC721PresetMinterPauserAutoIdABI,
@@ -82,7 +88,7 @@ export default function AuctionList({
 
   useEffect( async () => {
     try{
-      setupAuctionsData()
+      await setupAuctionsData()
     }catch(e){
       console.error('error getting auction data');
       console.error(e);
@@ -138,7 +144,6 @@ export default function AuctionList({
       console.log('nft approval is with: ', nftApproval);
       const weHaveApproval = (nftApproval == auctionContractAddress)
       console.log('we have approval: ', weHaveApproval)
-      setupAuctionsData()
     } catch (err) {
       console.error('error while getting approval');
       console.error(err);
@@ -166,7 +171,7 @@ export default function AuctionList({
     title: 'Balance',
     dataIndex: 'key',
     key: 'key',
-    render: (elem, record) => <span>Ξ{utils.formatEther(record.balance.toString())}</span>
+    render: (elem, record) => <span>WETH {record.balance.toString()}</span>
   },
   {
     title: 'Platform Fees',
@@ -174,8 +179,8 @@ export default function AuctionList({
     key: '_platformFeesAccumulated',
     render: (elem, record) => {return (
       <div>
-        <div>Platform Fees: Ξ{utils.formatEther(record._platformFeesAccumulated.toString())}</div>
-        <div>Lister Fees: Ξ{utils.formatEther(record._listerFeesAccumulated.toString())}</div>
+        <div>Platform Fees: WETH {record._platformFeesAccumulated.toString()}</div>
+        <div>Lister Fees: WETH {record._listerFeesAccumulated.toString()}</div>
       </div>
     )}
   },
@@ -189,13 +194,13 @@ export default function AuctionList({
     title: 'Highest Bid',
     dataIndex: 'highestBid',
     key: 'highestBid',
-    render: (elem) => <span>Ξ{utils.formatEther(elem.toString())}</span>
+    render: (elem) => <span>WETH {elem.toString()}</span>
   },
   {
     title: 'Min Bid Increment',
     dataIndex: 'minimumBidIncrement',
     key: 'minimumBidIncrement',
-    render: (elem) => <span>Ξ{utils.formatEther(elem.toString())}</span>
+    render: (elem) => <span>WETH {elem.toString()}</span>
   },
   {
     title: 'Action',

@@ -1,6 +1,7 @@
 // deploy/00_deploy_your_contract.js
 
 const { ethers } = require("hardhat");
+const { wethAddresses } = require("../constants");
 
 const localChainId = "31337";
 
@@ -17,6 +18,13 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deployer } = await getNamedAccounts();
   const chainId = await getChainId();
 
+  try {
+    const theWETHContract = await ethers.getContract("WETH", deployer);
+    wethAddresses[chainId] = theWETHContract.address;
+  } catch (e) {
+    console.log("no local WETH contract found for chainId: ", chainId);
+  }
+
   await deploy("Auction", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
@@ -29,6 +37,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
       "100000000000000000", // 0.1 eth // _minimumBidIncrement
       "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283", // chrome // _nftListerAddress
       "100", // 100 bp // 1% // listerFeeInBasisPoints
+      wethAddresses[chainId], // _wethAddress
     ],
     log: true,
     waitConfirmations: 5,
@@ -51,7 +60,8 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
           60, // 1 minute // _auctionTimeIncrementOnBid
           "100000000000000000", // 0.1 eth // _minimumBidIncrement
           "0xF530CAb59d29c45d911E3AfB3B69e9EdB68bA283", // chrome // _nftListerAddress
-          "100", // 100 bp // 1% // listerFeeInBasisPoints
+          "100", // 100 bp // 1% // listerFeeInBasisPoints,
+          wethAddresses[chainId],
         ],
       });
     }
@@ -59,4 +69,4 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     console.error(error);
   }
 };
-module.exports.tags = ["YourContract"];
+module.exports.tags = ["Auction"];

@@ -57,9 +57,8 @@ export default function Auction({
     highestBid: '',
     expiration: '',
     minimumBidIncrement: '',
-    pendingRefund: 0,
-    extraPaymentRefunds: 0,
-    _weHavePossessionOfNft: false
+    _weHavePossessionOfNft: false,
+    desiredApprovalAmount: ethers.BigNumber.from(0)
   });
   const updateAuctionOptions = (name, value) => {
     setAuctionOptions(prev => {
@@ -73,16 +72,14 @@ export default function Auction({
       const highestBid = await auctionReader.highestBid();
       const expiration = await auctionReader.expiration();
       const minimumBidIncrement = await auctionReader.minimumBidIncrement();
-      const pendingRefunds = await auctionReader.pendingRefunds(address);
-      const extraPaymentRefunds = await auctionReader.extraPaymentRefunds(address);
       const _weHavePossessionOfNft = await auctionReader._weHavePossessionOfNft();
-      updateAuctionOptions('extraPaymentRefunds', extraPaymentRefunds.toString())
-      updateAuctionOptions('pendingRefunds', pendingRefunds.toString())
       updateAuctionOptions('winningAddress', winningAddress)
       updateAuctionOptions('highestBid', highestBid.toString())
       updateAuctionOptions('expiration', expiration.toString())
       updateAuctionOptions('minimumBidIncrement', minimumBidIncrement.toString())
       updateAuctionOptions('_weHavePossessionOfNft', _weHavePossessionOfNft)
+      const desiredApprovalAmount = BigNumber.from(highestBid).add(BigNumber.from(minimumBidIncrement).mul(1000));
+      updateAuctionOptions('desiredApprovalAmount', desiredApprovalAmount)
     }
   }
   useEffect(async () => {
@@ -97,35 +94,11 @@ export default function Auction({
   const bid = async () => {
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
-      const amountToSend = (BigNumber.from(auctionOptions.minimumBidIncrement).mul(10)).
-        add(BigNumber.from(auctionOptions.highestBid))
-      console.log('amountToSend: ', amountToSend);
-      const estimate = await auctionWriter.estimateGas.bid({value: amountToSend});
+      const estimate = await auctionWriter.estimateGas.bid();
       await tx(
-        auctionWriter.bid({value: amountToSend, gasLimit: estimate.mul(13).div(10)}),
+        auctionWriter.bid({gasLimit: estimate.mul(13).div(10)}),
         update => console.log(update)
       );
-      setupAuctionOptions()
-    }
-  }
-  const claimRefunds = async () => {
-    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
-      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
-      await tx(
-        auctionWriter.claimLoosingBids(),
-        update => console.log(update)
-      );
-      setupAuctionOptions()
-    }
-  }
-  const claimExtraPayments = async () => {
-    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
-      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
-      await tx(
-        auctionWriter.claimExtraPayments(),
-        update => console.log(update)
-      );
-      setupAuctionOptions()
     }
   }
   const claimNft = async () => {
@@ -135,10 +108,37 @@ export default function Auction({
         auctionWriter.claimNftUponWinning(),
         update => console.log(update)
       );
-      setupAuctionOptions()
     }
   }
-  const fundsApproved = true
+  const approvalAmount = '100000000000000000000000'
+  const approveButtonHandler = async () => {
+    const result = await tx(writeContracts.WETH.approve(auctionContractAddress, approvalAmount))
+    console.log('approval result: ', result)
+  }
+  const [fundsApproved, setFundsApproved] = useState(ethers.BigNumber.from(0))
+  const setupFundsApproved = async () => {
+    if(readContracts && readContracts.WETH && address && auctionContractAddress){
+      const result = await readContracts.WETH.allowance(address, auctionContractAddress)
+      setFundsApproved(result);
+    }
+  }
+  useEffect(async () => {
+    try{
+      await setupFundsApproved()
+    }catch(e){
+      console.error('unable to get funds approved');
+      console.erorr(e)
+    }
+  }, [readContracts, readContracts.WETH, address, blockNumber, auctionContractAddress]);
+
+  const disableApproval = () => {
+    if (fundsApproved.gt(auctionOptions.desiredApprovalAmount)){
+      return true
+    }else {
+      return false
+    }
+  }
+
   return (
     <div>
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 32 }}>
@@ -168,15 +168,19 @@ export default function Auction({
         {(auctionOptions.expiration > 0) && (moment().unix() < auctionOptions.expiration) &&
           <Text type="success">Active</Text>}
         <Divider />
-        {/*<Button type={'primary'} onClick={approve} disabled={fundsApproved? false: true}>*/}
-        {/*  Approve*/}
-        {/*</Button>*/}
-        {/*<Space style={{marginLeft:5, marginRight: 5}}>&nbsp;</Space>*/}
+        <Button type={'primary'} onClick={approveButtonHandler}
+          disabled={disableApproval()}>
+          Approve
+        </Button>
+        <Space style={{marginLeft:5, marginRight: 5}}>&nbsp;</Space>
         <Button
-          disabled={moment().unix() > auctionOptions.expiration ? true: false}
+          disabled={!disableApproval() || moment().unix() > auctionOptions.expiration}
           type={'primary'} onClick={bid}>
           Place Bid
         </Button>
+        <Divider />
+        fundsApproved : {fundsApproved && fundsApproved.toString()}<br/>
+        desiredApprovalAmount: {auctionOptions.desiredApprovalAmount && auctionOptions.desiredApprovalAmount.toString()}
         <Divider />
         Block Number: {blockNumber}
         <Divider />
@@ -190,20 +194,6 @@ export default function Auction({
           Claim Nft upon Winning
         </Button>
         <Divider />
-        Pending Refund: Ξ{auctionOptions.pendingRefunds && utils.formatEther(auctionOptions.pendingRefunds)}
-        <br/>
-        <Button disabled={auctionOptions.pendingRefunds == 0 ? true : false}
-          onClick={claimRefunds}>
-          Claim Loosing Bids
-        </Button>
-        <Divider />
-        Extra Payments Refund: Ξ{auctionOptions.extraPaymentRefunds && utils.formatEther(auctionOptions.extraPaymentRefunds)}
-        <br/>
-        <Button disabled={auctionOptions.extraPaymentRefunds == 0 ? true : false}
-          onClick={claimExtraPayments}>
-          Claim Extra Payments Refunds
-        </Button>
-
       </div>
     </div>
   );

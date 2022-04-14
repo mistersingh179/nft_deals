@@ -56,6 +56,7 @@ export default function Contract({
   blockExplorer,
   chainId,
   contractConfig,
+  readContracts
 }) {
   const contracts = useContractLoader(provider, contractConfig, chainId);
   let contract;
@@ -122,7 +123,7 @@ export default function Contract({
             {name}
             <div style={{ float: "right" }}>
               <Address value={address} />
-              <Balance address={address} provider={provider} price={price} />
+              <Balance address={address} provider={provider} price={price} readContracts={readContracts}/>
             </div>
           </div>
         }

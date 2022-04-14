@@ -2,6 +2,8 @@ pragma solidity ^0.8.4;
 // SPDX-License-Identifier: GPL-3.0
 
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "hardhat/console.sol";
 
 // someones deploy us [contract] with nft contract address
 // lister approves us [contract] to take nft or take all of their nfts
@@ -37,6 +39,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     address public constant _sandeepAddress = 0x6B09B3C63B72fF54Bcb7322B607E304a13Fba72B;
     uint public constant platformFeeInBasisPoints = 100;
     uint public immutable listerFeeInBasisPoints;
+    IERC20 public immutable weth;
 
     IERC721 public immutable nftContract;
     uint public immutable tokenId;
@@ -51,13 +54,12 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
 
     address public winningAddress;
     uint public highestBid;
-    mapping(address => uint) public pendingRefunds; // biddersAddress => theirBidAmount
-    mapping(address => uint) public extraPaymentRefunds; // biddersAddress => theirExtraBidAmount
     uint public _platformFeesAccumulated;
     uint public _listerFeesAccumulated;
 
     event Bid(address from, uint amount);
     event MoneyOut(address to, uint amount);
+    event FailedToSendMoney(address to, uint amount);
     event NftOut(address to, uint tokenId);
     event NftIn(address from, uint tokenId);
 
@@ -69,7 +71,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         uint _auctionTimeIncrementOnBid,
         uint _minimumBidIncrement,
         address _nftListerAddress,
-        uint _listerFeeInBasisPoints){
+        uint _listerFeeInBasisPoints,
+        address _wethAddress){
             nftContract = IERC721(_nftContractAddress);
             tokenId = _tokenId;
             nftListerAddress = _nftListerAddress;
@@ -83,6 +86,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             _setupRole(DEFAULT_ADMIN_ROLE, _sandeepAddress);
             _setupRole(CASHIER_ROLE, _rodAddress);
             _setupRole(CASHIER_ROLE, _sandeepAddress);
+
+            weth = IERC20(_wethAddress);
     }
 
     function startAuction() youAreTheNftLister external{
@@ -137,27 +142,25 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         return (amount * bp) / 10000;
     }
 
-    function bid() auctionHasStarted auctionHasNotEnded external payable {
+    function bid() auctionHasStarted auctionHasNotEnded external {
         uint totalNextBid = highestBid + minimumBidIncrement;
         uint platformFee;
         uint listerFee;
-        if (msg.value >= totalNextBid){ // a good bad
-            extraPaymentRefunds[msg.sender] += msg.value - totalNextBid; // extra money which came in
-            platformFee = calculateFee(totalNextBid, platformFeeInBasisPoints);
-            listerFee = calculateFee(totalNextBid, listerFeeInBasisPoints);
-            _platformFeesAccumulated += platformFee;
-            _listerFeesAccumulated += listerFee;
-            pendingRefunds[winningAddress] += highestBid; // current highest bid
-            highestBid = totalNextBid; // new highest bid
-            winningAddress = msg.sender;
-            expiration = block.timestamp + auctionTimeIncrementOnBid;
-        } else if(msg.value < totalNextBid){ // a loosing bid
-            platformFee = calculateFee(msg.value, platformFeeInBasisPoints);
-            listerFee = calculateFee(msg.value, listerFeeInBasisPoints);
-            _platformFeesAccumulated += platformFee;
-            _listerFeesAccumulated += listerFee;
-            pendingRefunds[msg.sender] += msg.value;
-        }
+
+        require(weth.balanceOf(msg.sender) >= totalNextBid, 'insufficient WETH funds');
+        require(weth.transferFrom(msg.sender, address(this), totalNextBid), 'transfer of WETH failed!');
+
+        _sendPreviousWinnerTheirBidBack(winningAddress, highestBid);
+
+        platformFee = calculateFee(totalNextBid, platformFeeInBasisPoints);
+        listerFee = calculateFee(totalNextBid, listerFeeInBasisPoints);
+        _platformFeesAccumulated += platformFee;
+        _listerFeesAccumulated += listerFee;
+
+        highestBid = totalNextBid; // new highest bid
+        winningAddress = msg.sender;
+        expiration = block.timestamp + auctionTimeIncrementOnBid;
+
         emit Bid(msg.sender, totalNextBid);
     }
 
@@ -186,13 +189,13 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     function claimPlatformFees() onlyRole(CASHIER_ROLE) external {
         uint amountToSend = _platformFeesAccumulated;
         _platformFeesAccumulated = 0;
-        _sendMoney(amountToSend);
+        _sendMoney(msg.sender, amountToSend);
     }
 
     function claimListerFees() youAreTheNftLister external {
         uint amountToSend = _listerFeesAccumulated;
         _listerFeesAccumulated = 0;
-        _sendMoney(amountToSend);
+        _sendMoney(msg.sender, amountToSend);
     }
 
     function claimFinalBidAmount() auctionHasStarted auctionHasEnded
@@ -204,25 +207,25 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             bidAmount -= platformFee;
             bidAmount -= listerFee;
             highestBid = 0;
-            _sendMoney(bidAmount);
+            _sendMoney(msg.sender, bidAmount);
     }
 
-    function claimLoosingBids() external {
-        require(pendingRefunds[msg.sender] > 0, "you have no refund due");
-        uint bidAmount = pendingRefunds[msg.sender];
-        uint platformFee = calculateFee(bidAmount, platformFeeInBasisPoints);
-        uint listerFee = calculateFee(bidAmount, listerFeeInBasisPoints);
-        bidAmount -= platformFee;
-        bidAmount -= listerFee;
-        pendingRefunds[msg.sender] = 0;
-        _sendMoney(bidAmount);
-    }
-
-    function claimExtraPayments() external {
-        require(extraPaymentRefunds[msg.sender] > 0, "you have no refund due");
-        uint bidAmount = extraPaymentRefunds[msg.sender];
-        extraPaymentRefunds[msg.sender] = 0;
-        _sendMoney(bidAmount);
+    function _sendPreviousWinnerTheirBidBack(address _previousWinnerAddress, uint bidAmount) private {
+        if(_previousWinnerAddress == address(0)){
+            console.log('wont sent previous bid back as previous winner is 0');
+        }else{
+            console.log('sending previous winner money back');
+            console.log(bidAmount);
+            uint platformFee = calculateFee(bidAmount, platformFeeInBasisPoints);
+            console.log(platformFee);
+            uint listerFee = calculateFee(bidAmount, listerFeeInBasisPoints);
+            console.log(listerFee);
+            bidAmount -= platformFee;
+            bidAmount -= listerFee;
+            console.log('amount sending back');
+            console.log(bidAmount);
+            _sendMoney(_previousWinnerAddress, bidAmount);
+        }
     }
 
     function _transfer() private {
@@ -231,10 +234,16 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         emit NftOut(msg.sender, tokenId);
     }
 
-    function _sendMoney(uint amount) private {
-        (bool success, bytes memory data) = payable(msg.sender).call{value: amount}("");
-        require(success, 'failed to send money  ');
-        emit MoneyOut(msg.sender, amount);
+    function _sendMoney(address recipient, uint amount) private {
+        console.log('in sendmoney');
+        console.log(recipient);
+        console.log(amount);
+        bool result = weth.transfer(recipient, amount);
+        if(result == true){
+            emit FailedToSendMoney(recipient, amount);
+        }else{
+            emit MoneyOut(recipient, amount);
+        }
     }
 
     function shutdown() onlyRole(DEFAULT_ADMIN_ROLE) external {

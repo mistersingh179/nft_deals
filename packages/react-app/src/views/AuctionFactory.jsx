@@ -30,7 +30,7 @@ export default function AuctionFactory({
   const [nftContractAddress, setNftContractAddress] = useState("");
   const [nftTokenId, setNftTokenId] = useState("");
   const [nftOwner, setNftOwner] = useState("");
-  const [listerAddress, setListerAddress] = useState("");
+  const [listerAddress, setListerAddress] = useState(address);
   const [auctionOptions, setAuctionOptions] = useState({
     startingBid: '',
     initialAuctionLength: '',

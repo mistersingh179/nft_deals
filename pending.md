@@ -1,12 +1,3 @@
-- make platform fee match lister fee
-- make platform fee have floor
-- make custom method to override pltform fee
-- disable buttons while waiting for tx
-- previous bids with address & amount & tx id
-- countdown timer
-
-ERC20
-reward
 
 # Must 
 - deploy env
@@ -28,7 +19,7 @@ reward
 - external contract calls
   - we only do this when refunding money & that is pull based.
 - use check-effect-interact pattern, need to double check everywhere for it.
-
+- test if can we manually help recover lost funds
 
 # Auction Factory
 - get stats from auctionFactory and show on front end
