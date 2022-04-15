@@ -8,7 +8,8 @@ yarn build
 yarn deploy
 yarn deploy --network rinkeby
 yarn verify --network rinkeby
-cd packages/hardhat && npx hardhat --network rinkeby etherscan-verify
+cd packages/hardhat
+npx hardhat --network rinkeby etherscan-verify
 ```
 
 # questions
