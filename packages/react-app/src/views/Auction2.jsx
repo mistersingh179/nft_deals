@@ -2,7 +2,29 @@ import bayc300 from '../img/BAYC300.png';
 
 const Auction2 = props => {
   return (
-      <div>
+    <>
+      <header id="header" className="fixed-top ">
+        <div className="container d-flex align-items-center">
+
+          <a href="index.html" className="logo mr-auto">
+            <img src="assets/img/NFTD_Logo_2.png" alt="" className="img-fluid"/>
+          </a>
+
+          <nav className="nav-menu d-none d-lg-block">
+            <ul>
+              <li className="active"><a href="#">Bid to Win</a></li>
+              <li><a href="#claim">Claim NFT</a></li>
+              <li><a href="#sell">Sell Your NFT</a></li>
+              <li><a href="#docs">Docs</a></li>
+            </ul>
+          </nav>
+
+          <a href="#about" className="get-started-btn scrollto">Connect Wallet</a>
+
+        </div>
+      </header>
+      <section id="hero" className="d-flex align-items-center">
+      <div class={'container'}>
         <div className="row">
           <div className="col-lg-12 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
             <div className="explainer-banner text-center">
@@ -70,6 +92,8 @@ const Auction2 = props => {
           </div>
         </div>
       </div>
+    </section>
+    </>
   )
 }
 

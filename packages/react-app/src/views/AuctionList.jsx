@@ -222,6 +222,7 @@ export default function AuctionList({
         <Link to={`/Auction/${record.key}`}>
           <Button style={{marginBottom:4}} disabled={record.expiration == 0 ? true : false}>Open Auction</Button>
         </Link>
+        <br/>
         <Link to={`/Auction2/${record.key}`}>
           <Button style={{marginBottom:4}} disabled={record.expiration == 0 ? true : false}>Open Auction *New*</Button>
         </Link>

@@ -51,6 +51,8 @@ import "./vendor/bootstrap/css/bootstrap.css"
 import "./vendor/icofont/icofont.min.css"
 import "./css/style.css"
 import Auction2 from "./views/Auction2";
+import FaucetAndInfo from "./components/FaucetAndInfo";
+import AccountAndOthers from "./components/AccountAndOthers";
 /*
     Welcome to 🏗 scaffold-eth !
 
@@ -264,7 +266,7 @@ function App(props) {
     }
   }, [loadWeb3Modal]);
 
-  const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
+
   const { TabPane } = Tabs;
 
   const [auctionContract, setAuctionContract] = useState('')
@@ -289,40 +291,13 @@ function App(props) {
   const location = useLocation();
 
   return (
-    <div className="App">
-      {/* ✏️ Edit the header and change the title to your project name */}
-      {/*<Header />*/}
-      <header id="header" className="fixed-top ">
-        <div className="container d-flex align-items-center">
-
-          <a href="index.html" className="logo mr-auto">
-            <img src={logo} alt="" className="img-fluid"/>
-          </a>
-
-          <nav className="nav-menu d-none d-lg-block">
-            <ul>
-              <li className="active"><a href="#">Bid to Win</a></li>
-              <li><a href="#claim">Claim NFT</a></li>
-              <li><a href="#sell">Sell Your NFT</a></li>
-              <li><a href="#docs">Docs</a></li>
-            </ul>
-          </nav>
-
-          <a href="#about" className="get-started-btn scrollto">Connect Wallet</a>
-
-          <NetworkDisplay
-            NETWORKCHECK={NETWORKCHECK}
-            localChainId={localChainId}
-            selectedChainId={selectedChainId}
-            targetNetwork={targetNetwork}
-            logoutOfWeb3Modal={logoutOfWeb3Modal}
-            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-          />
-
-          </div>
-      </header>
-      <section id="hero" className="d-flex align-items-center">
-        <div className={'container'}>
+    <Switch>
+      <Route exact path="/auction2/:slug">
+        <Auction2 />
+      </Route>
+      <Route>
+        <div className="App">
+          <Header />
           <Switch>
             <Route exact path="/">
               <Redirect to={"BestNft"} />
@@ -383,9 +358,6 @@ function App(props) {
                 blockExplorer={blockExplorer}
               />
             </Route>
-            <Route exact path="/Auction2/:slug">
-              <Auction2 />
-            </Route>
             <Route exact path="/AuctionList">
               <AuctionList
                 address={address}
@@ -403,12 +375,10 @@ function App(props) {
             </Route>
             <Route exact path="/debug">
               <>
-              <TopNavMenu location={location} />
-              <Tabs defaultActiveKey="1" centered>
-                <TabPane tab="Auction" key="1">
-                  <Input placeholder={'an auction address'}
-                         onChange={e => handleAuctionAddressChange(e.target.value)}
-                        style={{width: 400}}/>
+                <TopNavMenu location={location} />
+                <Tabs defaultActiveKey="1" centered>
+                  <TabPane tab="Auction" key="1">
+                  <Input placeholder={'an auction address'} onChange={e => handleAuctionAddressChange(e.target.value)} style={{width: 400}} />
                   <Contract
                     customContract={auctionContract}
                     name="Auction"
@@ -421,7 +391,7 @@ function App(props) {
                     readContracts={readContracts}
                   />
                 </TabPane>
-                <TabPane tab="Auction Factory" key="2">
+                  <TabPane tab="Auction Factory" key="2">
                   <Contract
                     name="AuctionFactory"
                     price={price}
@@ -432,7 +402,7 @@ function App(props) {
                     contractConfig={contractConfig}
                   />
                 </TabPane>
-                <TabPane tab="BestNft" key="3">
+                  <TabPane tab="BestNft" key="3">
                   <Contract
                     name="BestNft"
                     price={price}
@@ -443,7 +413,7 @@ function App(props) {
                     contractConfig={contractConfig}
                   />
                 </TabPane>
-                <TabPane tab="WETH" key="4">
+                  <TabPane tab="WETH" key="4">
                   <Contract
                     name="WETH"
                     price={price}
@@ -455,7 +425,7 @@ function App(props) {
                     customContract={readContracts && readContracts.DAI}
                   />
                 </TabPane>
-              </Tabs>
+                </Tabs>
               </>
             </Route>
             <Route path="/hints">
@@ -491,16 +461,6 @@ function App(props) {
                 contractConfig={contractConfig}
                 chainId={1}
               />
-              {/*
-                <Contract
-                  name="UNI"
-                  customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.UNI}
-                  signer={userSigner}
-                  provider={mainnetProvider}
-                  address={address}
-                  blockExplorer="https://etherscan.io/"
-                />
-                */}
             </Route>
             <Route path="/subgraph">
               <Subgraph
@@ -511,82 +471,51 @@ function App(props) {
               />
             </Route>
           </Switch>
+
+          <ThemeSwitch />
+
+          <NetworkDisplay
+            NETWORKCHECK={NETWORKCHECK}
+            localChainId={localChainId}
+            selectedChainId={selectedChainId}
+            targetNetwork={targetNetwork}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+          />
+
+          <AccountAndOthers
+            useBurner={USE_BURNER_WALLET}
+            address={address}
+            localProvider={localProvider}
+            userSigner={userSigner}
+            mainnetProvider={mainnetProvider}
+            price={price}
+            web3Modal={web3Modal}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            blockExplorer={blockExplorer}
+            readContracts={readContracts}
+            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+            networkOptions={networkOptions}
+            selectedNetwork={selectedNetwork}
+            setSelectedNetwork={setSelectedNetwork}
+            USE_BURNER_WALLET={USE_BURNER_WALLET}
+            yourLocalBalance={yourLocalBalance}
+            targetNetwork={targetNetwork}
+          />
+
+          <FaucetAndInfo
+            price={price}
+            address={address}
+            gasPrice={gasPrice}
+            localProvider={localProvider}
+            targetNetwork={targetNetwork}
+            mainnetProvider={mainnetProvider}
+          />
+
         </div>
-      </section>
-
-
-      <ThemeSwitch />
-
-      {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
-      <div style={{ position: "fixed", textAlign: "right", right: 0, top: 60, padding: 10 }}>
-            <div style={{ display: "flex", flex: 1, alignItems: "center" }}>
-              {USE_NETWORK_SELECTOR && (
-                <div style={{ marginRight: 20 }}>
-                  <NetworkSwitch
-                    networkOptions={networkOptions}
-                    selectedNetwork={selectedNetwork}
-                    setSelectedNetwork={setSelectedNetwork}
-                  />
-                </div>
-              )}
-              <Account
-                useBurner={USE_BURNER_WALLET}
-                address={address}
-                localProvider={localProvider}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                price={price}
-                web3Modal={web3Modal}
-                loadWeb3Modal={loadWeb3Modal}
-                logoutOfWeb3Modal={logoutOfWeb3Modal}
-                blockExplorer={blockExplorer}
-                readContracts={readContracts}
-              />
-            </div>
-            {/*{yourLocalBalance.lte(ethers.BigNumber.from("0")) && (*/}
-            {/*  <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />*/}
-            {/*)}*/}
-            </div>
-      {/* 🗺 Extra UI like gas price, eth price, faucet, and support: */}
-      <div style={{ position: "fixed", textAlign: "left", left: 0, bottom: 20, padding: 10 }}>
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={8}>
-            <Ramp price={price} address={address} networks={NETWORKS} />
-          </Col>
-
-          <Col span={8} style={{ textAlign: "center", opacity: 0.8 }}>
-            <GasGauge gasPrice={gasPrice} />
-          </Col>
-          <Col span={8} style={{ textAlign: "center", opacity: 1 }}>
-            <Button
-              onClick={() => {
-                window.open("https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA");
-              }}
-              size="large"
-              shape="round"
-            >
-              <span style={{ marginRight: 8 }} role="img" aria-label="support">
-                💬
-              </span>
-              Support
-            </Button>
-          </Col>
-        </Row>
-
-        <Row align="middle" gutter={[4, 4]}>
-          <Col span={24}>
-            {
-              /*  if the local provider has a signer, let's show the faucet:  */
-              faucetAvailable ? (
-                <Faucet localProvider={localProvider} price={price} ensProvider={mainnetProvider} />
-              ) : (
-                ""
-              )
-            }
-          </Col>
-        </Row>
-      </div>
-    </div>
+      </Route>
+    </Switch>
   );
 }
 
