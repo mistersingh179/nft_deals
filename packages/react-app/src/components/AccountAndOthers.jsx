@@ -11,7 +11,7 @@ const AccountAndOthers = props => {
   } = props
   return (
 
-  <div style={{ position: "fixed", textAlign: "right", right: 0, top: 5, padding: 10 }}>
+  <div style={{ position: "fixed", textAlign: "right", right: 0, top: 50, padding: 10 }}>
         <div style={{ display: "flex", flex: 1, alignItems: "center" }}>
           {USE_NETWORK_SELECTOR && (
             <div style={{ marginRight: 20 }}>
