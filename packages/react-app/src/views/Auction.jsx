@@ -2,12 +2,13 @@ import {Button, Card, DatePicker, Divider, Input, Progress, Slider, Space, Spin,
 import React, { useState, useEffect } from "react";
 import moment from 'moment';
 import {
+  useLocation,
   useParams
 } from "react-router-dom";
 import {ethers, utils, BigNumber} from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
-import { Address, Balance, Events } from "../components";
+import {Address, Balance, Events, TopNavMenu} from "../components";
 import {useContractReader} from "eth-hooks";
 import NftImage from "../components/NftImage";
 import {useBlockNumber} from "eth-hooks";
@@ -127,7 +128,6 @@ export default function Auction({
       await setupFundsApproved()
     }catch(e){
       console.error('unable to get funds approved');
-      console.erorr(e)
     }
   }, [readContracts, readContracts.WETH, address, blockNumber, auctionContractAddress]);
 
@@ -138,9 +138,11 @@ export default function Auction({
       return false
     }
   }
+  const location = useLocation();
 
   return (
     <div>
+      <TopNavMenu location={location} />
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 32 }}>
         <h2>Auction</h2>
         <Divider />

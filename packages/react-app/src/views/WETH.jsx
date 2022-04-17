@@ -3,9 +3,10 @@ import React, {useEffect, useState} from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
-import {Address, Balance, EtherInput, Events} from "../components";
+import {Address, Balance, EtherInput, Events, TopNavMenu} from "../components";
 import {useBlockNumber, useContractReader} from "eth-hooks";
 import NftImage from "../components/NftImage";
+import {useLocation} from "react-router-dom";
 
 export default function WETH({
   purpose,
@@ -36,11 +37,11 @@ export default function WETH({
 
   const wethBalance = useContractReader(readContracts, "WETH", "balanceOf", [address]);
 
+  const location = useLocation();
+
   return (
     <div>
-      {/*
-        ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
-      */}
+      <TopNavMenu location={location} />
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 32 }}>
         <h2>WETH</h2>
         <Divider />

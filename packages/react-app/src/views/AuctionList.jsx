@@ -3,11 +3,11 @@ import React, {useEffect, useState} from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
-import {Address, Balance, Events, AddressInput, EtherInput} from "../components";
+import {Address, Balance, Events, AddressInput, EtherInput, TopNavMenu} from "../components";
 import ERC721PresetMinterPauserAutoIdABI from "../abis/ERC721PresetMinterPauserAutoIdABI.json"
 import Text from "antd/es/typography/Text";
 import {useBlockNumber, useContractReader} from "eth-hooks";
-import {Link} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import NftImage from "../components/NftImage";
 import moment from "moment";
 
@@ -222,6 +222,9 @@ export default function AuctionList({
         <Link to={`/Auction/${record.key}`}>
           <Button style={{marginBottom:4}} disabled={record.expiration == 0 ? true : false}>Open Auction</Button>
         </Link>
+        <Link to={`/Auction2/${record.key}`}>
+          <Button style={{marginBottom:4}} disabled={record.expiration == 0 ? true : false}>Open Auction *New*</Button>
+        </Link>
         <br/>
         <Button disabled={(record.expiration > 0) && (record._weHavePossessionOfNft == true) ? false: true}
           style={{marginBottom:4}}
@@ -244,9 +247,12 @@ export default function AuctionList({
   },
   ];
 
+  const location = useLocation();
+
   return (
     <div>
-      <div style={{ border: "1px solid #cccccc", padding: 16, width: 1500, margin: "auto", marginTop:32 }}>
+      <TopNavMenu location={location} />
+      <div style={{ border: "1px solid #cccccc", padding: 16, width: 'auto', margin: "auto", marginTop:32 }}>
         <h2>Auction List</h2>
         <Divider />
         <Table dataSource={auctionsArray} columns={columns} />

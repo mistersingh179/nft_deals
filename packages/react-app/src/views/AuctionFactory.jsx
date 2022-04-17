@@ -3,11 +3,12 @@ import React, {useEffect, useState} from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
-import {Address, Balance, Events, AddressInput, EtherInput} from "../components";
+import {Address, Balance, Events, AddressInput, EtherInput, TopNavMenu} from "../components";
 import ERC721PresetMinterPauserAutoIdABI from "../abis/ERC721PresetMinterPauserAutoIdABI.json"
 import Text from "antd/es/typography/Text";
 import {useBlockNumber, useContractReader} from "eth-hooks";
 import NftImage from "../components/NftImage";
+import {useLocation} from "react-router-dom";
 
 console.log(ERC721PresetMinterPauserAutoIdABI);
 
@@ -107,9 +108,11 @@ export default function AuctionFactory({
       console.error(err);
     }
   }
+  const location = useLocation();
 
   return (
     <div>
+      <TopNavMenu location={location} />
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 450, margin: "auto", marginTop: 64 }}>
         <h2>Auction Factory</h2>
         <Divider />
