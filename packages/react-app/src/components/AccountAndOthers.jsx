@@ -10,7 +10,6 @@ const AccountAndOthers = props => {
     selectedNetwork, setSelectedNetwork,
     USE_BURNER_WALLET, yourLocalBalance, targetNetwork
   } = props;
-  const [bottom, setBottom] = useState(10);
 
   return (
 

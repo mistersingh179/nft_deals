@@ -4,7 +4,10 @@ import { useThemeSwitcher } from "react-css-theme-switcher";
 
 import Address from "./Address";
 import Balance from "./Balance";
-// import Wallet from "./Wallet";
+import Wallet from "./Wallet";
+
+import '../css/Account.css';
+import BalanceTable from "./BalanceTable";
 
 /** 
   ~ What it does? ~
@@ -89,43 +92,26 @@ export default function Account({
     <div>
       {web3Modal && web3Modal.cachedProvider ? (
         <>
-          {address && <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />}
-          <Balance address={address} provider={localProvider} price={price} readContracts={readContracts} />
+          <BalanceTable address={address} provider={localProvider}
+                        price={price} readContracts={readContracts}
+                        ensProvider={mainnetProvider} blockExplorer={blockExplorer}
+          />
         </>
       ) : useBurner ? (
         ""
       ) : isContract ? (
         <>
-          {address && <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />}
-          <Balance address={address} provider={localProvider} price={price} readContracts={readContracts}/>
+          <BalanceTable address={address} provider={localProvider}
+                        price={price} readContracts={readContracts}
+                        ensProvider={mainnetProvider} blockExplorer={blockExplorer}
+          />
         </>
       ) : (
         ""
       )}
       {useBurner && web3Modal && !web3Modal.cachedProvider ? (
         <>
-          <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
-          <div style={{ fontSize: 16, fontWeight: 500, padding: "2em 0 0.5em 0" }}>Fund Available</div>
-          <div style={{
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderImage: "initial",
-            borderColor: "#dde1e6",
-            padding: "1rem",
-          }}>
-              <Balance token_type="ETH" address={address} provider={localProvider} price={price} readContracts={readContracts} />
-              <Balance token_type="WETH" address={address} provider={localProvider} price={price} readContracts={readContracts} />
-          </div>
-          <div style={{
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderImage: "initial",
-            borderColor: "#dde1e6",
-            padding: "1rem",
-            textAlign: "right",
-          }}>
-            <a href={"https://app.uniswap.org/#/swap?chain=mainnet"}>Convert ETH / WETH</a>
-          </div>
+          <BalanceTable address={address} provider={localProvider} price={price} readContracts={readContracts}/>
         </>
       ) : (
         <></>
