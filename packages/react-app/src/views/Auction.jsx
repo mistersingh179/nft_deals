@@ -1,4 +1,4 @@
-import {Button, Card, DatePicker, Divider, Input, Progress, Slider, Space, Spin, Switch} from "antd";
+import {Button, Card, DatePicker, Divider, Input, Progress, Slider, Space, Spin, Switch, Table} from "antd";
 import React, { useState, useEffect } from "react";
 import moment from 'moment';
 import {
@@ -13,6 +13,7 @@ import {useContractReader} from "eth-hooks";
 import NftImage from "../components/NftImage";
 import {useBlockNumber} from "eth-hooks";
 import Text from "antd/es/typography/Text";
+import BidEvents from "../components/BidEvents";
 
 export default function Auction({
   purpose,
@@ -68,6 +69,8 @@ export default function Auction({
   }
   const setupAuctionOptions = async () => {
     if(address && readContracts && readContracts.Auction && readContracts.Auction.interface){
+      readContracts.Auction = readContracts.Auction.attach(auctionContractAddress)
+      window.readContracts = readContracts
       const auctionReader = readContracts.Auction.attach(auctionContractAddress);
       const winningAddress = await auctionReader.winningAddress();
       const highestBid = await auctionReader.highestBid();
@@ -93,15 +96,18 @@ export default function Auction({
   }, [readContracts, auctionContractAddress, blockNumber, address]);
 
   const bid = async () => {
-    if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
+    if (writeContracts && writeContracts.Auction && writeContracts.Auction.interface) {
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
-      const estimate = await auctionWriter.estimateGas.bid();
-      await tx(
-        auctionWriter.bid({gasLimit: estimate.mul(13).div(10)}),
-        update => console.log(update)
-      );
+      try {
+        const estimate = await auctionWriter.estimateGas.bid();
+        if (estimate !== undefined) {
+          await tx(auctionWriter.bid({ gasLimit: estimate.mul(13).div(10) }), update => console.log(update));
+        }
+      } catch (e) {
+        console.error("failed placing bid: ", e);
+      }
     }
-  }
+  };
   const claimNft = async () => {
     if(writeContracts && writeContracts.Auction && writeContracts.Auction.interface){
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
@@ -196,6 +202,14 @@ export default function Auction({
           Claim Nft upon Winning
         </Button>
         <Divider />
+        <BidEvents
+          readContracts = {readContracts}
+          auctionContractAddress={auctionContractAddress}
+          mainnetProvider={mainnetProvider}
+          localProvider={localProvider}
+          eventsCount={5}
+          blockCount={10}
+        />
       </div>
     </div>
   );
