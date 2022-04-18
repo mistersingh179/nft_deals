@@ -1024,6 +1024,10 @@ background: linear-gradient(rgba(33, 26, 29, 0.95), rgba(33, 26, 29, 1.0)), url(
   .cta {
     background-attachment: scroll;
   }
+  .img-investors{
+    width: 60%;
+    padding-top: 5em;
+  }
 }
 
 @media (min-width: 769px) {
@@ -1038,6 +1042,10 @@ background: linear-gradient(rgba(33, 26, 29, 0.95), rgba(33, 26, 29, 1.0)), url(
   .cta .pic .img-fluid {
     max-width: 70%;
     margin: 20px auto;
+  }
+  .img-investors{
+    width: 70%;
+    padding: 1em;
   }
 }
 
@@ -1145,7 +1153,7 @@ background: linear-gradient(rgba(33, 26, 29, 0.95), rgba(33, 26, 29, 1.0)), url(
 
 .team .member .pic {
   overflow: hidden;
-  width: 180px;
+  max-width: 100px;
   border-radius: 50%;
 }
 

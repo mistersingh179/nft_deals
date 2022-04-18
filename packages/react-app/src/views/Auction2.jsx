@@ -1,10 +1,17 @@
 import bayc300 from '../img/BAYC300.png';
+import tachyonLogo from '../img/consensys-tachyon-logo.png';
+import consensysLogo from '../img/consensys-labs-icon-logo-white.png';
+import protocolLabsLogo from '../img/protocol-labs-logo.png';
+import rod from '../img/team/rod.jpg';
+import sandeep from '../img/team/sandeep.jpg';
+import anon1 from '../img/team/anon1.png';
+import anon2 from '../img/team/anon2.png';
 import logo from '../img/NFTD_Logo_2.png';
 import {NetworkDisplay, ThemeSwitch} from "../components";
 import AccountAndOthers from "../components/AccountAndOthers";
 
 import React, { useState } from 'react';
-import {Drawer, Button, Space, Radio, Skeleton} from 'antd';
+import {Drawer, Button, Space, Radio, Skeleton, Tooltip} from 'antd';
 import Blockies from "react-blockies";
 
 const Auction2 = props => {
@@ -123,30 +130,32 @@ const Auction2 = props => {
               <h2>Collection Floor Price: Ξ 111 <span className="smaller-usdc">(~$390,707.79)</span></h2>
               <div className="row">
                 <div className="col-md-6 bid-box">
-                  <h3>Top Bid <i className="bi bi-info-circle bid-info" data-toggle="tooltip"
-                                 data-placement="top"
-                                 title="The top bidder when the timer ends will win the auction."></i></h3>
+                  <Space>
+                    <h3>Top Bid <Tooltip title="The top bidder when the timer ends will win the auction.">
+                      <i className="bi bi-info-circle bid-info"></i></Tooltip>
+                    </h3>
+                  </Space>
                   <h1>Ξ 0.0012</h1>
                 </div>
                 <div className="col-md-6 bid-box">
-                  <h3>Ends in <i className="bi bi-info-circle bid-info" data-toggle="tooltip"
-                                 data-placement="top"
-                                 title="A new top bid will extend the auction by 24 hours. There’s no advantage to waiting until the last few minutes."></i>
+                  <h3>Ends in <Tooltip 
+                    title="A new top bid will extend the auction by 24 hours. There’s no advantage to waiting 
+                    until the last few minutes.">
+                      <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
                   <h1 id="end-timer">2h 12m 53s</h1>
                 </div>
               </div>
               <div className="row">
                 <div className="col-md-6 bid-box">
-                  <h3>Next Bid <i className="bi bi-info-circle bid-info" data-toggle="tooltip"
-                                  data-placement="top"
-                                  title="Bid increments are fixed at +0.0003 ETH above the current bid."></i></h3>
+                  <h3>Next Bid <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
+                    <i className="bi bi-info-circle bid-info"></i></Tooltip>
+                  </h3>
                   <h1>Ξ 0.0015</h1>
                 </div>
                 <div className="col-md-6 bid-box">
-                  <h3>Earnable Rewards <i className="bi bi-info-circle bid-info" data-toggle="tooltip"
-                                          data-placement="top"
-                                          title="Bid early, get more. Rewards will be convertible into our NFTD token when it launches."></i>
+                  <h3>Earnable Rewards <Tooltip title="Bid early, get more. Rewards will be convertible into our NFTD token when it launches.">
+                    <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
                   <h1>249</h1>
                 </div>
@@ -159,12 +168,12 @@ const Auction2 = props => {
                 </div>
               </div>
               <div className="row">
-                <div className="col-sm-3 offset-sm-3 col-lg-3 offset-lg-0"><a href="#"
-                                                                              className="btn btn-secondary btn-sm btn-block">
+                <div className="col-sm-3 offset-sm-3 col-lg-3 offset-lg-0">
+                  <a href="#" className="btn btn-secondary btn-sm btn-block">
                   <i className="bi bi-card-checklist btn-icon"></i> Bid History</a>
                 </div>
-                <div className="col-sm-3 offset-sm-0 col-lg-3 offset-lg-0"><a href="#"
-                                                                              className="btn btn-secondary btn-sm btn-block">
+                <div className="col-sm-3 offset-sm-0 col-lg-3 offset-lg-0">
+                  <a href="#" className="btn btn-secondary btn-sm btn-block">
                   <i className="bi bi-patch-check-fill btn-icon"></i> Etherscan</a>
                 </div>
               </div>
@@ -259,9 +268,9 @@ const Auction2 = props => {
             <div class="col-lg-3 text-center text-lg-left">
               <h3>Trust Us, <p>We're Backed By The Best</p></h3>
             </div>
-            <div class="pic col-lg-3 text-center"><img src="../img/consensys-tachyon-logo.png" class="img-fluid" alt="" /></div>
-            <div class="pic col-lg-3 text-center"><img src="../img/consensys-labs-icon-logo-white.png" class="img-fluid" alt="" /></div>
-            <div class="pic col-lg-3 text-center"><img src="../img/protocol-labs-logo.png" class="img-fluid" alt="" /></div>
+            <div class="pic col-lg-3 text-center"><img src={tachyonLogo} class="img-fluid img-investors" alt="" /></div>
+            <div class="pic col-lg-3 text-center"><img src={consensysLogo} class="img-fluid img-investors" alt="" /></div>
+            <div class="pic col-lg-3 text-center"><img src={protocolLabsLogo} class="img-fluid img-investors" alt="" /></div>
           </div>
         </div>
       </section>
@@ -343,14 +352,14 @@ const Auction2 = props => {
             <div class="col-lg-6">
 
               <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="100">
-                <div class="pic"><img src="../img/team/rod.jpg" class="img-fluid" alt="" /></div>
+                <div class="pic"><img src={rod} class="img-fluid profile-pic" alt="" /></div>
                 <div class="member-info">
                   <h4>Rod Fuentes</h4>
                   <span>Co-founder & CEO</span>
                   <p>IP lawyer turned 3x startup founder (1x exit, 2019). Hosts "NFT Show & Tell" on YouTube for fun.</p>
                   <div class="social">
-                    <a href="https://twitter.com/rodrigofuentes7"><i class="ri-twitter-fill"></i></a>
-                    <a href="https://www.linkedin.com/in/jrodrigofuentes/"> <i class="ri-linkedin-box-fill"></i> </a>
+                    <a href="https://twitter.com/rodrigofuentes7"><i class="bx bxl-twitter"></i></a>
+                    <a href="https://www.linkedin.com/in/jrodrigofuentes/"> <i class="bx bxl-linkedin"></i> </a>
                   </div>
                 </div>
               </div>
@@ -358,14 +367,14 @@ const Auction2 = props => {
 
             <div class="col-lg-6 mt-4 mt-lg-0">
               <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="200">
-                <div class="pic"><img src="../img/team/sandeep.jpg" class="img-fluid" alt="" /></div>
+                <div class="pic"><img src={sandeep} class="img-fluid profile-pic" alt="" /></div>
                 <div class="member-info">
                   <h4>Sandeep Arneja</h4>
                   <span>Co-founder & CTO</span>
                   <p>Full-stack developer for 15+ years, 2x startup founder (1x exit, 2019). Loves Solidity and Ant.Design.</p>
                   <div class="social">
-                    <a href="https://twitter.com/sandeeparneja"><i class="ri-twitter-fill"></i></a>
-                    <a href="https://www.linkedin.com/in/sandeeparneja/"> <i class="ri-linkedin-box-fill"></i> </a>
+                    <a href="https://twitter.com/sandeeparneja"><i class="bx bxl-twitter"></i></a>
+                    <a href="https://www.linkedin.com/in/sandeeparneja/"> <i class="bx bxl-linkedin"></i> </a>
                   </div>
                 </div>
               </div>
@@ -373,7 +382,7 @@ const Auction2 = props => {
 
             <div class="col-lg-6 mt-4">
               <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="300">
-                <div class="pic"><img src="../img/team/anon1.png" class="img-fluid" alt="" /></div>
+                <div class="pic"><img src={anon1} class="img-fluid profile-pic" alt="" /></div>
                 <div class="member-info">
                   <h4>You?</h4>
                   <span>Lead Developer</span>
@@ -384,7 +393,7 @@ const Auction2 = props => {
 
             <div class="col-lg-6 mt-4">
               <div class="member d-flex align-items-start" data-aos="zoom-in" data-aos-delay="400">
-                <div class="pic"><img src="../img/team/anon2.png" class="img-fluid" alt="" /></div>
+                <div class="pic"><img src={anon2} class="img-fluid profile-pic" alt="" /></div>
                 <div class="member-info">
                   <h4>Your friend? </h4>
                   <span>Marketing</span>
@@ -426,8 +435,8 @@ const Auction2 = props => {
           <div class="col-lg-3 col-md-6 footer-contact">
             <a href="index.html" class="logo"><img src="../img/NFTD_Logo_2.png" alt="" class="img-fluid  footer-logo" /></a>
             <p>
-              Made with ❤️ in
-              Texas and New York
+              Made with ❤️
+              <p>in Texas and New York</p>
               <p><strong>Email:</strong> info_at_nftdeals.xyz</p>
             </p>
           </div>
@@ -475,7 +484,6 @@ const Auction2 = props => {
       </div>
     </div>
   </footer>
-
     </>
   )
 }
