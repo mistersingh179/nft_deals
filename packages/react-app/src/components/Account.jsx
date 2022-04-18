@@ -4,7 +4,7 @@ import { useThemeSwitcher } from "react-css-theme-switcher";
 
 import Address from "./Address";
 import Balance from "./Balance";
-import Wallet from "./Wallet";
+// import Wallet from "./Wallet";
 
 /** 
   ~ What it does? ~
@@ -65,25 +65,20 @@ export default function Account({
       modalButtons.push(
         <Button
           key="logoutbutton"
-          style={{ verticalAlign: "top", marginLeft: 8, marginTop: 4 }}
-          shape="round"
-          size="large"
+          style={{ position: "fixed", bottom: "24px", right: "24px" }}
           onClick={logoutOfWeb3Modal}
         >
-          logout
+          Disconnect Wallet
         </Button>,
       );
     } else {
       modalButtons.push(
         <Button
           key="loginbutton"
-          style={{ verticalAlign: "top", marginLeft: 8, marginTop: 4 }}
-          shape="round"
-          size="large"
-          /* type={minimized ? "default" : "primary"}     too many people just defaulting to MM and having a bad time */
+          style={{ position: "fixed", bottom: "24px", right: "24px" }}
           onClick={loadWeb3Modal}
         >
-          connect
+          Connect Wallet
         </Button>,
       );
     }
@@ -91,19 +86,11 @@ export default function Account({
   const display = minimized ? (
     ""
   ) : (
-    <span>
+    <div>
       {web3Modal && web3Modal.cachedProvider ? (
         <>
           {address && <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />}
           <Balance address={address} provider={localProvider} price={price} readContracts={readContracts} />
-          <Wallet
-            address={address}
-            provider={localProvider}
-            signer={userSigner}
-            ensProvider={mainnetProvider}
-            price={price}
-            color={currentTheme === "light" ? "#1890ff" : "#2caad9"}
-          />
         </>
       ) : useBurner ? (
         ""
@@ -118,20 +105,32 @@ export default function Account({
       {useBurner && web3Modal && !web3Modal.cachedProvider ? (
         <>
           <Address address={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
-          <Balance address={address} provider={localProvider} price={price} readContracts={readContracts} />
-          <Wallet
-            address={address}
-            provider={localProvider}
-            signer={userSigner}
-            ensProvider={mainnetProvider}
-            price={price}
-            color={currentTheme === "light" ? "#1890ff" : "#2caad9"}
-          />
+          <div style={{ fontSize: 16, fontWeight: 500, padding: "2em 0 0.5em 0" }}>Fund Available</div>
+          <div style={{
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderImage: "initial",
+            borderColor: "#dde1e6",
+            padding: "1rem",
+          }}>
+              <Balance token_type="ETH" address={address} provider={localProvider} price={price} readContracts={readContracts} />
+              <Balance token_type="WETH" address={address} provider={localProvider} price={price} readContracts={readContracts} />
+          </div>
+          <div style={{
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderImage: "initial",
+            borderColor: "#dde1e6",
+            padding: "1rem",
+            textAlign: "right",
+          }}>
+            <a href={"https://app.uniswap.org/#/swap?chain=mainnet"}>Convert ETH / WETH</a>
+          </div>
         </>
       ) : (
         <></>
       )}
-    </span>
+    </div>
   );
 
   return (

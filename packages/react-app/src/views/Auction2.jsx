@@ -1,6 +1,11 @@
 import bayc300 from '../img/BAYC300.png';
+import logo from '../img/NFTD_Logo_2.png';
 import {NetworkDisplay, ThemeSwitch} from "../components";
 import AccountAndOthers from "../components/AccountAndOthers";
+
+import React, { useState } from 'react';
+import {Drawer, Button, Space, Radio, Skeleton} from 'antd';
+import Blockies from "react-blockies";
 
 const Auction2 = props => {
   const {NETWORKCHECK, localChainId, selectedChainId, targetNetwork, logoutOfWeb3Modal, USE_NETWORK_SELECTOR} = props
@@ -8,15 +13,43 @@ const Auction2 = props => {
     loadWeb3Modal, blockExplorer, readContracts,
     networkOptions, selectedNetwork, setSelectedNetwork, USE_BURNER_WALLET, yourLocalBalance} = props
 
+  const [visible, setVisible] = useState(false);
+  const [placement, setPlacement] = useState('right');
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  const onChange = (e) => {
+    setPlacement("right");
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
+
+  function BlockiesIcon(props) {
+    const address = props.address;
+    if (address) {
+      return (
+        <div onClick={showDrawer}>
+          <Blockies seed={address.toLowerCase()}
+                    size={8}
+                    scale={props.fontSize ? props.fontSize / 7 : 4}
+          />
+        </div>
+    );}
+    return <span />;
+  }
+
     return (
     <>
       <header id="header" className="fixed-top ">
         <div className="container d-flex align-items-center">
 
           <a href="index.html" className="logo mr-auto">
-            <img src="assets/img/NFTD_Logo_2.png" alt="" className="img-fluid"/>
+            <img src={logo} alt="" className="img-fluid"/>
           </a>
-
           <nav className="nav-menu d-none d-lg-block">
             <ul>
               <li className="active"><a href="#">Bid to Win</a></li>
@@ -26,39 +59,51 @@ const Auction2 = props => {
             </ul>
           </nav>
 
-          <a href="#about" className="get-started-btn scrollto">Connect Wallet</a>
+          <Space>
+            <a href="#about" className="get-started-btn scrollto">Connect Wallet</a>
+            <BlockiesIcon address={address} />
+          </Space>
 
         </div>
       </header>
       <section id="hero" className="d-flex align-items-center">
-        <NetworkDisplay
-            NETWORKCHECK={NETWORKCHECK}
-            localChainId={localChainId}
-            selectedChainId={selectedChainId}
-            targetNetwork={targetNetwork}
-            logoutOfWeb3Modal={logoutOfWeb3Modal}
-            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-        />
-        <AccountAndOthers
-            useBurner={USE_BURNER_WALLET}
-            address={address}
-            localProvider={localProvider}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            price={price}
-            web3Modal={web3Modal}
-            loadWeb3Modal={loadWeb3Modal}
-            logoutOfWeb3Modal={logoutOfWeb3Modal}
-            blockExplorer={blockExplorer}
-            readContracts={readContracts}
-            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-            networkOptions={networkOptions}
-            selectedNetwork={selectedNetwork}
-            setSelectedNetwork={setSelectedNetwork}
-            USE_BURNER_WALLET={USE_BURNER_WALLET}
-            yourLocalBalance={yourLocalBalance}
-            targetNetwork={targetNetwork}
+
+        <Drawer
+          title="Your Wallet"
+          placement={placement}
+          width={400}
+          onClose={onClose}
+          visible={visible}
+        >
+          <NetworkDisplay
+              NETWORKCHECK={NETWORKCHECK}
+              localChainId={localChainId}
+              selectedChainId={selectedChainId}
+              targetNetwork={targetNetwork}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
           />
+          <AccountAndOthers
+              useBurner={USE_BURNER_WALLET}
+              address={address}
+              localProvider={localProvider}
+              userSigner={userSigner}
+              mainnetProvider={mainnetProvider}
+              price={price}
+              web3Modal={web3Modal}
+              loadWeb3Modal={loadWeb3Modal}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              blockExplorer={blockExplorer}
+              readContracts={readContracts}
+              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+              networkOptions={networkOptions}
+              selectedNetwork={selectedNetwork}
+              setSelectedNetwork={setSelectedNetwork}
+              USE_BURNER_WALLET={USE_BURNER_WALLET}
+              yourLocalBalance={yourLocalBalance}
+              targetNetwork={targetNetwork}
+            />
+        </Drawer>
 
         <div class={'container'}>
           <div className="row">

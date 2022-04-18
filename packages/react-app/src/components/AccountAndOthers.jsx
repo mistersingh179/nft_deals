@@ -1,5 +1,6 @@
 import {Account, FaucetHint, NetworkSwitch} from "./index";
 import {ethers} from "ethers";
+import React, { useState } from 'react';
 
 const AccountAndOthers = props => {
   const {useBurner, address, localProvider, userSigner,
@@ -8,13 +9,30 @@ const AccountAndOthers = props => {
     USE_NETWORK_SELECTOR, networkOptions,
     selectedNetwork, setSelectedNetwork,
     USE_BURNER_WALLET, yourLocalBalance, targetNetwork
-  } = props
+  } = props;
+  const [bottom, setBottom] = useState(10);
+
   return (
 
-  <div style={{ position: "fixed", textAlign: "right", right: 0, top: 50, padding: 10 }}>
-        <div style={{ display: "flex", flex: 1, alignItems: "center" }}>
+      <div style={{}}>
+        <div style={{ alignItems: "center" }}>
+            <Account
+              useBurner={USE_BURNER_WALLET}
+              address={address}
+              localProvider={localProvider}
+              userSigner={userSigner}
+              mainnetProvider={mainnetProvider}
+              price={price}
+              web3Modal={web3Modal}
+              loadWeb3Modal={loadWeb3Modal}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              blockExplorer={blockExplorer}
+              readContracts={readContracts}
+            />
+        </div>
+        <div style={{ position: "fixed", bottom: "24px" }}>
           {USE_NETWORK_SELECTOR && (
-            <div style={{ marginRight: 20 }}>
+            <div >
               <NetworkSwitch
                 networkOptions={networkOptions}
                 selectedNetwork={selectedNetwork}
@@ -22,23 +40,10 @@ const AccountAndOthers = props => {
               />
             </div>
           )}
-          <Account
-            useBurner={USE_BURNER_WALLET}
-            address={address}
-            localProvider={localProvider}
-            userSigner={userSigner}
-            mainnetProvider={mainnetProvider}
-            price={price}
-            web3Modal={web3Modal}
-            loadWeb3Modal={loadWeb3Modal}
-            logoutOfWeb3Modal={logoutOfWeb3Modal}
-            blockExplorer={blockExplorer}
-            readContracts={readContracts}
-          />
+          {yourLocalBalance.lte(ethers.BigNumber.from("0")) && targetNetwork.name.indexOf("local") == 0 && (
+              <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
+          )}
         </div>
-        {yourLocalBalance.lte(ethers.BigNumber.from("0")) && targetNetwork.name.indexOf("local") == 0 && (
-          <FaucetHint localProvider={localProvider} targetNetwork={targetNetwork} address={address} />
-        )}
       </div>
   )
 }
