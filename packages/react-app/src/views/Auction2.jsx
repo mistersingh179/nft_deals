@@ -10,12 +10,13 @@ import logo from '../img/NFTD_Logo_2.png';
 import {LoginLogoutButton, NetworkDisplay, ThemeSwitch, ApproveBidButtonsCombo} from "../components";
 import AccountAndOthers from "../components/AccountAndOthers";
 
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Drawer, Button, Space, Radio, Skeleton, Tooltip} from 'antd';
 import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
 import {useParams} from "react-router-dom";
+import {useTopNavClass} from "../hooks";
 
 const Auction2 = props => {
   const {NETWORKCHECK, localChainId, selectedChainId, targetNetwork, logoutOfWeb3Modal, USE_NETWORK_SELECTOR} = props
@@ -55,9 +56,11 @@ const Auction2 = props => {
   let { slug } = useParams();
   const auctionContractAddress = slug
 
+  const topNavClass = useTopNavClass()
+
     return (
     <>
-      <header id="header" className="fixed-top ">
+      <header id="header" className={`fixed-top ${topNavClass}`}>
         <div className="container d-flex align-items-center">
 
           <a href="index.html" className="logo mr-auto">
