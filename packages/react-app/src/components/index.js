@@ -25,3 +25,4 @@ export { default as MultiAddressInput } from "./MultiAddressInput";
 export { default as TokenSelect } from "./TokenSelect";
 export { default as TopNavMenu } from "./TopNavMenu";
 export { default as LoginLogoutButton } from "./LoginLogoutButton";
+export { default as ApproveBidButtonsCombo } from "./ApproveBidButtonsCombo";

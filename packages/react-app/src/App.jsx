@@ -314,11 +314,13 @@ function App(props) {
           logoutOfWeb3Modal={logoutOfWeb3Modal}
           blockExplorer={blockExplorer}
           readContracts={readContracts}
+          writeContracts={writeContracts}
           networkOptions={networkOptions}
           selectedNetwork={selectedNetwork}
           setSelectedNetwork={setSelectedNetwork}
           USE_BURNER_WALLET={USE_BURNER_WALLET}
           yourLocalBalance={yourLocalBalance}
+          tx={tx}
         />
       </Route>
       <Route>

@@ -7,7 +7,7 @@ import sandeep from '../img/team/sandeep.jpg';
 import anon1 from '../img/team/anon1.png';
 import anon2 from '../img/team/anon2.png';
 import logo from '../img/NFTD_Logo_2.png';
-import {LoginLogoutButton, NetworkDisplay, ThemeSwitch} from "../components";
+import {LoginLogoutButton, NetworkDisplay, ThemeSwitch, ApproveBidButtonsCombo} from "../components";
 import AccountAndOthers from "../components/AccountAndOthers";
 
 import React, { useState } from 'react';
@@ -15,12 +15,13 @@ import {Drawer, Button, Space, Radio, Skeleton, Tooltip} from 'antd';
 import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
+import {useParams} from "react-router-dom";
 
 const Auction2 = props => {
   const {NETWORKCHECK, localChainId, selectedChainId, targetNetwork, logoutOfWeb3Modal, USE_NETWORK_SELECTOR} = props
   const {useBurner, address, localProvider, userSigner, mainnetProvider, price, web3Modal,
-    loadWeb3Modal, blockExplorer, readContracts,
-    networkOptions, selectedNetwork, setSelectedNetwork, USE_BURNER_WALLET, yourLocalBalance} = props
+    loadWeb3Modal, blockExplorer, readContracts, writeContracts,
+    networkOptions, selectedNetwork, setSelectedNetwork, USE_BURNER_WALLET, yourLocalBalance, tx} = props
 
   const [visible, setVisible] = useState(false);
   const [placement, setPlacement] = useState('right');
@@ -50,6 +51,9 @@ const Auction2 = props => {
     );}
     return <span />;
   }
+
+  let { slug } = useParams();
+  const auctionContractAddress = slug
 
     return (
     <>
@@ -170,9 +174,14 @@ const Auction2 = props => {
               </div>
               <div className="row">
                 <div className="col-sm-6 offset-sm-3 col-lg-6 offset-lg-0">
-                  <button onClick="gtag('event','button_click');" className="btn btn-primary btn-lg btn-block"
-                          data-toggle="modal" data-target="#bidModal">Bid Now
-                  </button>
+                  <ApproveBidButtonsCombo
+                    writeContracts={writeContracts}
+                    readContracts={readContracts}
+                    address={address}
+                    localProvider={localProvider}
+                    auctionContractAddress={auctionContractAddress}
+                    tx={tx}
+                  />
                 </div>
               </div>
               <div className="row">

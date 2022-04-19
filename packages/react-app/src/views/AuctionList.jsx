@@ -61,13 +61,16 @@ export default function AuctionList({
         const minimumBidIncrement = await auction.minimumBidIncrement();
         // const balance = await localProvider.getBalance(auctionContractAddress);
         const balance = await readContracts.WETH.balanceOf(auctionContractAddress);
-        const myErc721 = new ethers.Contract(
-          nftContract,
-          ERC721PresetMinterPauserAutoIdABI,
-          userSigner
-        );
-        const nftApproval = await myErc721.getApproved(tokenId.toString());
-        const weHaveApproval = (nftApproval == auctionContractAddress)
+        var weHaveApproval = false
+        if(userSigner){
+          const myErc721 = new ethers.Contract(
+            nftContract,
+            ERC721PresetMinterPauserAutoIdABI,
+            userSigner
+          );
+          const nftApproval = await myErc721.getApproved(tokenId.toString());
+          weHaveApproval = (nftApproval == auctionContractAddress)
+        }
         const data = { nftContract, tokenId, expiration,
           highestBid, minimumBidIncrement, weHaveApproval,
         _weHavePossessionOfNft, winningAddress,
