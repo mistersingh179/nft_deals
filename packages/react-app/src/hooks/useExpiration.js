@@ -1,38 +1,47 @@
 import {useState, useEffect} from "react";
 import moment from "moment";
 import {useBlockNumber} from "eth-hooks";
+import useAuctionContract from './useAuctionContract'
+import {ethers} from "ethers";
 
-export default (expiration, localProvider) => {
+export default (readContracts, auctionContractAddress, localProvider) => {
 
-  const blockNumber = useBlockNumber(localProvider);
-
+  const incrementTime = 1000
   const [durationToExpire, setDurationToExpire] = useState(moment.duration(24, 'hours'))
+  const blockNumber = useBlockNumber(localProvider)
+  const auctionContract = useAuctionContract(readContracts, auctionContractAddress, localProvider);
+
+  useEffect(() => {
+    const init = async () => {
+      if(auctionContract){
+        const expiration = await auctionContract.expiration()
+        const exp = moment(expiration, 'X')
+        const duration = moment.duration(exp.diff(moment()))
+        console.log('*** syncing with blockchain and got latest duration to be: ', duration)
+        setDurationToExpire(duration)
+      }
+    }
+    init()
+  }, [auctionContract, blockNumber])
 
   useEffect(() => {
     const updateExpiration = () => {
-      console.log('asked to update time')
       setDurationToExpire(prevDuration => {
         console.log('*** manually ticking time down')
         const newDuration = prevDuration.clone()
-        newDuration.subtract(1, 's')
+        newDuration.subtract(incrementTime, 'ms')
         return newDuration
       })
-    }
+    };
 
-    if(expiration){
-      const exp = moment(expiration, 'X')
-      const duration = moment.duration(exp.diff(moment()))
-      console.log('*** syncing time with blockchain')
-      setDurationToExpire(duration)
-    }
-
-    const intervalHandler = setInterval(updateExpiration, 1000);
+    console.log('*** setting up interval to update time')
+    const intervalHandler = setInterval(updateExpiration, incrementTime);
 
     return () => {
-      console.log('*** stopping manual time ticking')
+      console.log('*** removing interval which updates time')
       window.clearInterval(intervalHandler)
     }
-  }, [expiration, blockNumber])
+  }, [])
 
   return durationToExpire
 }

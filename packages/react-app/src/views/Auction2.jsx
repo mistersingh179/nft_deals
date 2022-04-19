@@ -15,8 +15,9 @@ import {Drawer, Button, Space, Radio, Skeleton, Tooltip} from 'antd';
 import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useTopNavClass} from "../hooks";
+import useExpiration from "../hooks/useExpiration";
 
 const Auction2 = props => {
   const {NETWORKCHECK, localChainId, selectedChainId, targetNetwork, logoutOfWeb3Modal, USE_NETWORK_SELECTOR} = props
@@ -55,8 +56,8 @@ const Auction2 = props => {
 
   let { slug } = useParams();
   const auctionContractAddress = slug
-
   const topNavClass = useTopNavClass()
+  const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
 
     return (
     <>
@@ -70,7 +71,9 @@ const Auction2 = props => {
             <ul>
               <li className="active"><a href="#">Bid to Win</a></li>
               <li><a href="#claim">Claim NFT</a></li>
-              <li><a href="#sell">Sell Your NFT</a></li>
+              <li>
+                <Link to="/AuctionList">Sell Your NFT</Link>
+              </li>
               <li><a href="#docs">Docs</a></li>
             </ul>
           </nav>
@@ -158,7 +161,9 @@ const Auction2 = props => {
                     until the last few minutes.">
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
-                  <h1 id="end-timer">2h 12m 53s</h1>
+                  <h1 id="end-timer">
+                    {durationToExpire && `${durationToExpire.hours()} hours, ${durationToExpire.minutes()} minutes, ${durationToExpire.seconds()} seconds`}
+                  </h1>
                 </div>
               </div>
               <div className="row">

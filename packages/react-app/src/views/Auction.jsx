@@ -147,7 +147,7 @@ export default function Auction({
   }
   const location = useLocation();
 
-  const durationToExpire = useExpiration(auctionOptions.expiration, localProvider)
+  const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
 
   return (
     <div>

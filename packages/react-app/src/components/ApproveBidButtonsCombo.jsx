@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {BigNumber, ethers} from "ethers";
 import {Auction} from "../views";
 import {useBlockNumber} from "eth-hooks";
+import useAuctionContract from "../hooks/useAuctionContract";
 
 const ApproveBidButtonsCombo = props => {
   const {
@@ -19,21 +20,25 @@ const ApproveBidButtonsCombo = props => {
   const [fundsApproved, setFundsApproved] = useState(ethers.BigNumber.from(0));
   const [expiration, setExpiration] = useState(ethers.BigNumber.from(0));
   const blockNumber = useBlockNumber(localProvider);
+  const auctionContract = useAuctionContract(readContracts, auctionContractAddress, localProvider);
 
   useEffect(async () => {
-    if (readContracts && readContracts.Auction && auctionContractAddress) {
-      const auctionContract = readContracts.Auction.attach(auctionContractAddress);
-      const highestBid = await auctionContract.highestBid()
-      const minimumBidIncrement = await auctionContract.minimumBidIncrement()
+    if (auctionContract && localProvider) {
+      const highestBid = await auctionContract.highestBid();
+      const minimumBidIncrement = await auctionContract.minimumBidIncrement();
       const desiredApprovalAmount = highestBid.add(BigNumber.from(minimumBidIncrement).mul(1000))
       setDesiredApprovalAmount(desiredApprovalAmount)
     }
-  }, [readContracts && readContracts.Auction, auctionContractAddress, blockNumber]);
+  }, [localProvider, auctionContract, blockNumber]);
 
   useEffect(async () => {
-    if(readContracts && readContracts.WETH && address && auctionContractAddress){
-      const result = await readContracts.WETH.allowance(address, auctionContractAddress)
-      setFundsApproved(result);
+    try{
+      if(readContracts && readContracts.WETH && address && auctionContractAddress){
+        const result = await readContracts.WETH.allowance(address, auctionContractAddress)
+        setFundsApproved(result);
+      }
+    }catch(e){
+      console.error('unable to get approved funds', e)
     }
   }, [readContracts && readContracts.WETH, address, auctionContractAddress, blockNumber])
 
@@ -52,12 +57,11 @@ const ApproveBidButtonsCombo = props => {
   }, [desiredApprovalAmount, fundsApproved])
 
   useEffect(async () => {
-    if (readContracts && readContracts.Auction && auctionContractAddress) {
-      const auctionContract = readContracts.Auction.attach(auctionContractAddress);
+    if (auctionContract) {
       const expiration = await auctionContract.expiration()
       setExpiration(expiration)
     }
-  },[readContracts && readContracts.Auction, auctionContractAddress, blockNumber])
+  },[localProvider, auctionContract, blockNumber])
 
   const approveButtonHandler = async () => {
     if (writeContracts && writeContracts.WETH && auctionContractAddress) {
