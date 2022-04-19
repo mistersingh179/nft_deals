@@ -7,7 +7,7 @@ import sandeep from '../img/team/sandeep.jpg';
 import anon1 from '../img/team/anon1.png';
 import anon2 from '../img/team/anon2.png';
 import logo from '../img/NFTD_Logo_2.png';
-import {NetworkDisplay, ThemeSwitch} from "../components";
+import {LoginLogoutButton, NetworkDisplay, ThemeSwitch} from "../components";
 import AccountAndOthers from "../components/AccountAndOthers";
 
 import React, { useState } from 'react';
@@ -69,7 +69,13 @@ const Auction2 = props => {
           </nav>
 
           <Space>
-            <a href="#about" className="get-started-btn scrollto">Connect Wallet</a>
+            <LoginLogoutButton
+              web3Modal={web3Modal}
+              loadWeb3Modal={loadWeb3Modal}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              className="get-started-btn scrollto"
+            />
+
             <BlockiesIcon address={address} />
           </Space>
 

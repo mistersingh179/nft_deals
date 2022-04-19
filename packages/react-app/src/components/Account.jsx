@@ -86,6 +86,7 @@ export default function Account({
       );
     }
   }
+
   const display = minimized ? (
     ""
   ) : (
