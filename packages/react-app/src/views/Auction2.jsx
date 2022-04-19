@@ -162,7 +162,7 @@ const Auction2 = props => {
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
                   <h1 id="end-timer">
-                    {durationToExpire && `${durationToExpire.hours()} hours, ${durationToExpire.minutes()} minutes, ${durationToExpire.seconds()} seconds`}
+                    <Duration durationToExpire={durationToExpire} />
                   </h1>
                 </div>
               </div>
@@ -449,6 +449,13 @@ const Auction2 = props => {
   </footer>
     </>
   )
+}
+
+const Duration = ({durationToExpire}) => {
+  return <>
+    {durationToExpire && durationToExpire.as('seconds') > 0 && `${durationToExpire.hours()} hours, ${durationToExpire.minutes()} minutes, ${durationToExpire.seconds()} seconds`}
+    {durationToExpire && durationToExpire.as('seconds') <= 0 && `Expired`}
+  </>
 }
 
 export default Auction2

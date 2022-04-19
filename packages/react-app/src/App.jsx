@@ -500,7 +500,7 @@ function App(props) {
             </Route>
           </Switch>
 
-          <ThemeSwitch />
+          {/*<ThemeSwitch />*/}
 
           <NetworkDisplay
             NETWORKCHECK={NETWORKCHECK}
