@@ -14,6 +14,7 @@ import NftImage from "../components/NftImage";
 import {useBlockNumber} from "eth-hooks";
 import Text from "antd/es/typography/Text";
 import BidEvents from "../components/BidEvents";
+import useExpiration from "../hooks/useExpiration";
 
 export default function Auction({
   purpose,
@@ -146,6 +147,8 @@ export default function Auction({
   }
   const location = useLocation();
 
+  const durationToExpire = useExpiration(auctionOptions.expiration, localProvider)
+
   return (
     <div>
       <TopNavMenu location={location} />
@@ -170,7 +173,11 @@ export default function Auction({
         </Text>
 
         <Divider />
-        Expiration: {moment(auctionOptions.expiration, 'X').fromNow()}
+        Expiration: {auctionOptions.expiration}
+        <br/>
+        {durationToExpire && `${durationToExpire.hours()} hours, ${durationToExpire.minutes()} minutes, ${durationToExpire.seconds()} seconds`}
+        <br/>
+        BlockNumber: {blockNumber}
         <br/>
         {(moment().unix() > auctionOptions.expiration) && <Text type="danger">Expired</Text>}
         {(auctionOptions.expiration > 0) && (moment().unix() < auctionOptions.expiration) &&
