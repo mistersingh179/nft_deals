@@ -1,19 +1,50 @@
 import { useEffect, useState } from "react";
 import {ethers} from "ethers";
 import ERC721PresetMinterPauserAutoIdABI from "../abis/ERC721PresetMinterPauserAutoIdABI.json";
+import axios from "axios";
 
 const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
-  const [options, setOptions] = useState({
+  const [nftOptions, setNftOptions] = useState({
     symbol: '',
     name: '',
-    tokenUri: ''
+    tokenUri: '',
   });
 
   const updateOptions = (name, value) => {
-    setOptions(prev => {
+    setNftOptions(prev => {
       return { ...prev, [name]: value };
     });
   };
+
+  useEffect(()=> {
+    const init = async () => {
+      try{
+        if(nftOptions.name){
+          console.log('*** lets call opensea and get details for: ', nftOptions.name)
+          const result = await axios({
+            method: 'get',
+            url: `https://api.opensea.io/api/v1/collection/${nftOptions.name.toLowerCase()}/stats`,
+            headers: {
+              'Accept': 'application/json'
+            },
+            responsedType: 'json'
+          })
+          console.log('*** opensea gave: ', result)
+          setNftOptions(prevObj => {
+            return {...prevObj, ...result.data.stats}
+          })
+        }
+      }catch(e){
+        console.error('unable to get nft options')
+      }
+    }
+    init()
+  }, [nftOptions.name]);
+
+  useEffect(() => {
+    // this is the way to see latest state, not printing after setting it, as set is async
+    // console.log('*** nftOptions: ', nftOptions)
+  }, [nftOptions])
 
   useEffect(() => {
     const init = async () => {
@@ -41,7 +72,7 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
     init()
   }, [nftContractAddress && localProvider && tokenId]);
 
-  return options
+  return nftOptions
 };
 
 export default useNftOptions

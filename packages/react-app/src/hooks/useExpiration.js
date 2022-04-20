@@ -17,7 +17,7 @@ export default (readContracts, auctionContractAddress, localProvider) => {
         const expiration = await auctionContract.expiration()
         const exp = moment(expiration, 'X')
         const duration = moment.duration(exp.diff(moment()))
-        console.log('*** syncing with blockchain and got latest duration to be: ', duration)
+        // console.log('*** syncing with blockchain and got latest duration to be: ', duration)
         setDurationToExpire(duration)
       }
     }
@@ -27,18 +27,18 @@ export default (readContracts, auctionContractAddress, localProvider) => {
   useEffect(() => {
     const updateExpiration = () => {
       setDurationToExpire(prevDuration => {
-        console.log('*** manually ticking time down')
+        // console.log('*** manually ticking time down')
         const newDuration = prevDuration.clone()
         newDuration.subtract(incrementTime, 'ms')
         return newDuration
       })
     };
 
-    console.log('*** setting up interval to update time')
+    // console.log('*** setting up interval to update time')
     const intervalHandler = setInterval(updateExpiration, incrementTime);
 
     return () => {
-      console.log('*** removing interval which updates time')
+      // console.log('*** removing interval which updates time')
       window.clearInterval(intervalHandler)
     }
   }, [])

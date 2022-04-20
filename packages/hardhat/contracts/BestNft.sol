@@ -6,7 +6,7 @@ import "base64-sol/base64.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract BestNft is ERC721PresetMinterPauserAutoId {
-    constructor() ERC721PresetMinterPauserAutoId("Best NFT", "BN", "http://"){ }
+    constructor() ERC721PresetMinterPauserAutoId("BoredApeYachtClub", "BAYC", "http://"){ }
     using Strings for uint;
     using Counters for Counters.Counter;
     Counters.Counter public tokenIdTracker;
@@ -30,7 +30,7 @@ contract BestNft is ERC721PresetMinterPauserAutoId {
           bytes(
               string(
                   abi.encodePacked(
-                      '{"name": "Best NFT", "description": "for testing", "image": "', image_url, '"}'
+                      '{"name": "BoredApeYachtClub", "description": "for testing", "image": "', image_url, '"}'
                   )
               )
           )

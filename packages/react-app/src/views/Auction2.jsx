@@ -46,7 +46,6 @@ const Auction2 = props => {
   const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
   const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId)
-
   const [blockExplorerLink, setBlockExplorerLink] = useState('')
   useEffect(() => {
     if(auctionContractAddress){
@@ -117,7 +116,12 @@ const Auction2 = props => {
             <div className="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-2 order-sm-2"
                  data-aos="fade-up" data-aos-delay="200">
               <h1>{nftOptions.name} #{auctionOptions.tokenId.toString()}</h1>
-              <h2>Collection Floor Price: Ξ 111 <span className="smaller-usdc">(~$390,707.79)</span></h2>
+              <h2>
+                Collection Floor Price: Ξ {nftOptions.floor_price}
+                <span className="smaller-usdc">
+                  (~{nftOptions.floor_price && price && `$${ethers.utils.commify((nftOptions.floor_price * price).toFixed(2))}`})
+                </span>
+              </h2>
               <div className="row">
                 <div className="col-md-6 bid-box">
                   <Space>

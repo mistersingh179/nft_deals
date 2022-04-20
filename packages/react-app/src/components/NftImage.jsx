@@ -22,7 +22,7 @@ export default function NftImage(props) {
   } = props
 
   const nftOptions = useNftOptions(nftContractAddress, localProvider, tokenId)
-  console.log('*** nftOptions: ', nftOptions)
+  // console.log('*** nftOptions: ', nftOptions)
   if(!nftOptions.tokenUri){
     return <Skeleton />
   }
