@@ -16,6 +16,7 @@ export default function NftImage(props) {
     localProvider,
     width,
     height,
+    className,
     style
   } = props
 
@@ -51,8 +52,8 @@ export default function NftImage(props) {
 
   return (
     <div style={style}>
-      <img src={nftTokenUrl} width={width} height={height} /><br/><br/>
-      <Address address={nftContractAddress} fontSize={14}></Address> Token Id: {tokenId && tokenId.toString()}
+      <img src={nftTokenUrl} width={width} height={height} className={className} /><br/><br/>
+      {/*<Address address={nftContractAddress} fontSize={14}></Address> Token Id: {tokenId && tokenId.toString()}*/}
     </div>
   );
 }

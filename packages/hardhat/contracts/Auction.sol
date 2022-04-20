@@ -37,21 +37,20 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     bytes32 public constant CASHIER_ROLE = keccak256("CASHIER_ROLE");
     address public constant _rodAddress = 0x44791F3A984982499Dc582633D2b5BFc8F9850c5;
     address public constant _sandeepAddress = 0x6B09B3C63B72fF54Bcb7322B607E304a13Fba72B;
-    uint public constant platformFeeInBasisPoints = 100;
+
+    uint public immutable platformFeeInBasisPoints;
     uint public immutable listerFeeInBasisPoints;
     IERC20 public immutable weth;
+    uint public immutable minimumBidIncrement;
+    uint public immutable auctionTimeIncrementOnBid;
+    address public immutable nftListerAddress;
+    uint public immutable initialAuctionLength;
 
     IERC721 public immutable nftContract;
     uint public immutable tokenId;
 
     bool public _weHavePossessionOfNft;
-    address public nftListerAddress;
-
     uint public expiration;
-    uint public minimumBidIncrement;
-    uint public auctionTimeIncrementOnBid;
-    uint public initialAuctionLength;
-
     address public winningAddress;
     uint public highestBid;
     uint public _platformFeesAccumulated;
@@ -77,6 +76,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             tokenId = _tokenId;
             nftListerAddress = _nftListerAddress;
             listerFeeInBasisPoints = _listerFeeInBasisPoints;
+            platformFeeInBasisPoints = _listerFeeInBasisPoints > 100 ? _listerFeeInBasisPoints : 100;
             initialAuctionLength = _initialAuctionLength;
             highestBid = startBidAmount;
             auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;

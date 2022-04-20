@@ -31,6 +31,7 @@ import Balance from "../components/Balance";
 import {ReactComponent as WEthLogo} from "../img/wrapped_ethereum_icon.svg";
 import {ReactComponent as EthLogo} from "../img/ethereum_icon.svg";
 import {Typography, Drawer, Button, Space, Radio, Skeleton, Tooltip, Col, Row} from 'antd';
+import NftImage from "../components/NftImage";
 const { Text } = Typography;
 
 const Auction2 = props => {
@@ -179,7 +180,12 @@ const Auction2 = props => {
               </div>
             </div>
             <div className="col-lg-6 order-1 order-lg-1 order-sm-1 hero-img" data-aos="zoom-in" data-aos-delay="200">
-              <img src={bayc300} className="img-fluid" alt="" />
+              <NftImage
+                nftContractAddress={auctionOptions.nftContract}
+                tokenId={auctionOptions.tokenId}
+                localProvider={localProvider}
+                className="img-fluid"
+              />
             </div>
           </div>
         </div>
@@ -393,7 +399,7 @@ const Auction2 = props => {
 
 const Duration = ({durationToExpire}) => {
   return <>
-    {durationToExpire && durationToExpire.as('seconds') > 0 && `${durationToExpire.hours()} hours, ${durationToExpire.minutes()} minutes, ${durationToExpire.seconds()} seconds`}
+    {durationToExpire && durationToExpire.as('seconds') > 0 && `${durationToExpire.hours()}h ${durationToExpire.minutes()}m ${durationToExpire.seconds()}s`}
     {durationToExpire && durationToExpire.as('seconds') <= 0 && `Expired`}
   </>
 }

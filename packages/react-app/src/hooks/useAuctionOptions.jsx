@@ -6,13 +6,16 @@ import {useBlockNumber} from "eth-hooks";
 const useAuctionOptions = (readContracts, auctionContractAddress, localProvider) => {
   const auctionContract = useAuctionContract(readContracts, auctionContractAddress, localProvider)
   const blockNumber = useBlockNumber(localProvider);
+  const zeroAddress = '0x0000000000000000000000000000000000000000'
 
   const [auctionOptions, setAuctionOptions] = useState({
-    winningAddress: '0x0000000000000000000000000000000000000000',
+    winningAddress: zeroAddress,
     highestBid: ethers.BigNumber.from(0),
     expiration: ethers.BigNumber.from(0),
     minimumBidIncrement: ethers.BigNumber.from(0),
     _weHavePossessionOfNft: false,
+    nftContract: zeroAddress,
+    tokenId: ethers.BigNumber.from(0)
   });
   const updateAuctionOptions = (name, value) => {
     setAuctionOptions(prev => {
@@ -26,17 +29,32 @@ const useAuctionOptions = (readContracts, auctionContractAddress, localProvider)
         const winningAddress = await auctionContract.winningAddress();
         const highestBid = await auctionContract.highestBid();
         const expiration = await auctionContract.expiration();
-        const minimumBidIncrement = await auctionContract.minimumBidIncrement();
         const _weHavePossessionOfNft = await auctionContract._weHavePossessionOfNft();
         updateAuctionOptions('winningAddress', winningAddress)
         updateAuctionOptions('highestBid', highestBid)
         updateAuctionOptions('expiration', expiration)
-        updateAuctionOptions('minimumBidIncrement', minimumBidIncrement)
         updateAuctionOptions('_weHavePossessionOfNft', _weHavePossessionOfNft)
       }
     }
     setupAuctionOptions()
   }, [auctionContract, blockNumber]);
+
+  useEffect(() => {
+    const setupAuctionOptions = async () => {
+      if(auctionContract){
+        const nftContract = await auctionContract.nftContract();
+        const tokenId = await auctionContract.tokenId();
+        const minimumBidIncrement = await auctionContract.minimumBidIncrement();
+        updateAuctionOptions('nftContract', nftContract)
+        updateAuctionOptions('tokenId', tokenId)
+        updateAuctionOptions('minimumBidIncrement', minimumBidIncrement)
+
+      }
+    }
+    setupAuctionOptions()
+  }, [auctionContract]);
+
+
 
   return auctionOptions
 }
