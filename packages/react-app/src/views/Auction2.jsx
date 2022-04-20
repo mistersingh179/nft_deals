@@ -18,6 +18,7 @@ import FAQ from '../components/FAQ';
 import {Link, useParams} from "react-router-dom";
 import {useAuctionOptions, useTopNavClass} from "../hooks";
 import useExpiration from "../hooks/useExpiration";
+import BidHistoryButtonModalCombo from "../components/BidHistoryButtonModalCombo";
 
 const Auction2 = props => {
   const {NETWORKCHECK, localChainId, selectedChainId, targetNetwork, logoutOfWeb3Modal, USE_NETWORK_SELECTOR} = props
@@ -60,7 +61,7 @@ const Auction2 = props => {
   const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
 
-    return (
+  return (
     <>
       <header id="header" className={`fixed-top ${topNavClass}`}>
         <div className="container d-flex align-items-center">
@@ -195,8 +196,12 @@ const Auction2 = props => {
               </div>
               <div className="row">
                 <div className="col-sm-3 offset-sm-3 col-lg-3 offset-lg-0">
-                  <a href="#" className="btn btn-secondary btn-sm btn-block">
-                  <i className="bi bi-card-checklist btn-icon"></i> Bid History</a>
+                  <BidHistoryButtonModalCombo
+                    readContracts = {readContracts}
+                    auctionContractAddress={auctionContractAddress}
+                    mainnetProvider={mainnetProvider}
+                    localProvider={localProvider}
+                  />
                 </div>
                 <div className="col-sm-3 offset-sm-0 col-lg-3 offset-lg-0">
                   <a href="#" className="btn btn-secondary btn-sm btn-block">
@@ -211,36 +216,8 @@ const Auction2 = props => {
         </div>
       </section>
 
-      <div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Confirm Your Bid</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div class="col-lg">
-                  <p>We love your enthusiasm, but we're not quite ready :)</p>
-                  <p>Wen launch?! Very soon.</p>
-                  <p>Follow us on Twitter to get the latest alpha. Join our Discord to watch or build the product with us.</p>
-                  <div class="social-links mt-3 text-center">
-                    <a href="https://twitter.com/NFT_Deals_xyz" class="twitter"><i class="bx bxl-twitter"></i></a>
-                    <a href="https://discord.gg/Q8WM4yHc" class="discord"><i class="bx bxl-discord"></i></a>
-                  </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <main id="main">
-
-      <section id="services" class="services section-bg">
+        <section id="services" class="services section-bg">
         <div class="container" data-aos="fade-up">
 
           <div class="section-title">
@@ -285,9 +262,7 @@ const Auction2 = props => {
 
         </div>
       </section>
-
-
-      <section id="cta" class="cta">
+        <section id="cta" class="cta">
         <div class="container" data-aos="zoom-in">
 
           <div class="row">
@@ -300,17 +275,13 @@ const Auction2 = props => {
           </div>
         </div>
       </section>
-
-      <FAQ />
-
-      <section id="team" class="team section-bg">
-        <div class="container" data-aos="fade-up">
-
+        <FAQ />
+        <section id="team" class="team section-bg">
+          <div class="container" data-aos="fade-up">
           <div class="section-title">
             <h2>Team</h2>
             <p>We're a tight-knit team of hackers who love building products that users love. We won’t stop until all high-value, collectible NFT sales are running through NFT Deals.</p>
           </div>
-
           <div class="row">
 
             <div class="col-lg-6">
@@ -367,12 +338,11 @@ const Auction2 = props => {
             </div>
 
           </div>
-
         </div>
-      </section>
+        </section>
 
-      <section id="contact" class="contact">
-        <div class="container" data-aos="fade-up">
+        <section id="contact" class="contact">
+          <div class="container" data-aos="fade-up">
 
           <div class="section-title">
             <h2>Stay In Touch</h2>
@@ -387,10 +357,10 @@ const Auction2 = props => {
           </div>
 
         </div>
-      </section>
-    </main>
+        </section>
+      </main>
 
-  <footer id="footer">
+      <footer id="footer">
 
     <div class="footer-top">
       <div class="container">
