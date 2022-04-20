@@ -7,11 +7,17 @@ import sandeep from '../img/team/sandeep.jpg';
 import anon1 from '../img/team/anon1.png';
 import anon2 from '../img/team/anon2.png';
 import logo from '../img/NFTD_Logo_2.png';
-import {LoginLogoutButton, NetworkDisplay, ThemeSwitch, ApproveBidButtonsCombo} from "../components";
+import {
+  LoginLogoutButton,
+  NetworkDisplay,
+  ThemeSwitch,
+  ApproveBidButtonsCombo,
+  Address,
+  NetworkSwitch, FaucetHint, AccountDrawer
+} from "../components";
 import AccountAndOthers from "../components/AccountAndOthers";
 
 import React, {useEffect, useState} from 'react';
-import {Drawer, Button, Space, Radio, Skeleton, Tooltip} from 'antd';
 import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
@@ -19,41 +25,19 @@ import {Link, useParams} from "react-router-dom";
 import {useAuctionOptions, useTopNavClass} from "../hooks";
 import useExpiration from "../hooks/useExpiration";
 import BidHistoryButtonModalCombo from "../components/BidHistoryButtonModalCombo";
+import {ethers, utils} from "ethers";
+import {useContractReader} from "eth-hooks";
+import Balance from "../components/Balance";
+import {ReactComponent as WEthLogo} from "../img/wrapped_ethereum_icon.svg";
+import {ReactComponent as EthLogo} from "../img/ethereum_icon.svg";
+import {Typography, Drawer, Button, Space, Radio, Skeleton, Tooltip, Col, Row} from 'antd';
+const { Text } = Typography;
 
 const Auction2 = props => {
   const {NETWORKCHECK, localChainId, selectedChainId, targetNetwork, logoutOfWeb3Modal, USE_NETWORK_SELECTOR} = props
   const {useBurner, address, localProvider, userSigner, mainnetProvider, price, web3Modal,
     loadWeb3Modal, blockExplorer, readContracts, writeContracts,
     networkOptions, selectedNetwork, setSelectedNetwork, USE_BURNER_WALLET, yourLocalBalance, tx} = props
-
-  const [visible, setVisible] = useState(false);
-  const [placement, setPlacement] = useState('right');
-
-  const showDrawer = () => {
-    setVisible(true);
-  };
-
-  const onChange = (e) => {
-    setPlacement("right");
-  };
-
-  const onClose = () => {
-    setVisible(false);
-  };
-
-  function BlockiesIcon(props) {
-    const address = props.address;
-    if (address) {
-      return (
-        <div onClick={showDrawer}>
-          <Blockies seed={address.toLowerCase()}
-                    size={8}
-                    scale={props.fontSize ? props.fontSize / 7 : 4}
-          />
-        </div>
-    );}
-    return <span />;
-  }
 
   const { slug } = useParams();
   const auctionContractAddress = slug;
@@ -65,9 +49,8 @@ const Auction2 = props => {
     <>
       <header id="header" className={`fixed-top ${topNavClass}`}>
         <div className="container d-flex align-items-center">
-
-          <a href="index.html" className="logo mr-auto">
-            <img src={logo} alt="" className="img-fluid"/>
+          <a href="/" className="logo mr-auto">
+            <img src={logo} alt="" className="img-fluid" />
           </a>
           <nav className="nav-menu d-none d-lg-block">
             <ul>
@@ -87,51 +70,29 @@ const Auction2 = props => {
               logoutOfWeb3Modal={logoutOfWeb3Modal}
               className="get-started-btn scrollto"
             />
-
-            <BlockiesIcon address={address} />
-          </Space>
-
-        </div>
-      </header>
-
-      <section id="hero" className="d-flex align-items-center">
-
-        <Drawer
-          title="Your Wallet"
-          placement={placement}
-          width={400}
-          onClose={onClose}
-          visible={visible}
-        >
-          <NetworkDisplay
+            <AccountDrawer
+              address={address}
+              mainnetProvider={mainnetProvider}
+              blockExplorer={blockExplorer}
+              readContracts={readContracts}
+              yourLocalBalance={yourLocalBalance}
               NETWORKCHECK={NETWORKCHECK}
               localChainId={localChainId}
               selectedChainId={selectedChainId}
               targetNetwork={targetNetwork}
               logoutOfWeb3Modal={logoutOfWeb3Modal}
               USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-          />
-          <AccountAndOthers
-              useBurner={USE_BURNER_WALLET}
-              address={address}
-              localProvider={localProvider}
-              userSigner={userSigner}
-              mainnetProvider={mainnetProvider}
-              price={price}
-              web3Modal={web3Modal}
-              loadWeb3Modal={loadWeb3Modal}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              blockExplorer={blockExplorer}
-              readContracts={readContracts}
-              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
               networkOptions={networkOptions}
               selectedNetwork={selectedNetwork}
               setSelectedNetwork={setSelectedNetwork}
-              USE_BURNER_WALLET={USE_BURNER_WALLET}
-              yourLocalBalance={yourLocalBalance}
-              targetNetwork={targetNetwork}
+              localProvider={localProvider}
             />
-        </Drawer>
+          </Space>
+
+        </div>
+      </header>
+
+      <section id="hero" className="d-flex align-items-center">
 
         <div class={'container'}>
           <div className="row">

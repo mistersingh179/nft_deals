@@ -27,3 +27,4 @@ export { default as TopNavMenu } from "./TopNavMenu";
 export { default as LoginLogoutButton } from "./LoginLogoutButton";
 export { default as ApproveBidButtonsCombo } from "./ApproveBidButtonsCombo";
 export { default as BidHistoryButtonModalCombo } from "./BidHistoryButtonModalCombo";
+export { default as AccountDrawer } from "./AccountDrawer";
