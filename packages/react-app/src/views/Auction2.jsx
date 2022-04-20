@@ -45,6 +45,13 @@ const Auction2 = props => {
   const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
 
+  const [blockExplorerLink, setBlockExplorerLink] = useState('')
+  useEffect(() => {
+    if(auctionContractAddress){
+      setBlockExplorerLink(`${blockExplorer || "https://etherscan.io/"}address/${auctionContractAddress}`)
+    }
+  }, [auctionContractAddress, blockExplorer])
+
   return (
     <>
       <header id="header" className={`fixed-top ${topNavClass}`}>
@@ -165,7 +172,8 @@ const Auction2 = props => {
                   />
                 </div>
                 <div className="col-sm-3 offset-sm-0 col-lg-3 offset-lg-0">
-                  <a href="#" className="btn btn-secondary btn-sm btn-block">
+                  <a href={blockExplorerLink} className="btn btn-secondary btn-sm btn-block">
+
                   <i className="bi bi-patch-check-fill btn-icon"></i> Etherscan</a>
                 </div>
               </div>
