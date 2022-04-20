@@ -92,6 +92,11 @@ export default function BestNFT({
                 height={100}
                 style={{margin: 'auto'}}
               />
+              <Address
+                address={readContracts && readContracts.BestNft && readContracts.BestNft.address}
+                fontSize={14}
+              />
+              Token Id: {item && item.toString()}
             </List.Item>
           )}
         />

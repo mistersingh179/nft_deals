@@ -22,7 +22,7 @@ import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
 import {Link, useParams} from "react-router-dom";
-import {useAuctionOptions, useTopNavClass} from "../hooks";
+import {useAuctionOptions, useTopNavClass, useNftOptions} from "../hooks";
 import useExpiration from "../hooks/useExpiration";
 import BidHistoryButtonModalCombo from "../components/BidHistoryButtonModalCombo";
 import {ethers, utils} from "ethers";
@@ -45,6 +45,7 @@ const Auction2 = props => {
   const topNavClass = useTopNavClass()
   const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
+  const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId)
 
   const [blockExplorerLink, setBlockExplorerLink] = useState('')
   useEffect(() => {
@@ -115,7 +116,7 @@ const Auction2 = props => {
 
             <div className="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-2 order-sm-2"
                  data-aos="fade-up" data-aos-delay="200">
-              <h1>Bored Ape Yacht Club #2386</h1>
+              <h1>{nftOptions.name} #{auctionOptions.tokenId.toString()}</h1>
               <h2>Collection Floor Price: Ξ 111 <span className="smaller-usdc">(~$390,707.79)</span></h2>
               <div className="row">
                 <div className="col-md-6 bid-box">

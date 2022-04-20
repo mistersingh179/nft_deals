@@ -48,7 +48,6 @@ const useAuctionOptions = (readContracts, auctionContractAddress, localProvider)
         updateAuctionOptions('nftContract', nftContract)
         updateAuctionOptions('tokenId', tokenId)
         updateAuctionOptions('minimumBidIncrement', minimumBidIncrement)
-
       }
     }
     setupAuctionOptions()
