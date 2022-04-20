@@ -16,7 +16,7 @@ import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
 import {Link, useParams} from "react-router-dom";
-import {useTopNavClass} from "../hooks";
+import {useAuctionOptions, useTopNavClass} from "../hooks";
 import useExpiration from "../hooks/useExpiration";
 
 const Auction2 = props => {
@@ -54,10 +54,11 @@ const Auction2 = props => {
     return <span />;
   }
 
-  let { slug } = useParams();
-  const auctionContractAddress = slug
+  const { slug } = useParams();
+  const auctionContractAddress = slug;
   const topNavClass = useTopNavClass()
   const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
+  const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
 
     return (
     <>
@@ -153,7 +154,7 @@ const Auction2 = props => {
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>
                     </h3>
                   </Space>
-                  <h1>Ξ 0.0012</h1>
+                  <h1>Ξ {auctionOptions.highestBid.toString()} wei</h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>Ends in <Tooltip 
@@ -171,7 +172,7 @@ const Auction2 = props => {
                   <h3>Next Bid <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
                     <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
-                  <h1>Ξ 0.0015</h1>
+                  <h1>Ξ {auctionOptions.highestBid.add(auctionOptions.minimumBidIncrement).toString()} wei</h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>Earnable Rewards <Tooltip title="Bid early, get more. Rewards will be convertible into our NFTD token when it launches.">
