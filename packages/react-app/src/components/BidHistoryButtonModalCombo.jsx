@@ -3,7 +3,7 @@ import BidEvents from "./BidEvents";
 import {useState} from "react";
 
 const BidHistoryButtonModalCombo = props => {
-  const {readContracts, auctionContractAddress, mainnetProvider, localProvider} = props
+  const {readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer} = props
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
   const handleOk = evt => {setShowBidHistoryModal(false)}
   const handleCancel = evt => {setShowBidHistoryModal(false)};
@@ -17,7 +17,7 @@ const BidHistoryButtonModalCombo = props => {
         <i className="bi bi-card-checklist btn-icon"></i>
         Bid History
       </Button>
-      <Modal title="Basic Modal" visible={showBidHistoryModal} onOk={handleOk} onCancel={handleCancel}>
+      <Modal className="bid-history-modal" title="Latest Bids" visible={showBidHistoryModal} onOk={handleOk} onCancel={handleCancel}>
         <p>
           <BidEvents
             readContracts = {readContracts}
@@ -26,6 +26,8 @@ const BidHistoryButtonModalCombo = props => {
             localProvider={localProvider}
             eventsCount={5}
             blockCount={10}
+            address={address}
+            blockExplorer={blockExplorer}
           />
         </p>
       </Modal>

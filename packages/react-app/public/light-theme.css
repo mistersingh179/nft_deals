@@ -965,7 +965,7 @@ mark {
   line-height: 0;
   text-align: center;
   text-transform: none;
-  vertical-align: -0.125em;
+  vertical-align: middle;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -23692,4 +23692,15 @@ div.ant-typography-edit-content.ant-typography-rtl {
   box-shadow: none;
   border-color: transparent;
   color: #333;
+}
+.bid-history-modal .ant-modal-footer {
+  display: none;
+}
+.current-winner{
+  border-radius: 50%;
+  vertical-align: inherit;
+}
+.you-the-winner{
+  font-style: italic;
+  color: #777;
 }

@@ -171,7 +171,7 @@ const Auction2 = props => {
                     </Tooltip>
                   </h3>
                   <h1>
-                    <CurrentWinner user_address={address} address={auctionOptions.winningAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
+                    <CurrentWinner className="current-winner" user_address={address} address={auctionOptions.winningAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
                   </h1>
                 </div>
               </div>
@@ -203,6 +203,8 @@ const Auction2 = props => {
                     auctionContractAddress={auctionContractAddress}
                     mainnetProvider={mainnetProvider}
                     localProvider={localProvider}
+                    address={address}
+                    blockExplorer={blockExplorer}
                   />
                 </Col>
                 <Col lg={{offset: 2,span: 10}} xs={{span: 24}}>

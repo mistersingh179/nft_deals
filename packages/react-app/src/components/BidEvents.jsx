@@ -3,9 +3,10 @@ import {ethers, utils, BigNumber} from "ethers";
 import {Table} from "antd";
 import {Address} from "./index";
 import {useBlockNumber} from "eth-hooks";
+import CurrentWinnerBidHistory from "../components/CurrentWinnerBidHistory";
 
 const BidEvents = props => {
-  const {readContracts, auctionContractAddress, mainnetProvider, localProvider} = props;
+  const {readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer} = props;
   const eventsCount = props.eventsCount || 5;
   const blockCount = props.blockCount || 10;
   const blockNumber = useBlockNumber(localProvider);
@@ -63,23 +64,29 @@ const BidEvents = props => {
     }
   }, [localProvider, readContracts, auctionContractAddress]);
 
+  const displayTable = props.minimized
+
+  function styledAmountWithIcon(text) {
+    return <>Ξ {utils.formatEther(text)}</>;
+  }
+
   const bidEventColumns = [
     {
       title: 'Address',
       dataIndex: 'address',
       key: 'address',
-      render: text => <Address address={text} ensProvider={mainnetProvider} fontSize={16} />
+      render: (text, record) => <CurrentWinnerBidHistory rowAddress={record.address} userAddress={address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
-      render: text => utils.formatEther(text)
+      render: text => styledAmountWithIcon(text)
     },
   ]
 
   return (
-    <Table columns={bidEventColumns} dataSource={bidEvents} />
+    <Table columns={bidEventColumns} dataSource={bidEvents} pagination={false} />
   )
 
 }
