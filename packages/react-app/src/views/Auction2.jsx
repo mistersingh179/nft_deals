@@ -22,7 +22,7 @@ import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
 import {Link, useParams} from "react-router-dom";
-import {useAuctionOptions, useTopNavClass, useNftOptions} from "../hooks";
+import {useAuctionOptions, useTopNavClass, useNftOptions, useAuctionContract} from "../hooks";
 import useExpiration from "../hooks/useExpiration";
 import BidHistoryButtonModalCombo from "../components/BidHistoryButtonModalCombo";
 import {ethers, utils} from "ethers";
@@ -48,12 +48,18 @@ const Auction2 = props => {
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
   const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId)
   const [blockExplorerLink, setBlockExplorerLink] = useState('')
+  const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider)
+
   useEffect(() => {
     if(auctionContractAddress){
       setBlockExplorerLink(`${blockExplorer || "https://etherscan.io/"}address/${auctionContractAddress}`)
     }
   }, [auctionContractAddress, blockExplorer])
-
+  const claimButtonHandler = async (evt) => {
+    if(auctionContractWriter){
+      await tx(auctionContractWriter.claimNftUponWinning())
+    }
+  }
   return (
     <>
       <header id="header" className={`fixed-top ${topNavClass}`}>
@@ -63,12 +69,16 @@ const Auction2 = props => {
           </a>
           <nav className="nav-menu d-none d-lg-block">
             <ul>
-              <li className="active"><a href="#">Bid to Win</a></li>
-              <li><a href="#claim">Claim NFT</a></li>
-              <li>
-                <Link to="/AuctionList">Sell Your NFT</Link>
+              <li className="active">
+                <Link to={'/AuctionList'}>Auctions</Link>
               </li>
-              <li><a href="#docs">Docs</a></li>
+              <li>
+                <a href="javascript:void(0)" onClick={claimButtonHandler}>Claim NFT</a>
+              </li>
+              <li>
+                <Link to="/AuctionFactory">Sell Your NFT</Link>
+              </li>
+              <li><a href="https://coral-credit-8f4.notion.site/NFT-Deals-0bdff8f05a5747d987cee55e1134129d">Docs</a></li>
             </ul>
           </nav>
 
