@@ -17,6 +17,8 @@ import {
 } from "../components";
 import AccountAndOthers from "../components/AccountAndOthers";
 
+import CurrentWinner from "../components/CurrentWinner";
+
 import React, {useEffect, useState} from 'react';
 import Blockies from "react-blockies";
 
@@ -168,7 +170,7 @@ const Auction2 = props => {
                     </Tooltip>
                   </h3>
                   <h1>
-                    <Address address={auctionOptions.winningAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
+                    <CurrentWinner user_address={address} address={auctionOptions.winningAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
                   </h1>
                 </div>
               </div>
