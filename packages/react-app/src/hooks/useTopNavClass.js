@@ -5,7 +5,7 @@ const useTopNavClass = () => {
 
   useEffect(() => {
     const handleScroll = evt => {
-      if(window.scrollY > 100){
+      if(window.scrollY > 40){
         setTopNavClass('header-scrolled')
       }else {
         setTopNavClass('')

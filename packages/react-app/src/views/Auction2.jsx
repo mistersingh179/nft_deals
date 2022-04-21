@@ -32,6 +32,7 @@ import {ReactComponent as WEthLogo} from "../img/wrapped_ethereum_icon.svg";
 import {ReactComponent as EthLogo} from "../img/ethereum_icon.svg";
 import {Typography, Drawer, Button, Space, Radio, Skeleton, Tooltip, Col, Row} from 'antd';
 import NftImage from "../components/NftImage";
+import {displayWeiAsEther} from "../helpers";
 const { Text } = Typography;
 
 const Auction2 = props => {
@@ -115,7 +116,7 @@ const Auction2 = props => {
 
             <div className="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-2 order-sm-2"
                  data-aos="fade-up" data-aos-delay="200">
-              <h1>{nftOptions.name} #{auctionOptions.tokenId.toString()}</h1>
+              <h1>{nftOptions.name && nftOptions.name === 'BoredApeYachtClub' ? 'Bored Ape Yacht Club' : nftOptions.name} #{auctionOptions.tokenId.toString()}</h1>
               <h2>
                 Collection Floor Price: Ξ {nftOptions.floor_price}
                 <span className="smaller-usdc">
@@ -129,7 +130,7 @@ const Auction2 = props => {
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>
                     </h3>
                   </Space>
-                  <h1>Ξ {auctionOptions.highestBid.toString()} wei</h1>
+                  <h1>Ξ {displayWeiAsEther(auctionOptions.highestBid)}</h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>Ends in <Tooltip 
@@ -147,7 +148,7 @@ const Auction2 = props => {
                   <h3>Next Bid <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
                     <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
-                  <h1>Ξ {auctionOptions.highestBid.add(auctionOptions.minimumBidIncrement).toString()} wei</h1>
+                  <h1>Ξ {displayWeiAsEther(auctionOptions.highestBid.add(auctionOptions.minimumBidIncrement))} </h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>Earnable Rewards <Tooltip title="Bid early, get more. Rewards will be convertible into our NFTD token when it launches.">
@@ -403,10 +404,19 @@ const Auction2 = props => {
 }
 
 const Duration = ({durationToExpire}) => {
+  const getDays = () => {
+    if(durationToExpire.days() > 0){
+      return `${durationToExpire.days()} d`
+    }else {
+      return ''
+    }
+  }
+
   return <>
-    {durationToExpire && durationToExpire.as('seconds') > 0 && `${durationToExpire.hours()}h ${durationToExpire.minutes()}m ${durationToExpire.seconds()}s`}
+    {durationToExpire && durationToExpire.as('seconds') > 0 &&  `${getDays()} ${durationToExpire.hours()}h ${durationToExpire.minutes()}m ${durationToExpire.seconds()}s`}
     {durationToExpire && durationToExpire.as('seconds') <= 0 && `Expired`}
   </>
 }
+
 
 export default Auction2
