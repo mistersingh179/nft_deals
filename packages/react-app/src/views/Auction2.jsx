@@ -109,7 +109,6 @@ const Auction2 = props => {
               localProvider={localProvider}
             />
           </Space>
-
         </div>
       </header>
 
@@ -416,6 +415,14 @@ const Auction2 = props => {
       </div>
     </div>
   </footer>
+  <NetworkDisplay
+              NETWORKCHECK={NETWORKCHECK}
+              localChainId={localChainId}
+              selectedChainId={selectedChainId}
+              targetNetwork={targetNetwork}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+    />  
     </>
   )
 }

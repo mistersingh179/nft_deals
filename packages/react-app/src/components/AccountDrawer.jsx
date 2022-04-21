@@ -87,14 +87,6 @@ const AccountDrawer = (props) => {
           }}>
             <a href={"https://app.uniswap.org/#/swap?chain=mainnet"}>Convert ETH / WETH</a>
           </div>
-          <NetworkDisplay
-              NETWORKCHECK={NETWORKCHECK}
-              localChainId={localChainId}
-              selectedChainId={selectedChainId}
-              targetNetwork={targetNetwork}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-          />
           <div style={{ position: "fixed", bottom: "24px" }}>
           {USE_NETWORK_SELECTOR && (
             <div >
