@@ -7,6 +7,8 @@ import sandeep from '../img/team/sandeep.jpg';
 import anon1 from '../img/team/anon1.png';
 import anon2 from '../img/team/anon2.png';
 import logo from '../img/NFTD_Logo_2.png';
+import rewardsImage from '../img/rewards.png';
+
 import {
   LoginLogoutButton,
   NetworkDisplay,
@@ -43,14 +45,14 @@ const Auction2 = props => {
     loadWeb3Modal, blockExplorer, readContracts, writeContracts,
     networkOptions, selectedNetwork, setSelectedNetwork, USE_BURNER_WALLET, yourLocalBalance, tx} = props
 
-  const { slug } = useParams();
-  const auctionContractAddress = slug;
+  const { slug: auctionContractAddress } = useParams();
   const topNavClass = useTopNavClass()
   const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
   const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId)
   const [blockExplorerLink, setBlockExplorerLink] = useState('')
   const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider)
+  const rewards = useContractReader(readContracts, "AuctionFactory", "rewards", [address]);
 
   useEffect(() => {
     if(auctionContractAddress){
@@ -170,6 +172,19 @@ const Auction2 = props => {
                   </h3>
                   <h1>
                     <CurrentWinner user_address={address} address={auctionOptions.winningAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
+                  </h1>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 bid-box">
+                  <h3>Your Rewards Balance{' '}
+                    <Tooltip title="The amount of rewards you have earned by bidding. these rewards will be exchangeable for our token when it launches">
+                      <i className="bi bi-info-circle bid-info"></i>
+                    </Tooltip>
+                  </h3>
+                  <h1>
+                    <img src={rewardsImage} style={{height: 50}} />
+                    {rewards && ethers.utils.commify(rewards)}
                   </h1>
                 </div>
               </div>

@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
+import "./AuctionFactory.sol";
 
 // someones deploy us [contract] with nft contract address
 // lister approves us [contract] to take nft or take all of their nfts
@@ -29,7 +30,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 contract Auction is IERC721Receiver, Ownable, AccessControl {
     using Strings for uint;
@@ -45,6 +46,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     uint public immutable auctionTimeIncrementOnBid;
     address public immutable nftListerAddress;
     uint public immutable initialAuctionLength;
+    AuctionFactory public immutable auctionFactory;
 
     IERC721 public immutable nftContract;
     uint public immutable tokenId;
@@ -88,6 +90,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             _setupRole(CASHIER_ROLE, _sandeepAddress);
 
             weth = IERC20(_wethAddress);
+            auctionFactory = AuctionFactory(msg.sender);
     }
 
     function startAuction() youAreTheNftLister external{
@@ -142,6 +145,21 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         return (amount * bp) / 10000;
     }
 
+    function currentReward() view public returns(uint){
+        uint reward = 0;
+        if(expiration > block.timestamp){
+            reward = (expiration - block.timestamp) / 60 / 60;
+        }
+        return reward;
+    }
+
+    function giveReward() private {
+        uint reward = currentReward();
+        if(reward > 0){
+            auctionFactory.giveReward(msg.sender, reward);
+        }
+    }
+
     function bid() auctionHasStarted auctionHasNotEnded external {
         uint totalNextBid = highestBid + minimumBidIncrement;
         uint platformFee;
@@ -151,6 +169,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         require(weth.transferFrom(msg.sender, address(this), totalNextBid), 'transfer of WETH failed!');
 
         _sendPreviousWinnerTheirBidBack(winningAddress, highestBid);
+        giveReward();
 
         platformFee = calculateFee(totalNextBid, platformFeeInBasisPoints);
         listerFee = calculateFee(totalNextBid, listerFeeInBasisPoints);

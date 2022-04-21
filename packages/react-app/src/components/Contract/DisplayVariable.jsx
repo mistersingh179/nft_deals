@@ -8,7 +8,11 @@ const DisplayVariable = ({ contractFunction, functionInfo, refreshRequired, trig
 
   const refresh = useCallback(async () => {
     try {
-      const funcResponse = await contractFunction();
+      let funcResponse = await contractFunction();
+      if(Array.isArray(funcResponse)){
+        console.log('reduced array size to 10 for display')
+        funcResponse = funcResponse.slice(0,10)
+      }
       setVariable(funcResponse);
       triggerRefresh(false);
     } catch (e) {

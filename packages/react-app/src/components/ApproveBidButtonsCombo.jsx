@@ -81,10 +81,14 @@ const ApproveBidButtonsCombo = props => {
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
       try {
         setDisableBid(true)
-        const estimate = await auctionWriter.estimateGas.bid();
-        if (estimate !== undefined) {
-          await tx(auctionWriter.bid({ gasLimit: estimate.mul(13).div(10) }), update => console.log(update));
+        const options = {}
+        try{
+          const estimate = await auctionWriter.estimateGas.bid();
+          options['gasLimit'] = estimate.mul(13).div(10);
+        }catch(e){
+          console.error('failed to get estimate')
         }
+        await tx(auctionWriter.bid(options), update => console.log(update));
       } catch (e) {
         console.error("failed placing bid: ", e);
       } finally {
