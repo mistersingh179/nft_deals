@@ -8,6 +8,7 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
     symbol: '',
     name: '',
     tokenUri: '',
+    imageUrl: ''
   });
 
   const updateOptions = (name, value) => {
@@ -27,7 +28,6 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
             headers: {
               'Accept': 'application/json'
             },
-            responsedType: 'json'
           })
           console.log('*** opensea gave: ', result)
           setNftOptions(prevObj => {
@@ -56,9 +56,6 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
             localProvider
           );
           let tokenUri = await myErc721.tokenURI(tokenId)
-          tokenUri = tokenUri.replace('data:application/json;base64,', '')
-          tokenUri = JSON.parse(atob(tokenUri))
-          tokenUri = tokenUri.image
           updateOptions('tokenUri', tokenUri);
           const name = await myErc721.name()
           updateOptions('name', name);
@@ -71,6 +68,54 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
     }
     init()
   }, [nftContractAddress && localProvider && tokenId]);
+
+  useEffect(() => {
+    const getImageFromUrl = async (url) => {
+      const result = await axios({
+        method: 'get',
+        url: url,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      const imageUrl = result.data.image
+      return imageUrl
+    };
+
+    const init = async () => {
+      const tokenUri = nftOptions.tokenUri
+      var imageUrl;
+      if(tokenUri.indexOf('http') == 0){
+        const imageUrl = await getImageFromUrl(tokenUri)
+        updateOptions('imageUrl', imageUrl)
+
+      }else if (tokenUri.indexOf('ipfs://') == 0){
+        const ipfsHash = tokenUri.split("ipfs://")[1]
+        const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`
+        imageUrl = await getImageFromUrl(ipfsUrl)
+        console.log('*** imageUrl: ', imageUrl)
+
+        if(imageUrl.indexOf('http') == 0){
+          updateOptions('imageUrl', imageUrl)
+        }else if(imageUrl.indexOf('ipfs://') == 0){
+          const ipfsHash = imageUrl.split("ipfs://")[1]
+          imageUrl = `https://ipfs.io/ipfs/${ipfsHash}`
+          updateOptions('imageUrl', imageUrl)
+        }else{
+          updateOptions('imageUrl', '')
+        }
+
+      }else if (tokenUri.indexOf('data:application/json;base64,') == 0){
+        const base64DataObj = tokenUri.replace('data:application/json;base64,', '')
+        const dataObj = JSON.parse(atob(base64DataObj))
+        const imageUrl = dataObj.image
+        updateOptions('imageUrl', imageUrl)
+      }else {
+        updateOptions('imageUrl', '')
+      }
+    }
+    init()
+  }, [nftOptions.tokenUri])
 
   return nftOptions
 };
