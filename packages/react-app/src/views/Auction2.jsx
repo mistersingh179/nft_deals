@@ -173,33 +173,29 @@ const Auction2 = props => {
                   </h1>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-sm-6 offset-sm-3 col-lg-6 offset-lg-0">
-                  <ApproveBidButtonsCombo
+              <ApproveBidButtonsCombo
                     writeContracts={writeContracts}
                     readContracts={readContracts}
                     address={address}
                     localProvider={localProvider}
                     auctionContractAddress={auctionContractAddress}
                     tx={tx}
-                  />
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-3 offset-sm-3 col-lg-3 offset-lg-0">
+              />
+              <Row>
+                <Col lg={{offset: 0,span: 10}} xs={{span: 24}}>
                   <BidHistoryButtonModalCombo
                     readContracts = {readContracts}
                     auctionContractAddress={auctionContractAddress}
                     mainnetProvider={mainnetProvider}
                     localProvider={localProvider}
                   />
-                </div>
-                <div className="col-sm-3 offset-sm-0 col-lg-3 offset-lg-0">
-                  <a href={blockExplorerLink} className="btn btn-secondary btn-sm btn-block">
-
-                  <i className="bi bi-patch-check-fill btn-icon"></i> Etherscan</a>
-                </div>
-              </div>
+                </Col>
+                <Col lg={{offset: 2,span: 10}} xs={{span: 24}}>
+                  <a href={blockExplorerLink} className="ant-btn btn btn-secondary btn-sm btn-block bid-details-btn" target="_blank">
+                    <i className="bi bi-patch-check-fill btn-icon"></i> Inspect Auction on Etherscan
+                  </a>
+                </Col>
+              </Row>
             </div>
             <div className="col-lg-6 order-1 order-lg-1 order-sm-1 hero-img" data-aos="zoom-in" data-aos-delay="200">
               <NftImage

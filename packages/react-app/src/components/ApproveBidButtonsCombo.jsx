@@ -1,4 +1,4 @@
-import { Button, Space } from "antd";
+import { Button, Space, Row, Col } from "antd";
 import moment from "moment";
 import {useEffect, useState} from "react";
 import {BigNumber, ethers} from "ethers";
@@ -97,25 +97,28 @@ const ApproveBidButtonsCombo = props => {
   const [disableBid, setDisableBid] = useState(true);
 
   return (
-    <Space>
-      <Button
-        onClick={approveButtonHandler}
-        className="btn btn-primary btn-lg btn-block"
-        size={"large"}
-        disabled={disableApprove}
-      >
-        Approve
-      </Button>
-      <Space style={{ marginLeft: 5, marginRight: 5 }}>&nbsp;</Space>
-      <Button
-        disabled={disableBid}
-        className="btn btn-primary btn-lg btn-block"
-        size={"large"}
-        onClick={bidButtonHandler}
-      >
-        Place Bid
-      </Button>
-    </Space>
+    <Row >
+      <Col lg={{offset: 0,span: 10}} xs={{span: 24}}>
+        <Button
+          onClick={approveButtonHandler}
+          className="btn-primary bid-btn"
+          size={"large"}
+          disabled={disableApprove}
+        >
+          Approve
+        </Button>
+      </Col>
+      <Col lg={{offset: 2,span: 10}} xs={{span: 24}}>
+        <Button
+          disabled={disableBid}
+          className="btn-primary bid-btn"
+          size={"large"}
+          onClick={bidButtonHandler}
+        >
+          Place Bid
+        </Button>
+      </Col>
+    </Row>
   );
 };
 

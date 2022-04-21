@@ -11,7 +11,7 @@ const BidHistoryButtonModalCombo = props => {
   return (
     <>
       <Button
-         className="btn btn-secondary btn-sm btn-block"
+         className="btn btn-secondary btn-sm btn-block bid-details-btn"
          onClick={evt => setShowBidHistoryModal(true)}
       >
         <i className="bi bi-card-checklist btn-icon"></i>

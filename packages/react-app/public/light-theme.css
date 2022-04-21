@@ -2341,9 +2341,9 @@ mark {
   padding: 4px 15px;
   font-size: 14px;
   border-radius: 4px;
-  color: rgba(0, 0, 0, 0.85);
-  background: #fff;
-  border-color: #d9d9d9;
+  color: #fff;
+  background-color: #DF5FAF;
+  border-color: #DF5FAF;
 }
 .ant-btn > .anticon {
   line-height: 1;
@@ -23646,4 +23646,50 @@ div.ant-typography-edit-content.ant-typography-rtl {
 }
 .highlight {
   background-color: #f9f9f9;
+}
+.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+.btn-block {
+  display: block;
+  width: 100%;
+}
+.btn-group-sm>.btn, .btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+.bid-btn{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+@media (max-width: 575px) {
+  #hero .bid-btn {
+    font-size: 16px;
+    padding: 10px 24px 11px 24px;
+    margin: 1em 0 1em 0;
+  }
+}
+
+@media (max-width: 1000px){
+  #hero .btn-sm {
+    margin: 1em 0 1em 0;
+  }
+}
+
+.bid-details-btn {
+  color: #333;
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.bid-details-btn:focus {
+  box-shadow: none;
+  border-color: transparent;
+  color: #333;
 }
