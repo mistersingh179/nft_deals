@@ -151,10 +151,15 @@ const Auction2 = props => {
                   <h1>Ξ {displayWeiAsEther(auctionOptions.highestBid.add(auctionOptions.minimumBidIncrement))} </h1>
                 </div>
                 <div className="col-md-6 bid-box">
-                  <h3>Earnable Rewards <Tooltip title="Bid early, get more. Rewards will be convertible into our NFTD token when it launches.">
-                    <i className="bi bi-info-circle bid-info"></i></Tooltip>
+                  <h3>
+                    Current Winner{' '}
+                    <Tooltip title="The address which can claim the NFT on expiration provided it is not outbid.">
+                      <i className="bi bi-info-circle bid-info"></i>
+                    </Tooltip>
                   </h3>
-                  <h1>249</h1>
+                  <h1>
+                    <Address address={auctionOptions.winningAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
+                  </h1>
                 </div>
               </div>
               <div className="row">
