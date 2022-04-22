@@ -14,11 +14,14 @@ export default (readContracts, auctionContractAddress, localProvider) => {
   useEffect(() => {
     const init = async () => {
       if(auctionContract){
-        const expiration = await auctionContract.expiration()
-        const exp = moment(expiration, 'X')
-        const duration = moment.duration(exp.diff(moment()))
-        console.log('*** syncing with blockchain and got latest duration to be: ', duration)
-        setDurationToExpire(duration)
+        const expiration = await auctionContract.expiration();
+        const block = await localProvider.getBlock();
+        const blockTimestamp = moment(block.timestamp, 'X');
+        // const blockTimestamp = moment();
+        const exp = moment(expiration, 'X');
+        let duration = moment.duration(exp.diff(blockTimestamp));
+        console.log('*** syncing with blockchain and got latest duration to be: ', duration);
+        setDurationToExpire(duration);
       }
     }
     init()
