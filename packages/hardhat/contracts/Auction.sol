@@ -63,6 +63,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     event FailedToSendMoney(address to, uint amount);
     event NftOut(address to, uint tokenId);
     event NftIn(address from, uint tokenId);
+    event AuctionExtended(uint from, uint to);
 
     constructor(
         address _nftContractAddress,
@@ -179,6 +180,11 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
 
         highestBid = totalNextBid; // new highest bid
         winningAddress = msg.sender;
+        console.log('increasing expiration timestamp');
+        console.log(block.timestamp);
+        console.log(auctionTimeIncrementOnBid);
+        console.log(block.timestamp + auctionTimeIncrementOnBid);
+        emit AuctionExtended(expiration, block.timestamp + auctionTimeIncrementOnBid);
         expiration = block.timestamp + auctionTimeIncrementOnBid;
 
         emit Bid(msg.sender, totalNextBid);

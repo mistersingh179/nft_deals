@@ -17,7 +17,7 @@ export default (readContracts, auctionContractAddress, localProvider) => {
         const expiration = await auctionContract.expiration()
         const exp = moment(expiration, 'X')
         const duration = moment.duration(exp.diff(moment()))
-        // console.log('*** syncing with blockchain and got latest duration to be: ', duration)
+        console.log('*** syncing with blockchain and got latest duration to be: ', duration)
         setDurationToExpire(duration)
       }
     }
