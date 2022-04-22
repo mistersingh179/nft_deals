@@ -178,7 +178,8 @@ const Auction2 = props => {
               <div className="row">
                 <div className="col-md-6 bid-box">
                   <h3>Your Rewards Balance{' '}
-                    <Tooltip title="The amount of rewards you have earned by bidding. these rewards will be exchangeable for our token when it launches">
+                    <Tooltip title="The amount of rewards you have earned by bidding.
+                     These rewards will be exchangeable for our token when it launches. ">
                       <i className="bi bi-info-circle bid-info"></i>
                     </Tooltip>
                   </h3>

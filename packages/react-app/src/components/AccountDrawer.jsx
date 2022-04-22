@@ -3,7 +3,7 @@ import {Button, Col, Drawer, Row, Space, Typography} from "antd";
 import {ReactComponent as WEthLogo} from "../img/wrapped_ethereum_icon.svg";
 import {ReactComponent as EthLogo} from "../img/ethereum_icon.svg";
 import {ethers} from "ethers";
-import {useState} from "react";
+import React, {useState} from "react";
 import {useContractReader} from "eth-hooks";
 import Blockies from "react-blockies";
 
@@ -25,6 +25,7 @@ const AccountDrawer = (props) => {
   if(ethBalance){
     ethBalance = parseFloat(ethers.utils.formatEther(yourLocalBalance)).toFixed(4)
   }
+  const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
 
   return (
     <>
@@ -86,6 +87,10 @@ const AccountDrawer = (props) => {
             textAlign: "right",
           }}>
             <a href={"https://app.uniswap.org/#/swap?chain=mainnet"}>Convert ETH / WETH</a>
+          </div>
+          <div>
+            Rewards Contract: <Address address={readContracts && readContracts.Reward && readContracts.Reward.address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
+            Rewards accumulated: {rewards ? ethers.utils.commify(rewards) : 0}
           </div>
           <div style={{ position: "fixed", bottom: "24px" }}>
           {USE_NETWORK_SELECTOR && (
