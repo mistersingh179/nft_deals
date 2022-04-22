@@ -23736,3 +23736,7 @@ div.ant-typography-edit-content.ant-typography-rtl {
 .info-icon{
   font-size: 70%;
 }
+.winner-modal-badge{
+  height: 10em;
+  margin: 20px 0px 30px 0px
+}
