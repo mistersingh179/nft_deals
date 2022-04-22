@@ -1,12 +1,17 @@
 import {Button, Modal} from "antd";
 import BidEvents from "./BidEvents";
 import {useState} from "react";
+import SampleWinningModal from "../components/SampleWinningModal";
 
 const BidHistoryButtonModalCombo = props => {
-  const {readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer} = props
+  const {readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer, rewards} = props
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
   const handleOk = evt => {setShowBidHistoryModal(false)}
   const handleCancel = evt => {setShowBidHistoryModal(false)};
+
+  const [showWinnerModal, setShowWinnerModal] = useState(false)  
+  const handleOkWinner = evt => {setShowWinnerModal(false)}
+  const handleCancelWinner = evt => {setShowWinnerModal(false)};
 
   return (
     <>
@@ -31,6 +36,17 @@ const BidHistoryButtonModalCombo = props => {
           />
         </p>
       </Modal>
+      
+      {/* Throwaway once Sandeep wires this with proper React hook */}
+      <SampleWinningModal 
+        readContracts = {readContracts}
+        auctionContractAddress={auctionContractAddress}
+        mainnetProvider={mainnetProvider}
+        localProvider={localProvider}
+        address={address}
+        blockExplorer={blockExplorer}
+        rewards={rewards}
+      />      
     </>
   )
 }

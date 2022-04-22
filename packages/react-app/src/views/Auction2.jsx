@@ -175,20 +175,6 @@ const Auction2 = props => {
                   </h1>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-md-6 bid-box">
-                  <h3>Your Rewards Balance{' '}
-                    <Tooltip title="The amount of rewards you have earned by bidding.
-                     These rewards will be exchangeable for our token when it launches. ">
-                      <i className="bi bi-info-circle bid-info"></i>
-                    </Tooltip>
-                  </h3>
-                  <h1>
-                    <img src={rewardsImage} style={{height: 50}} />
-                    {rewards ? ethers.utils.commify(rewards) : 0}
-                  </h1>
-                </div>
-              </div>
               <ApproveBidButtonsCombo
                     writeContracts={writeContracts}
                     readContracts={readContracts}
@@ -206,6 +192,7 @@ const Auction2 = props => {
                     localProvider={localProvider}
                     address={address}
                     blockExplorer={blockExplorer}
+                    rewards={rewards}
                   />
                 </Col>
                 <Col lg={{offset: 2,span: 10}} xs={{span: 24}}>

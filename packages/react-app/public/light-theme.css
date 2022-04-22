@@ -23704,3 +23704,20 @@ div.ant-typography-edit-content.ant-typography-rtl {
   font-style: italic;
   color: #777;
 }
+.code-placeholder{
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  z-index: 3;
+}
+
+.winner-modal .ant-modal-header{
+  display: none;
+}
+
+.winner-modal .ant-modal-footer{
+  display: none;
+}
+.winner-info-icon{
+  font-size: 70%;
+}
