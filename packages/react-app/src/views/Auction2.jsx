@@ -7,7 +7,6 @@ import sandeep from '../img/team/sandeep.jpg';
 import anon1 from '../img/team/anon1.png';
 import anon2 from '../img/team/anon2.png';
 import logo from '../img/NFTD_Logo_2.png';
-import rewardsImage from '../img/rewards.png';
 
 import {
   LoginLogoutButton,

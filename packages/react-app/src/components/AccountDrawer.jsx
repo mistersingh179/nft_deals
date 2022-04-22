@@ -1,11 +1,13 @@
 import {Address, FaucetHint, NetworkDisplay, NetworkSwitch} from "./index";
-import {Button, Col, Drawer, Row, Space, Typography} from "antd";
+import {Button, Col, Drawer, Row, Space, Tooltip, Typography} from "antd";
 import {ReactComponent as WEthLogo} from "../img/wrapped_ethereum_icon.svg";
 import {ReactComponent as EthLogo} from "../img/ethereum_icon.svg";
 import {ethers} from "ethers";
 import React, {useState} from "react";
 import {useContractReader} from "eth-hooks";
 import Blockies from "react-blockies";
+import rewardsImage from '../img/rewards.png';
+import alphaBackToken from '../img/AlphaBackToken-small.png';
 
 const { Text } = Typography;
 
@@ -88,10 +90,67 @@ const AccountDrawer = (props) => {
           }}>
             <a href={"https://app.uniswap.org/#/swap?chain=mainnet"}>Convert ETH / WETH</a>
           </div>
-          <div>
-            Rewards Contract: <Address address={readContracts && readContracts.Reward && readContracts.Reward.address} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
-            Rewards accumulated: {rewards ? ethers.utils.commify(rewards) : 0}
+
+          <div style={{ fontSize: 16, fontWeight: 500, padding: "2em 0 0.5em 0" }}>
+            Rewards Balance
           </div>
+          <div style={{
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderImage: "initial",
+            borderColor: "#dde1e6",
+            padding: "1rem",
+          }}>
+            <Row type={"flex"} justify={"start"} style={{fontSize: 16, padding: 8}}>
+              <Col span={3}>
+                <img src={rewardsImage} className="rewards-icon" />
+              </Col>
+              <Col span={4}><Space><Text >Rewards</Text></Space></Col>
+              <Col span={4} push={12}>
+                <Space>
+                  <Text>
+                    {rewards ? ethers.utils.commify(rewards) : 0}
+                  </Text>
+                </Space>
+              </Col>
+            </Row>
+            <Row type={"flex"} justify={"start"} style={{fontSize: 16, padding: 8}}>
+                <Col span={3}>
+                  <Tooltip title="Rewards will be convertible into our token when it launches.">
+                    <img src={alphaBackToken} className="rewards-icon" />
+                  </Tooltip>
+                </Col>
+                <Col span={4}>
+                  <Space>
+                    <Tooltip title="Rewards will be convertible into our token when it launches.">
+                      <Text className="token-teaser">Tokens</Text>
+                    </Tooltip>
+                  </Space>
+                </Col>
+                    
+                <Col span={4} push={12}>
+                  <Space>
+                    <Tooltip title="Rewards will be convertible into our token when it launches.">
+                      <Text className="token-teaser">
+                        0
+                      </Text>
+                    </Tooltip>
+                  </Space>
+                </Col>
+            </Row>            
+          </div>
+          <div style={{
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderImage: "initial",
+            borderColor: "#dde1e6",
+            padding: "1rem",
+            textAlign: "right",
+          }}>
+            <a className="rewards-contract" href={"use blockExplorer with readContracts.Reward.address"}>Inspect Rewards Contract on Etherscan</a>
+          </div>
+
+
           <div style={{ position: "fixed", bottom: "24px" }}>
           {USE_NETWORK_SELECTOR && (
             <div >
