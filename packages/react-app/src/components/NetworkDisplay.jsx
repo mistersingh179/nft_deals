@@ -17,7 +17,7 @@ function NetworkDisplay({
     const networkLocal = NETWORK(localChainId);
     if (selectedChainId === 1337 && localChainId === 31337) {
       networkDisplay = (
-        <div className="networkDisplay" style={{ zIndex: 2, position: "absolute", right: 60, top: 60, padding: 16 }}>
+        <div className="networkDisplay" >
           <Alert
             message="⚠️ Wrong Network ID"
             description={
@@ -34,13 +34,13 @@ function NetworkDisplay({
       );
     } else {
       networkDisplay = (
-        <div className="networkDisplay" style={{ zIndex: 2, position: "absolute", right: 0, bottom: 60, padding: 16 }}>
+        <div className="networkDisplay">
           <Alert
             message="⚠️ Wrong Network"
             description={
               <div>
-                You have <b>{networkSelected && networkSelected.name}</b> selected and you need to be on{" "}
-                <Button
+                In your wallet, you have <b>{networkSelected && networkSelected.name}</b> selected and you need to be on {" "}
+                <Button type={"dashed"}
                   onClick={async () => {
                     const ethereum = window.ethereum;
                     const data = [
@@ -90,7 +90,7 @@ function NetworkDisplay({
     }
   } else {
     networkDisplay = USE_NETWORK_SELECTOR ? null : (
-      <div className="networkDisplay" style={{ zIndex: -1, position: "absolute", right: 10, top: 60, padding: 16, color: targetNetwork.color }}>
+      <div className="networkDisplay" style={{ zIndex: -1, color: targetNetwork.color }}>
         {targetNetwork.name}
       </div>
     );

@@ -2,3 +2,11 @@
   text-align: center;
   padding-left: calc(100vw - 100%);
 }
+
+.networkDisplay{
+  zIndex: 2;
+  position: fixed;
+  right: 60px;
+  top: 60px;
+  padding: 16px;
+}
