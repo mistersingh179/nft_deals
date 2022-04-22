@@ -4,8 +4,10 @@ pragma solidity ^0.8.4;
 import "./Auction.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Reward.sol";
 
-contract AuctionFactory {
+contract AuctionFactory is Ownable {
     Auction[] public auctions;
     uint public auctionsCount;
     mapping(address => Auction[]) public auctionsByLister;
@@ -13,39 +15,14 @@ contract AuctionFactory {
     mapping(address => bool) public allAuctionsHash;
     address public immutable wethAddress;
 
-    using EnumerableSet for EnumerableSet.AddressSet;
-    EnumerableSet.AddressSet private addressesWithRewards;
-    mapping(address => uint) public rewards;
-    event RewardGiven(address to, uint rewardAmout);
+    Reward public rewardContract;
 
     constructor(address _addr){
         wethAddress = _addr;
     }
 
-    modifier youAreAnAuction(){
-        require(allAuctionsHash[msg.sender] == true, 'you are not an auction');
-        _;
-    }
-
-    function giveReward(address to, uint reward) youAreAnAuction public {
-        console.log('going to give reward');
-        console.log(to);
-        console.log(reward);
-        rewards[to] += reward;
-        addressesWithRewards.add(to);
-        emit RewardGiven(to, reward);
-    }
-
-    function numberOfAddressesWithRewards() public view returns(uint){
-        return addressesWithRewards.length();
-    }
-
-    function addressWithRewardAtIndex(uint index) public view returns(address){
-        return addressesWithRewards.at(index);
-    }
-
-    function allAddressesWithRewards() public view returns(address[] memory){
-        return addressesWithRewards.values();
+    function setRewardContractAddress(address _rewardContractAddress) onlyOwner public{
+        rewardContract = Reward(_rewardContractAddress);
     }
 
     function getAuction(uint index) public view returns(Auction){
@@ -73,7 +50,8 @@ contract AuctionFactory {
             _minimumBidIncrement, // 0.1 eth // _minimumBidIncrement
             _nftListerAddress, // chrome // _nftListerAddress
             _listerFeeInBasisPoints, // 100 basis points // 1%
-            wethAddress // address given to us when constructed per chain.
+            wethAddress, // address given to us when constructed per chain.
+            address(rewardContract) // _rewardContractAddress
         );
         _saveNewAuction(_nftListerAddress, pennyAuction);
     }
@@ -84,6 +62,7 @@ contract AuctionFactory {
         auctionsByLister[_nftListerAddress].push(pennyAuction);
         auctionSizeByLister[_nftListerAddress] += 1;
         allAuctionsHash[address(pennyAuction)] = true;
+        rewardContract.addAuctionAddress(address(pennyAuction));
         emit AuctionGenerated(_nftListerAddress, address(pennyAuction));
     }
 }

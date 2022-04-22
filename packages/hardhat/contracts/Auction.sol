@@ -4,7 +4,7 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "hardhat/console.sol";
-import "./AuctionFactory.sol";
+import "./Reward.sol";
 
 // someones deploy us [contract] with nft contract address
 // lister approves us [contract] to take nft or take all of their nfts
@@ -46,7 +46,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     uint public immutable auctionTimeIncrementOnBid;
     address public immutable nftListerAddress;
     uint public immutable initialAuctionLength;
-    AuctionFactory public immutable auctionFactory;
+    Reward public rewardContract;
 
     IERC721 public immutable nftContract;
     uint public immutable tokenId;
@@ -73,7 +73,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         uint _minimumBidIncrement,
         address _nftListerAddress,
         uint _listerFeeInBasisPoints,
-        address _wethAddress){
+        address _wethAddress,
+        address _rewardContractAddress){
             nftContract = IERC721(_nftContractAddress);
             tokenId = _tokenId;
             nftListerAddress = _nftListerAddress;
@@ -90,7 +91,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             _setupRole(CASHIER_ROLE, _sandeepAddress);
 
             weth = IERC20(_wethAddress);
-            auctionFactory = AuctionFactory(msg.sender);
+            rewardContract = Reward(_rewardContractAddress);
     }
 
     function startAuction() youAreTheNftLister external{
@@ -156,7 +157,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     function giveReward() private {
         uint reward = currentReward();
         if(reward > 0){
-            auctionFactory.giveReward(msg.sender, reward);
+            rewardContract.giveReward(msg.sender, reward);
         }
     }
 

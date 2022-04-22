@@ -52,7 +52,7 @@ const Auction2 = props => {
   const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId)
   const [blockExplorerLink, setBlockExplorerLink] = useState('')
   const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider)
-  const rewards = useContractReader(readContracts, "AuctionFactory", "rewards", [address]);
+  const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
 
   useEffect(() => {
     if(auctionContractAddress){
@@ -184,7 +184,7 @@ const Auction2 = props => {
                   </h3>
                   <h1>
                     <img src={rewardsImage} style={{height: 50}} />
-                    {rewards && ethers.utils.commify(rewards)}
+                    {rewards ? ethers.utils.commify(rewards) : 0}
                   </h1>
                 </div>
               </div>

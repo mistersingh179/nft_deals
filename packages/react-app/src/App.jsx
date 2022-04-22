@@ -406,53 +406,64 @@ function App(props) {
                 <TopNavMenu location={location} />
                 <Tabs defaultActiveKey="1" centered>
                   <TabPane tab="Auction" key="1">
-                  <Input placeholder={'an auction address'} onChange={e => handleAuctionAddressChange(e.target.value)} style={{width: 400}} />
-                  <Contract
-                    customContract={auctionContract}
-                    name="Auction"
-                    price={price}
-                    signer={userSigner}
-                    provider={localProvider}
-                    address={address}
-                    blockExplorer={blockExplorer}
-                    contractConfig={contractConfig}
-                    readContracts={readContracts}
-                  />
-                </TabPane>
+                    <Input placeholder={'an auction address'} onChange={e => handleAuctionAddressChange(e.target.value)} style={{width: 400}} />
+                    <Contract
+                      customContract={auctionContract}
+                      name="Auction"
+                      price={price}
+                      signer={userSigner}
+                      provider={localProvider}
+                      address={address}
+                      blockExplorer={blockExplorer}
+                      contractConfig={contractConfig}
+                      readContracts={readContracts}
+                    />
+                  </TabPane>
                   <TabPane tab="Auction Factory" key="2">
-                  <Contract
-                    name="AuctionFactory"
-                    price={price}
-                    signer={userSigner}
-                    provider={localProvider}
-                    address={address}
-                    blockExplorer={blockExplorer}
-                    contractConfig={contractConfig}
-                  />
-                </TabPane>
+                    <Contract
+                      name="AuctionFactory"
+                      price={price}
+                      signer={userSigner}
+                      provider={localProvider}
+                      address={address}
+                      blockExplorer={blockExplorer}
+                      contractConfig={contractConfig}
+                    />
+                  </TabPane>
                   <TabPane tab="BestNft" key="3">
-                  <Contract
-                    name="BestNft"
-                    price={price}
-                    signer={userSigner}
-                    provider={localProvider}
-                    address={address}
-                    blockExplorer={blockExplorer}
-                    contractConfig={contractConfig}
-                  />
-                </TabPane>
+                    <Contract
+                      name="BestNft"
+                      price={price}
+                      signer={userSigner}
+                      provider={localProvider}
+                      address={address}
+                      blockExplorer={blockExplorer}
+                      contractConfig={contractConfig}
+                    />
+                  </TabPane>
                   <TabPane tab="WETH" key="4">
-                  <Contract
-                    name="WETH"
-                    price={price}
-                    signer={userSigner}
-                    provider={localProvider}
-                    address={address}
-                    blockExplorer={blockExplorer}
-                    contractConfig={contractConfig}
-                    customContract={readContracts && readContracts.DAI}
-                  />
-                </TabPane>
+                    <Contract
+                      name="WETH"
+                      price={price}
+                      signer={userSigner}
+                      provider={localProvider}
+                      address={address}
+                      blockExplorer={blockExplorer}
+                      contractConfig={contractConfig}
+                      customContract={readContracts && readContracts.WETH}
+                    />
+                  </TabPane>
+                  <TabPane tab="Reward" key="5">
+                    <Contract
+                      name="Reward"
+                      price={price}
+                      signer={userSigner}
+                      provider={localProvider}
+                      address={address}
+                      blockExplorer={blockExplorer}
+                      contractConfig={contractConfig}
+                    />
+                  </TabPane>
                 </Tabs>
               </>
             </Route>
