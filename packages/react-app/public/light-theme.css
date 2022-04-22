@@ -23694,7 +23694,7 @@ div.ant-typography-edit-content.ant-typography-rtl {
   color: #333;
 }
 .bid-history-modal .ant-modal-footer {
-  display: none;
+  text-align: center;
 }
 .current-winner{
   border-radius: 50%;
@@ -23729,4 +23729,10 @@ div.ant-typography-edit-content.ant-typography-rtl {
 }
 .token-teaser{
   color: #bbb;
+}
+.etherscan-link{
+  color: #777;
+}
+.info-icon{
+  font-size: 70%;
 }
