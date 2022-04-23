@@ -16,12 +16,16 @@ export default (readContracts, auctionContractAddress, localProvider) => {
         const block = await localProvider.getBlock()
         let secondsLeftInAuction = await auctionContract.secondsLeftInAuction();
         secondsLeftInAuction = secondsLeftInAuction.toNumber()
-        const behindBy = (moment().unix() - block.timestamp)
-        console.log('*** behind by: ', behindBy)
         console.log('*** seconds left in auction: ', secondsLeftInAuction)
-        let adjustSecondsLeftInAuction = secondsLeftInAuction - behindBy
-        console.log('*** seconds left in auction: ', adjustSecondsLeftInAuction)
-        setDurationToExpire(moment.duration(adjustSecondsLeftInAuction, 'seconds'));
+        if(secondsLeftInAuction == 0){
+          setDurationToExpire(moment.duration(0, 'seconds'));
+        }else {
+          const behindBy = (moment().unix() - block.timestamp)
+          console.log('*** behind by: ', behindBy)
+          let adjustSecondsLeftInAuction = secondsLeftInAuction - behindBy
+          console.log('*** seconds left in auction: ', adjustSecondsLeftInAuction)
+          setDurationToExpire(moment.duration(adjustSecondsLeftInAuction, 'seconds'));
+        }
       }
     }
     init()
