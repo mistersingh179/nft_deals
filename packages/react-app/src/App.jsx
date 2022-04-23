@@ -53,6 +53,7 @@ import "./vendor/bootstrap/css/bootstrap.css"
 import "./vendor/icofont/icofont.min.css"
 import "./css/style.css"
 import Auction2 from "./views/Auction2";
+import Auctions from "./views/Auctions";
 import FaucetAndInfo from "./components/FaucetAndInfo";
 import AccountAndOthers from "./components/AccountAndOthers";
 /*
@@ -323,6 +324,34 @@ function App(props) {
           tx={tx}
         />
       </Route>
+      <Route exact path="/auctions/">
+        <Auctions
+          NETWORKCHECK={NETWORKCHECK}
+          localChainId={localChainId}
+          selectedChainId={selectedChainId}
+          targetNetwork={targetNetwork}
+          logoutOfWeb3Modal={logoutOfWeb3Modal}
+          USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+          useBurner={USE_BURNER_WALLET}
+          address={address}
+          localProvider={localProvider}
+          userSigner={userSigner}
+          mainnetProvider={mainnetProvider}
+          price={price}
+          web3Modal={web3Modal}
+          loadWeb3Modal={loadWeb3Modal}
+          logoutOfWeb3Modal={logoutOfWeb3Modal}
+          blockExplorer={blockExplorer}
+          readContracts={readContracts}
+          writeContracts={writeContracts}
+          networkOptions={networkOptions}
+          selectedNetwork={selectedNetwork}
+          setSelectedNetwork={setSelectedNetwork}
+          USE_BURNER_WALLET={USE_BURNER_WALLET}
+          yourLocalBalance={yourLocalBalance}
+          tx={tx}
+        />
+      </Route>      
       <Route>
         <div className="App">
           <Header />
