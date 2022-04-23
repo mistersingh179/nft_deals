@@ -1,7 +1,6 @@
 import {Button, Modal, Tooltip, Typography} from "antd";
 import BidEvents from "./BidEvents";
 import {useState} from "react";
-import SampleWinningModal from "../components/SampleWinningModal";
 const { Text } = Typography;
 
 const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
@@ -48,17 +47,6 @@ const BidHistoryButtonModalCombo = props => {
           />
         </p>
       </Modal>
-      
-      {/* Throwaway once Sandeep wires this with proper React hook */}
-      <SampleWinningModal 
-        readContracts = {readContracts}
-        auctionContractAddress={auctionContractAddress}
-        mainnetProvider={mainnetProvider}
-        localProvider={localProvider}
-        address={address}
-        blockExplorer={blockExplorer}
-        rewards={rewards}
-      />      
     </>
   )
 }

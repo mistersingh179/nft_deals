@@ -181,6 +181,7 @@ const Auction2 = props => {
                     localProvider={localProvider}
                     auctionContractAddress={auctionContractAddress}
                     tx={tx}
+                    price={price}
               />
               <Row>
                 <Col lg={{offset: 0,span: 10}} xs={{span: 24}}>

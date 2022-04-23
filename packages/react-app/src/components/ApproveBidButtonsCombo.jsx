@@ -1,19 +1,14 @@
-import { Button, Space, Row, Col } from "antd";
+import { Button, Space, Row, Col, Tooltip, Modal } from "antd";
 import moment from "moment";
-import {useEffect, useState} from "react";
-import {BigNumber, ethers} from "ethers";
-import {Auction} from "../views";
-import {useBlockNumber} from "eth-hooks";
+import { useEffect, useState } from "react";
+import { BigNumber, ethers } from "ethers";
+import { useBlockNumber } from "eth-hooks";
 import useAuctionContract from "../hooks/useAuctionContract";
+import useAuctionOptions from "../hooks/useAuctionOptions";
+import { BidWinningModal } from "./index";
 
 const ApproveBidButtonsCombo = props => {
-  const {
-    address,
-    writeContracts,
-    readContracts,
-    tx,
-    localProvider,
-    auctionContractAddress } = props;
+  const { address, writeContracts, readContracts, tx, price, localProvider, auctionContractAddress } = props;
 
   const approvalAmount = "100000000000000000000000";
   const [desiredApprovalAmount, setDesiredApprovalAmount] = useState(ethers.BigNumber.from(0));
@@ -21,58 +16,59 @@ const ApproveBidButtonsCombo = props => {
   const [expiration, setExpiration] = useState(ethers.BigNumber.from(0));
   const blockNumber = useBlockNumber(localProvider);
   const auctionContract = useAuctionContract(readContracts, auctionContractAddress, localProvider);
+  const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider);
 
   useEffect(async () => {
     if (auctionContract && localProvider) {
       const highestBid = await auctionContract.highestBid();
       const minimumBidIncrement = await auctionContract.minimumBidIncrement();
-      const desiredApprovalAmount = highestBid.add(BigNumber.from(minimumBidIncrement).mul(1000))
-      setDesiredApprovalAmount(desiredApprovalAmount)
+      const desiredApprovalAmount = highestBid.add(BigNumber.from(minimumBidIncrement).mul(1000));
+      setDesiredApprovalAmount(desiredApprovalAmount);
     }
   }, [localProvider, auctionContract, blockNumber]);
 
   useEffect(async () => {
-    try{
-      if(readContracts && readContracts.WETH && address && auctionContractAddress){
-        const result = await readContracts.WETH.allowance(address, auctionContractAddress)
+    try {
+      if (readContracts && readContracts.WETH && address && auctionContractAddress) {
+        const result = await readContracts.WETH.allowance(address, auctionContractAddress);
         setFundsApproved(result);
       }
-    }catch(e){
-      console.error('unable to get approved funds', e)
+    } catch (e) {
+      console.error("unable to get approved funds", e);
     }
-  }, [readContracts && readContracts.WETH, address, auctionContractAddress, blockNumber])
+  }, [readContracts && readContracts.WETH, address, auctionContractAddress, blockNumber]);
 
   useEffect(() => {
-    if(fundsApproved.gt(desiredApprovalAmount)){
-      setDisableApprove(true)
-      if(expiration.gt(ethers.BigNumber.from(moment().unix()))){
-        setDisableBid(false)
-      }else{
-        setDisableBid(true)
+    if (fundsApproved.gt(desiredApprovalAmount)) {
+      setDisableApprove(true);
+      if (expiration.gt(ethers.BigNumber.from(moment().unix()))) {
+        setDisableBid(false);
+      } else {
+        setDisableBid(true);
       }
-    }else{
-      setDisableApprove(false)
-      setDisableBid(true)
+    } else {
+      setDisableApprove(false);
+      setDisableBid(true);
     }
-  }, [desiredApprovalAmount, fundsApproved])
+  }, [desiredApprovalAmount, fundsApproved]);
 
   useEffect(async () => {
     if (auctionContract) {
-      const expiration = await auctionContract.expiration()
-      setExpiration(expiration)
+      const expiration = await auctionContract.expiration();
+      setExpiration(expiration);
     }
-  },[localProvider, auctionContract, blockNumber])
+  }, [localProvider, auctionContract, blockNumber]);
 
   const approveButtonHandler = async () => {
     if (writeContracts && writeContracts.WETH && auctionContractAddress) {
-      try{
-        setDisableApprove(true)
+      try {
+        setDisableApprove(true);
         const result = await tx(writeContracts.WETH.approve(auctionContractAddress, approvalAmount));
         console.log("approval result: ", result);
-      }catch(e){
-        console.error('failed to run approval')
+      } catch (e) {
+        console.error("failed to run approval");
       } finally {
-        setDisableApprove(false)
+        setDisableApprove(false);
       }
     }
   };
@@ -80,47 +76,51 @@ const ApproveBidButtonsCombo = props => {
     if (writeContracts && writeContracts.Auction && auctionContractAddress) {
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
       try {
-        setDisableBid(true)
-        const options = {}
-        try{
+        setDisableBid(true);
+        const options = {};
+        try {
           const estimate = await auctionWriter.estimateGas.bid();
-          options['gasLimit'] = estimate.mul(13).div(10);
-        }catch(e){
-          console.error('failed to get estimate')
+          options["gasLimit"] = estimate.mul(13).div(10);
+        } catch (e) {
+          console.error("failed to get estimate");
         }
-        await tx(auctionWriter.bid(options), update => console.log(update));
+        await tx(auctionWriter.bid(options), update => {
+          console.log(update);
+          if (update.status == 1) {
+            console.log("***the bid was successful");
+            setShowWinningModal(true);
+          }
+        });
       } catch (e) {
         console.error("failed placing bid: ", e);
       } finally {
-        setDisableBid(false)
+        setDisableBid(false);
       }
     }
   };
 
   const [disableApprove, setDisableApprove] = useState(true);
   const [disableBid, setDisableBid] = useState(true);
+  const [showWinningModal, setShowWinningModal] = useState(false);
 
   return (
-    <Row >
-      <Col lg={{offset: 0,span: 10}} xs={{span: 24}}>
-        <Button
-          onClick={approveButtonHandler}
-          className="btn-primary bid-btn"
-          size={"large"}
-          disabled={disableApprove}
-        >
+    <Row>
+      <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
+        <Button onClick={approveButtonHandler} className="btn-primary bid-btn" size={"large"} disabled={disableApprove}>
           Approve
         </Button>
       </Col>
-      <Col lg={{offset: 2,span: 10}} xs={{span: 24}}>
-        <Button
-          disabled={disableBid}
-          className="btn-primary bid-btn"
-          size={"large"}
-          onClick={bidButtonHandler}
-        >
+      <Col lg={{ offset: 2, span: 10 }} xs={{ span: 24 }}>
+        <Button disabled={disableBid} className="btn-primary bid-btn" size={"large"} onClick={bidButtonHandler}>
           Place Bid
         </Button>
+        <BidWinningModal
+          showWinningModal={showWinningModal}
+          setShowWinningModal={setShowWinningModal}
+          readContracts={readContracts}
+          localProvider={localProvider}
+          price={price}
+        />
       </Col>
     </Row>
   );
