@@ -80,7 +80,9 @@ const ApproveBidButtonsCombo = props => {
         const options = {};
         try {
           const estimate = await auctionWriter.estimateGas.bid();
-          options["gasLimit"] = estimate.mul(13).div(10);
+          if(estimate > 0){
+            options["gasLimit"] = estimate.mul(13).div(10);
+          }
         } catch (e) {
           console.error("failed to get estimate");
         }

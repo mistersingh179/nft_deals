@@ -212,12 +212,12 @@ export default function AuctionFactory({
           </Row>
           <Row gutter={16}>
             <Col span={6}>
-              Auction increment minutes
+              Auction increment
             </Col>
             <Col span={18}>
               <Input
                 value={auctionOptions.auctionTimeIncrementOnBid}
-                placeholder="Enter auction time increment on a bid in minutes"
+                placeholder="Enter auction time increment on a bid in seconds"
                 onChange={e => updateAuctionOptions('auctionTimeIncrementOnBid', e.target.value)}
               />
             </Col>

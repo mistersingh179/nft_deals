@@ -41,7 +41,7 @@ const BidWinningModal = props => {
   };
 
   const roi = () => {
-    if(auctionOptions.maxBid && nftOptions.floor_price){
+    if(auctionOptions.maxBid && auctionOptions.maxBid.gt(0) && nftOptions.floor_price){
       const floor_price = ethers.utils.parseEther(nftOptions.floor_price+""); // standardizing opensea value to big number holding wei
       const maxBid = auctionOptions.maxBid;
       let ans = (floor_price.sub(maxBid)).div(maxBid);
