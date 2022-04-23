@@ -40,7 +40,7 @@ import {
   WETH,
   AuctionFactory,
   Auction,
-  AuctionList
+  AuctionList, Foo
 } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
@@ -507,6 +507,34 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 mainnetProvider={mainnetProvider}
+              />
+            </Route>
+            <Route path="/foo/:slug">
+              <Foo
+                NETWORKCHECK={NETWORKCHECK}
+                localChainId={localChainId}
+                selectedChainId={selectedChainId}
+                targetNetwork={targetNetwork}
+                logoutOfWeb3Modal={logoutOfWeb3Modal}
+                USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+                useBurner={USE_BURNER_WALLET}
+                address={address}
+                localProvider={localProvider}
+                userSigner={userSigner}
+                mainnetProvider={mainnetProvider}
+                price={price}
+                web3Modal={web3Modal}
+                loadWeb3Modal={loadWeb3Modal}
+                logoutOfWeb3Modal={logoutOfWeb3Modal}
+                blockExplorer={blockExplorer}
+                readContracts={readContracts}
+                writeContracts={writeContracts}
+                networkOptions={networkOptions}
+                selectedNetwork={selectedNetwork}
+                setSelectedNetwork={setSelectedNetwork}
+                USE_BURNER_WALLET={USE_BURNER_WALLET}
+                yourLocalBalance={yourLocalBalance}
+                tx={tx}
               />
             </Route>
           </Switch>

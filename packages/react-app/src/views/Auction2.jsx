@@ -142,7 +142,7 @@ const Auction2 = props => {
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>
                     </h3>
                   </Space>
-                  <h1>Ξ {displayWeiAsEther(auctionOptions.highestBid)}</h1>
+                  <h1>Ξ {displayWeiAsEther(auctionOptions.maxBid)}</h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>Ends in <Tooltip 
@@ -160,7 +160,7 @@ const Auction2 = props => {
                   <h3>Next Bid <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
                     <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
-                  <h1>Ξ {displayWeiAsEther(auctionOptions.highestBid.add(auctionOptions.minimumBidIncrement))} </h1>
+                  <h1>Ξ {displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement))} </h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>
@@ -435,7 +435,6 @@ const Duration = ({durationToExpire}) => {
       return ''
     }
   }
-
   return <>
     {durationToExpire && durationToExpire.as('seconds') > 0 &&  `${getDays()} ${durationToExpire.hours()}h ${durationToExpire.minutes()}m ${durationToExpire.seconds()}s`}
     {durationToExpire && durationToExpire.as('seconds') <= 0 && `Expired`}

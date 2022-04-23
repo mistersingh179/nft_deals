@@ -57,6 +57,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     uint public highestBid;
     uint public _platformFeesAccumulated;
     uint public _listerFeesAccumulated;
+    uint public maxBid;
 
     event Bid(address from, uint amount);
     event MoneyOut(address to, uint amount);
@@ -188,6 +189,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         expiration = block.timestamp + auctionTimeIncrementOnBid;
 
         emit Bid(msg.sender, totalNextBid);
+
+        maxBid = highestBid;
     }
 
     function secondsLeftInAuction() external view returns(uint) {

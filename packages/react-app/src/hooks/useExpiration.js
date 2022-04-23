@@ -6,45 +6,49 @@ import {ethers} from "ethers";
 
 export default (readContracts, auctionContractAddress, localProvider) => {
 
-  const incrementTime = 1000
-  const [durationToExpire, setDurationToExpire] = useState(moment.duration(24, 'hours'))
+  const [durationToExpire, setDurationToExpire] = useState(undefined)
   const blockNumber = useBlockNumber(localProvider)
   const auctionContract = useAuctionContract(readContracts, auctionContractAddress, localProvider);
 
   useEffect(() => {
     const init = async () => {
-      if(auctionContract){
-        const expiration = await auctionContract.expiration();
-        const block = await localProvider.getBlock();
-        const blockTimestamp = moment(block.timestamp, 'X');
-        // const blockTimestamp = moment();
-        const exp = moment(expiration, 'X');
-        let duration = moment.duration(exp.diff(blockTimestamp));
-        console.log('*** syncing with blockchain and got latest duration to be: ', duration);
-        setDurationToExpire(duration);
+      if(localProvider && auctionContract){
+        const block = await localProvider.getBlock()
+        let secondsLeftInAuction = await auctionContract.secondsLeftInAuction();
+        secondsLeftInAuction = secondsLeftInAuction.toNumber()
+        const behindBy = (moment().unix() - block.timestamp)
+        console.log('*** behind by: ', behindBy)
+        console.log('*** seconds left in auction: ', secondsLeftInAuction)
+        let adjustSecondsLeftInAuction = secondsLeftInAuction - behindBy
+        console.log('*** seconds left in auction: ', adjustSecondsLeftInAuction)
+        setDurationToExpire(moment.duration(adjustSecondsLeftInAuction, 'seconds'));
       }
     }
     init()
-  }, [auctionContract, blockNumber])
+  }, [localProvider, auctionContract, blockNumber])
 
+  // setup decremnting the time manually
   useEffect(() => {
-    const updateExpiration = () => {
-      setDurationToExpire(prevDuration => {
-        // console.log('*** manually ticking time down')
-        const newDuration = prevDuration.clone()
-        newDuration.subtract(incrementTime, 'ms')
-        return newDuration
+    let intervalHandler
+    const decrementDuration = async () => {
+      console.log('*** decrementing')
+      setDurationToExpire(previous => {
+        if(!previous){
+          return previous
+        }else{
+          const updatedDuration = previous.clone()
+          updatedDuration.subtract(1, 'seconds')
+          return updatedDuration
+        }
       })
-    };
-
-    // console.log('*** setting up interval to update time')
-    const intervalHandler = setInterval(updateExpiration, incrementTime);
-
+    }
+    console.log('*** registering')
+    intervalHandler = window.setInterval(decrementDuration, 1000)
     return () => {
-      // console.log('*** removing interval which updates time')
+      console.log('*** unregistering')
       window.clearInterval(intervalHandler)
     }
-  }, [])
+  }, [auctionContractAddress])
 
   return durationToExpire
 }
