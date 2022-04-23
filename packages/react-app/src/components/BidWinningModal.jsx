@@ -65,7 +65,7 @@ const BidWinningModal = props => {
           <Col span={18} align="middle">
             <h1>Congratulations!</h1>
             <h5>
-              You earned {auctionOptions.currentReward.toString()} points by bidding.
+              Currently giving {auctionOptions.currentReward.toString()} points on each bid.
               <Tooltip
                 placement="right"
                 title="Get rewards every time you bid,

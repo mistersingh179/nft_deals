@@ -11,6 +11,8 @@ import alphaBackToken from '../img/AlphaBackToken-small.png';
 
 const { Text } = Typography;
 
+const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
+
 const AccountDrawer = (props) => {
   const {address, mainnetProvider, blockExplorer, readContracts, yourLocalBalance} = props
   const {NETWORKCHECK,localChainId,selectedChainId,targetNetwork,logoutOfWeb3Modal,USE_NETWORK_SELECTOR} = props
@@ -28,6 +30,7 @@ const AccountDrawer = (props) => {
     ethBalance = parseFloat(ethers.utils.formatEther(yourLocalBalance)).toFixed(4)
   }
   const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
+  const rewardsEtherscanLink = blockExplorerLink(readContracts && readContracts.Reward && readContracts.Reward.address, props.blockExplorer);
 
   return (
     <>
@@ -147,7 +150,7 @@ const AccountDrawer = (props) => {
             padding: "1rem",
             textAlign: "right",
           }}>
-            <a className="rewards-contract" href={"use blockExplorer with readContracts.Reward.address"}>Inspect Rewards Contract on Etherscan</a>
+            <a className="rewards-contract" href={rewardsEtherscanLink}>Inspect Rewards Contract on Etherscan</a>
           </div>
 
 
