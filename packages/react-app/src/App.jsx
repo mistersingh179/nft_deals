@@ -89,11 +89,11 @@ const USE_NETWORK_SELECTOR = true;
 
 const web3Modal = Web3ModalSetup();
 
-// 🛰 providers
+// 🛰 mainnet providers, for ens, price, balance, other lookups, etc.
 const providers = [
-  "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
+  // "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
   `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
-  "https://rpc.scaffoldeth.io:48544",
+  // "https://rpc.scaffoldeth.io:48544",
 ];
 
 function App(props) {
