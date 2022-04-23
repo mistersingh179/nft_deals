@@ -48,7 +48,7 @@ const BidWinningModal = props => {
       ans = ethers.utils.commify(ans);
       return ans;
     } else {
-      return "0";
+      return "Gazillion";
     }
   };
 

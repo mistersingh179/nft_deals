@@ -1,11 +1,11 @@
 import { Button, Space, Row, Col, Tooltip, Modal } from "antd";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useBlockNumber } from "eth-hooks";
 import useAuctionContract from "../hooks/useAuctionContract";
 import useAuctionOptions from "../hooks/useAuctionOptions";
-import { BidWinningModal } from "./index";
+import {BidWinningModal, Confetti} from "./index";
 
 const ApproveBidButtonsCombo = props => {
   const { address, writeContracts, readContracts, tx, price, localProvider, auctionContractAddress } = props;
@@ -17,6 +17,16 @@ const ApproveBidButtonsCombo = props => {
   const blockNumber = useBlockNumber(localProvider);
   const auctionContract = useAuctionContract(readContracts, auctionContractAddress, localProvider);
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider);
+
+  const canvasStyles = {
+    position: "fixed",
+    pointerEvents: "none",
+    width: "100%",
+    height: "100%",
+    top: 0,
+    left: 0,
+    zIndex: 10000
+  };
 
   useEffect(async () => {
     if (auctionContract && localProvider) {
@@ -75,6 +85,9 @@ const ApproveBidButtonsCombo = props => {
   const bidButtonHandler = async () => {
     if (writeContracts && writeContracts.Auction && auctionContractAddress) {
       const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      // setShowConfetti((new Date()).getTime())
+      // setShowWinningModal(true);
+      // return;
       try {
         setDisableBid(true);
         const options = {};
@@ -91,6 +104,7 @@ const ApproveBidButtonsCombo = props => {
           if (update.status == 1) {
             console.log("***the bid was successful");
             setShowWinningModal(true);
+            setShowConfetti((new Date()).getTime())
           }
         });
       } catch (e) {
@@ -104,6 +118,7 @@ const ApproveBidButtonsCombo = props => {
   const [disableApprove, setDisableApprove] = useState(true);
   const [disableBid, setDisableBid] = useState(true);
   const [showWinningModal, setShowWinningModal] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(undefined);
 
   return (
     <Row>
@@ -122,6 +137,11 @@ const ApproveBidButtonsCombo = props => {
           readContracts={readContracts}
           localProvider={localProvider}
           price={price}
+        />
+        <Confetti
+          style={canvasStyles}
+          fireConfetti={showConfetti}
+          // nextFn={() => setShowWinningModal(true)}
         />
       </Col>
     </Row>

@@ -112,7 +112,6 @@ const Auction2 = props => {
           </Space>
         </div>
       </header>
-
       <section id="hero" className="d-flex align-items-center">
 
         <div class={'container'}>
@@ -197,7 +196,7 @@ const Auction2 = props => {
                 </Col>
                 <Col lg={{offset: 2,span: 10}} xs={{span: 24}}>
                   <a href={blockExplorerLink} className="ant-btn btn btn-secondary btn-sm btn-block bid-details-btn" target="_blank">
-                    <i className="bi bi-patch-check-fill btn-icon"></i> Inspect Auction on Etherscan
+                    <i className="bi bi-patch-check-fill btn-icon" /> Inspect Auction on Etherscan
                   </a>
                 </Col>
               </Row>
@@ -216,52 +215,50 @@ const Auction2 = props => {
 
       <main id="main">
         <section id="services" class="services section-bg">
-        <div class="container" data-aos="fade-up">
-
+          <div class="container" data-aos="fade-up">
           <div class="section-title">
-            <h2>How It Works</h2>
-            <p>Only NFT Deals lets you <strong>win premium NFTs at deep discounts</strong>. Here's how it works: each bid raises the auction price by 0.0003 ETH and restarts the clock by 24 hours. The top bid when time runs out wins the auction and keeps the NFT. The massive discount against floor price is possible because we operate a novel auction format where you pay-to-bid and bid-to-earn.</p>
+          <h2>How It Works</h2>
+          <p>Only NFT Deals lets you <strong>win premium NFTs at deep discounts</strong>. Here's how it works: each bid raises the auction price by 0.0003 ETH and restarts the clock by 24 hours. The top bid when time runs out wins the auction and keeps the NFT. The massive discount against floor price is possible because we operate a novel auction format where you pay-to-bid and bid-to-earn.</p>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-3 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-money-withdraw"></i></div>
+              <h4><a href="">Pay-to-Bid</a></h4>
+              <p>Each bid is always +0.0003 wETH above the current, top bid. If your bid loses, you get 90% of your bid back. The remaining 10% is kept by the auction.</p>
+            </div>
           </div>
 
-          <div class="row">
-            <div class="col-xl-3 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-              <div class="icon-box">
-                <div class="icon"><i class="bx bx-money-withdraw"></i></div>
-                <h4><a href="">Pay-to-Bid</a></h4>
-                <p>Each bid is always +0.0003 wETH above the current, top bid. If your bid loses, you get 90% of your bid back. The remaining 10% is kept by the auction.</p>
-              </div>
+          <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-timer"></i></div>
+              <h4><a href="">Timer Restarts</a></h4>
+              <p>Each bid will extend the auction by 24 hours. This allows worldwide participation without losing sleep. Plus, there’s no advantage to waiting until the last few minutes.</p>
             </div>
-
-            <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
-              <div class="icon-box">
-                <div class="icon"><i class="bx bx-timer"></i></div>
-                <h4><a href="">Timer Restarts</a></h4>
-                <p>Each bid will extend the auction by 24 hours. This allows worldwide participation without losing sleep. Plus, there’s no advantage to waiting until the last few minutes.</p>
-              </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="300">
-              <div class="icon-box">
-                <div class="icon"><i class="bx bx-party"></i></div>
-                <h4><a href="">Winner, Winner</a></h4>
-                <p>If you are the top bid when the timer runs out, you win the NFT. Click on "Claim NFT" in the menu bar to transfer the NFT to your wallet.</p>
-              </div>
-            </div>
-
-            <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="400">
-              <div class="icon-box">
-                <div class="icon"><i class="bx bx-coin-stack"></i></div>
-                <h4><a href="">Bid-to-Earn</a></h4>
-                <p>Earn rewards everytime you bid. Rewards are based on the number of minutes remaining in this auction. Bid early, get more. Rewards will be convertible into our token when it launches.</p>
-              </div>
-            </div>
-
           </div>
+
+          <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="300">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-party"></i></div>
+              <h4><a href="">Winner, Winner</a></h4>
+              <p>If you are the top bid when the timer runs out, you win the NFT. Click on "Claim NFT" in the menu bar to transfer the NFT to your wallet.</p>
+            </div>
+          </div>
+
+          <div class="col-xl-3 col-md-6 d-flex align-items-stretch mt-4 mt-xl-0" data-aos="zoom-in" data-aos-delay="400">
+            <div class="icon-box">
+              <div class="icon"><i class="bx bx-coin-stack"></i></div>
+              <h4><a href="">Bid-to-Earn</a></h4>
+              <p>Earn rewards everytime you bid. Rewards are based on the number of minutes remaining in this auction. Bid early, get more. Rewards will be convertible into our token when it launches.</p>
+            </div>
+          </div>
+        </div>
 
         </div>
-      </section>
+        </section>
         <section id="cta" class="cta">
-        <div class="container" data-aos="zoom-in">
+          <div class="container" data-aos="zoom-in">
 
           <div class="row">
             <div class="col-lg-3 text-center text-lg-left">
@@ -272,7 +269,7 @@ const Auction2 = props => {
             <div class="pic col-lg-3 text-center"><img src={protocolLabsLogo} class="img-fluid img-investors" alt="" /></div>
           </div>
         </div>
-      </section>
+        </section>
         <FAQ />
         <section id="team" class="team section-bg">
           <div class="container" data-aos="fade-up">
@@ -338,7 +335,6 @@ const Auction2 = props => {
           </div>
         </div>
         </section>
-
         <section id="contact" class="contact">
           <div class="container" data-aos="fade-up">
 
@@ -359,71 +355,70 @@ const Auction2 = props => {
       </main>
 
       <footer id="footer">
+        <div class="footer-top">
+          <div class="container">
+            <div class="row">
 
-    <div class="footer-top">
-      <div class="container">
-        <div class="row">
+              <div class="col-lg-3 col-md-6 footer-contact">
+                <a href="index.html" class="logo"><img src="../img/NFTD_Logo_2.png" alt="" class="img-fluid  footer-logo" /></a>
+                <p>
+                  Made with ❤️
+                  <p>in Texas and New York</p>
+                  <p><strong>Email:</strong> info_at_nftdeals.xyz</p>
+                </p>
+              </div>
 
-          <div class="col-lg-3 col-md-6 footer-contact">
-            <a href="index.html" class="logo"><img src="../img/NFTD_Logo_2.png" alt="" class="img-fluid  footer-logo" /></a>
-            <p>
-              Made with ❤️
-              <p>in Texas and New York</p>
-              <p><strong>Email:</strong> info_at_nftdeals.xyz</p>
-            </p>
-          </div>
+              <div class="col-lg-3 col-md-6 footer-links">
+                <h4>Useful Links</h4>
+                <ul>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Bid to Win</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#team">About Us</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Claim Your NFT</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Sell Your NFT</a></li>
 
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Useful Links</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Bid to Win</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#team">About Us</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Claim Your NFT</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Sell Your NFT</a></li>
+                </ul>
+              </div>
 
-            </ul>
-          </div>
+              <div class="col-lg-3 col-md-6 footer-links">
+                <h4>Our Services</h4>
+                <ul>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Documentation</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Jobs</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of Service</a></li>
+                  <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy Policy</a></li>
+                </ul>
+              </div>
 
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Our Services</h4>
-            <ul>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Documentation</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Jobs</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Terms of Service</a></li>
-              <li><i class="bx bx-chevron-right"></i> <a href="#">Privacy Policy</a></li>
-            </ul>
-          </div>
+              <div class="col-lg-3 col-md-6 footer-links">
+                <h4>Join Our Journey</h4>
+                <p>
+                  Follow us on Twitter, where we drop the latest alpha. Read our Medium posts for announcements. Join our Discord to drink from the firehose.
+                </p>
+                <div class="social-links mt-3">
+                  <a href="https://twitter.com/NFT_Deals_xyz" class="twitter"><i class="bx bxl-twitter"></i></a>
+                  <a href="https://discord.gg/Q8WM4yHc" class="discord"><i class="bx bxl-discord"></i></a>
+                  <a href="https://medium.com/@rodrigofuentes7/" class="medium"><i class="bx bxl-medium"></i></a>
+                </div>
+              </div>
 
-          <div class="col-lg-3 col-md-6 footer-links">
-            <h4>Join Our Journey</h4>
-            <p>
-              Follow us on Twitter, where we drop the latest alpha. Read our Medium posts for announcements. Join our Discord to drink from the firehose.
-            </p>
-            <div class="social-links mt-3">
-              <a href="https://twitter.com/NFT_Deals_xyz" class="twitter"><i class="bx bxl-twitter"></i></a>
-              <a href="https://discord.gg/Q8WM4yHc" class="discord"><i class="bx bxl-discord"></i></a>
-              <a href="https://medium.com/@rodrigofuentes7/" class="medium"><i class="bx bxl-medium"></i></a>
             </div>
           </div>
-
         </div>
-      </div>
-    </div>
 
-    <div class="container footer-bottom clearfix">
-      <div class="copyright">
-        &copy; Copyright <strong><span>Masalsa Inc.</span></strong>. All Rights Reserved
-      </div>
-    </div>
-  </footer>
-  <NetworkDisplay
-              NETWORKCHECK={NETWORKCHECK}
-              localChainId={localChainId}
-              selectedChainId={selectedChainId}
-              targetNetwork={targetNetwork}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-    />  
+        <div class="container footer-bottom clearfix">
+          <div class="copyright">
+            &copy; Copyright <strong><span>Masalsa Inc.</span></strong>. All Rights Reserved
+          </div>
+        </div>
+      </footer>
+      <NetworkDisplay
+        NETWORKCHECK={NETWORKCHECK}
+        localChainId={localChainId}
+        selectedChainId={selectedChainId}
+        targetNetwork={targetNetwork}
+        logoutOfWeb3Modal={logoutOfWeb3Modal}
+        USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+      />
     </>
   )
 }
