@@ -66,6 +66,14 @@ const Auction2 = props => {
     //   await tx(auctionContractWriter.claimNftUponWinning())
     // }
   }
+  function discountCalc(floor, nextBid) {
+    let amount = 90;
+    if(floor && nextBid){
+      amount = ((1 - nextBid/floor)*100)
+      amount = Math.trunc(amount*10)/10 // <-- gives 1 digit after decimal without rounding. 
+    };
+    return <>{amount}</>;
+  }
   return (
     <>
       <header id="header" className={`fixed-top ${topNavClass}`}>
@@ -132,7 +140,7 @@ const Auction2 = props => {
           <div className="row">
             <div className="col-lg-12 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
               <div className="explainer-banner text-center">
-                <p>🎉 Buy this NFT for 90% off floor price??? Ok, STFU, I'm in!</p>
+                <p>🎉 Buy this NFT for {discountCalc(nftOptions.floor_price, displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)))}% off floor price??? Ok, STFU, I'm in!</p>
               </div>
             </div>
           </div>
