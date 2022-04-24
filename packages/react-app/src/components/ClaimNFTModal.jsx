@@ -39,7 +39,7 @@ const ClaimNFTModal = props => {
     return (
       <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
         <Col span={18} align="middle">
-          <h1>You have won this NFT!</h1>
+          <h1>You won this NFT!</h1>
           <NftImage
             nftContractAddress={auctionOptions.nftContract}
             tokenId={auctionOptions.tokenId}
@@ -49,12 +49,13 @@ const ClaimNFTModal = props => {
 
           {auctionOptions._weHavePossessionOfNft && <>
             <h4>
-              <Button type={'primary'} onClick={transferNftHandler}>
-                Transfer NFT to your wallet
+              <Button type={'primary'} className="ant-btn-lg transfer-btn"
+              onClick={transferNftHandler}>
+                Transfer NFT
               </Button>
             </h4>
             <p>
-              This NFT will arrive in your wallet address after the transfer
+              The NFT will arrive in your wallet address after this
               transaction is confirmed.
             </p>
           </>}

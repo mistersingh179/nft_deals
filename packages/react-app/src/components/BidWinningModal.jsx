@@ -51,7 +51,9 @@ const BidWinningModal = props => {
       return "Gazillion";
     }
   };
-
+  const rewardsExplainer = <>Get rewards every time you bid based on the number of hours
+  remaining in the auction. If you bid again right now you can 
+  earn {auctionOptions.currentReward.toString()} more points.</>;
   return (
     <>
       <Modal
@@ -63,24 +65,22 @@ const BidWinningModal = props => {
       >
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={18} align="middle">
-            <h1>Congratulations!</h1>
+            <h1>Congratulations</h1>
             <h5>
-              Currently giving {auctionOptions.currentReward.toString()} points on each bid.
-              <Tooltip
+              You got rewards just for bidding! <Tooltip
                 placement="right"
-                title="Get rewards every time you bid,
-              where the amount is based on the number of hours
-              remaining in the auction."
+                title={rewardsExplainer}
               >
                 <i className="bi bi-info-circle bid-info winner-info-icon"></i>
               </Tooltip>
             </h5>
+            {/* ADD CORRECT NUMBER OF POINTS BASED ON BALANCE */}
+            <h6>You now have 325 points.</h6>
             <img src={rewardsImage} className="winner-modal-badge" />
             <h5>You will win this NFT if you're not outbid within 24 hours!</h5>
             <p>
-              Current highest bid is Ξ{displayWeiAsEther(auctionOptions.maxBid)}. If you win this NFT – worth
-              approximately Ξ{nftOptions.floor_price} ({nftPriceInUsd()}) – you can flip it for Ξ
-              {nftEthProfit()} in profit.
+              The highest bid is Ξ{displayWeiAsEther(auctionOptions.maxBid)}. If you win this NFT, 
+              you can likely flip it for Ξ{nftEthProfit()} in profit.
             </p>
             <h6>That's a {roi()}x ROI! 🤑</h6>
           </Col>
