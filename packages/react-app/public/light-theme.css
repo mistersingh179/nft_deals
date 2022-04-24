@@ -23740,3 +23740,41 @@ div.ant-typography-edit-content.ant-typography-rtl {
   height: 10em;
   margin: 20px 0px 30px 0px
 }
+.weth-bid-icon{
+  width: 1em;
+  height: 1.2em;
+  vertical-align: sub;
+}
+.weth-drawer-icon{
+  width: 1.5em;
+}
+.explainer-video{
+  padding-bottom: 30px;
+}
+
+ .embed-container{ 
+   position: relative; 
+   padding-bottom: 56.25%; 
+   height: 0; 
+   overflow: hidden; 
+   max-width: 100%; 
+  } 
+  .embed-container iframe, .embed-container object, .embed-container embed { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+  }
+  .video-link{
+    color: #fff;
+  }
+  .video-link:hover{
+    color: #eee;
+    text-decoration: underline;
+  }  
+  #video{
+    /* create space for the anchor jump by offsetting padding vs. margin */
+    padding-top: 100px; 
+    margin-top: -40px;
+  }

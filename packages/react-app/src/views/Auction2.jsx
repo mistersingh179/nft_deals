@@ -6,6 +6,9 @@ import sandeep from '../img/team/sandeep.jpg'
 import anon1 from '../img/team/anon1.png'
 import anon2 from '../img/team/anon2.png'
 import logo from '../img/NFTD_Logo_2.png'
+import { ReactComponent as WEthLogo } from '../img/wrapped_ethereum_icon.svg';
+
+import { YoutubeFilled } from '@ant-design/icons';
 
 import {
   AccountDrawer,
@@ -31,12 +34,13 @@ import BidHistoryButtonModalCombo
   from '../components/BidHistoryButtonModalCombo'
 import { ethers } from 'ethers'
 import { useContractReader } from 'eth-hooks'
-import { Col, Row, Space, Tooltip, Typography } from 'antd'
+import { Col, Row, Space, Tooltip, Typography, Anchor } from 'antd'
 import NftImage from '../components/NftImage'
 import { displayWeiAsEther } from '../helpers'
 import ClaimNFTModal from '../components/ClaimNFTModal'
 import YouTubeEmbed from '../components/YouTubeEmbed'
 
+const { AntLink } = Anchor;
 const { Text } = Typography;
 
 const Auction2 = props => {
@@ -141,7 +145,11 @@ const Auction2 = props => {
           <div className="row">
             <div className="col-lg-12 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
               <div className="explainer-banner text-center">
-                <p>🎉 Buy this NFT for {discountCalc(nftOptions.floor_price, displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)))}% off floor price??? Ok, STFU, I'm in!</p>
+                <p>🎉 Bid to win this NFT 
+                  for {discountCalc(nftOptions.floor_price, displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)))}% 
+                  off floor price??? 
+                  Ok, STFU, <a href="#video" title="Watch Video" className="video-link">show me how <YoutubeFilled /></a>
+                </p>
               </div>
             </div>
           </div>
@@ -164,7 +172,7 @@ const Auction2 = props => {
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>
                     </h3>
                   </Space>
-                  <h1>Ξ {displayWeiAsEther(auctionOptions.maxBid)}</h1>
+                  <h1><WEthLogo className="weth-bid-icon" />{displayWeiAsEther(auctionOptions.maxBid)}</h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>Ends in <Tooltip
@@ -182,7 +190,7 @@ const Auction2 = props => {
                   <h3>Next Bid <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
                     <i className="bi bi-info-circle bid-info"></i></Tooltip>
                   </h3>
-                  <h1>Ξ {displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement))} </h1>
+                  <h1><WEthLogo className="weth-bid-icon" />{displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement))} </h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>
@@ -280,8 +288,19 @@ const Auction2 = props => {
         </div>
         </section>
 
-        <YouTubeEmbed embedId={'i2byTuH1nvo'} />
-
+        <section id="video" class="faq">
+                <div class="container" data-aos="fade-up">
+                    <div class="section-title">
+                        <h2>Quick Explainer Video</h2>
+                        <p className='explainer-video'>
+                          Watch this 60-second video to learn how to bid and win this NFT auction.
+                        </p>
+                        <div class='embed-container'>
+                          <YouTubeEmbed embedId={'i2byTuH1nvo'} />
+                        </div>
+                    </div>
+                </div>
+        </section>
         <section id="cta" class="cta">
           <div class="container" data-aos="zoom-in">
 

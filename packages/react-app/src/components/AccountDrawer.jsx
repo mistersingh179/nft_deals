@@ -58,7 +58,7 @@ const AccountDrawer = (props) => {
           }}>
             <Row type={"flex"} justify={"start"} style={{fontSize: 16, padding: 8}}>
               <Col span={3}>
-                <WEthLogo />
+                <WEthLogo className="weth-drawer-icon"/>
               </Col>
               <Col span={4}><Space><Text >WETH</Text></Space></Col>
               <Col span={4} push={12}>
@@ -71,7 +71,7 @@ const AccountDrawer = (props) => {
             </Row>
             <Row type={"flex"} justify={"start"} style={{fontSize: 16, padding: 8}}>
               <Col span={3}>
-                <EthLogo />
+                <EthLogo className="weth-drawer-icon"/>
               </Col>
               <Col span={4}><Space><Text >ETH</Text></Space></Col>
               <Col span={4} push={12}>

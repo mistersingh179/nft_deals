@@ -124,7 +124,7 @@ const ApproveBidButtonsCombo = props => {
     <Row>
       <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
         <Button onClick={approveButtonHandler} className="btn-primary bid-btn" size={"large"} disabled={disableApprove}>
-          Approve
+          Approve WETH
         </Button>
       </Col>
       <Col lg={{ offset: 2, span: 10 }} xs={{ span: 24 }}>
