@@ -1,41 +1,41 @@
-import bayc300 from '../img/BAYC300.png';
-import tachyonLogo from '../img/consensys-tachyon-logo.png';
-import consensysLogo from '../img/consensys-labs-icon-logo-white.png';
-import protocolLabsLogo from '../img/protocol-labs-logo.png';
-import rod from '../img/team/rod.jpg';
-import sandeep from '../img/team/sandeep.jpg';
-import anon1 from '../img/team/anon1.png';
-import anon2 from '../img/team/anon2.png';
-import logo from '../img/NFTD_Logo_2.png';
+import tachyonLogo from '../img/consensys-tachyon-logo.png'
+import consensysLogo from '../img/consensys-labs-icon-logo-white.png'
+import protocolLabsLogo from '../img/protocol-labs-logo.png'
+import rod from '../img/team/rod.jpg'
+import sandeep from '../img/team/sandeep.jpg'
+import anon1 from '../img/team/anon1.png'
+import anon2 from '../img/team/anon2.png'
+import logo from '../img/NFTD_Logo_2.png'
 
 import {
+  AccountDrawer,
+  ApproveBidButtonsCombo,
   LoginLogoutButton,
   NetworkDisplay,
-  ThemeSwitch,
-  ApproveBidButtonsCombo,
-  Address,
-  NetworkSwitch, FaucetHint, AccountDrawer
-} from "../components";
-import AccountAndOthers from "../components/AccountAndOthers";
+} from '../components'
 
-import CurrentWinner from "../components/CurrentWinner";
+import CurrentWinner from '../components/CurrentWinner'
 
-import React, {useEffect, useState} from 'react';
-import Blockies from "react-blockies";
+import React, { useEffect, useState } from 'react'
 
-import FAQ from '../components/FAQ';
-import {Link, useParams} from "react-router-dom";
-import {useAuctionOptions, useTopNavClass, useNftOptions, useAuctionContract} from "../hooks";
-import useExpiration from "../hooks/useExpiration";
-import BidHistoryButtonModalCombo from "../components/BidHistoryButtonModalCombo";
-import {ethers, utils} from "ethers";
-import {useContractReader} from "eth-hooks";
-import Balance from "../components/Balance";
-import {ReactComponent as WEthLogo} from "../img/wrapped_ethereum_icon.svg";
-import {ReactComponent as EthLogo} from "../img/ethereum_icon.svg";
-import {Typography, Drawer, Button, Space, Radio, Skeleton, Tooltip, Col, Row} from 'antd';
-import NftImage from "../components/NftImage";
-import {displayWeiAsEther} from "../helpers";
+import FAQ from '../components/FAQ'
+import { Link, useParams } from 'react-router-dom'
+import {
+  useAuctionContract,
+  useAuctionOptions,
+  useNftOptions,
+  useTopNavClass,
+} from '../hooks'
+import useExpiration from '../hooks/useExpiration'
+import BidHistoryButtonModalCombo
+  from '../components/BidHistoryButtonModalCombo'
+import { ethers } from 'ethers'
+import { useContractReader } from 'eth-hooks'
+import { Col, Row, Space, Tooltip, Typography } from 'antd'
+import NftImage from '../components/NftImage'
+import { displayWeiAsEther } from '../helpers'
+import ClaimNFTModal from '../components/ClaimNFTModal'
+
 const { Text } = Typography;
 
 const Auction2 = props => {
@@ -52,6 +52,7 @@ const Auction2 = props => {
   const [blockExplorerLink, setBlockExplorerLink] = useState('')
   const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider)
   const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
+  const [showClaimNftModal, setShowClaimNftModal] = useState(false)
 
   useEffect(() => {
     if(auctionContractAddress){
@@ -59,9 +60,11 @@ const Auction2 = props => {
     }
   }, [auctionContractAddress, blockExplorer])
   const claimButtonHandler = async (evt) => {
-    if(auctionContractWriter){
-      await tx(auctionContractWriter.claimNftUponWinning())
-    }
+    console.log('*** in claim button handler')
+    setShowClaimNftModal(true)
+    // if(auctionContractWriter){
+    //   await tx(auctionContractWriter.claimNftUponWinning())
+    // }
   }
   return (
     <>
@@ -77,6 +80,16 @@ const Auction2 = props => {
               </li>
               <li>
                 <a href="javascript:void(0)" onClick={claimButtonHandler}>Claim NFT</a>
+                <ClaimNFTModal
+                  showClaimNftModal={showClaimNftModal}
+                  setShowClaimNftModal={setShowClaimNftModal}
+                  readContracts={readContracts}
+                  localProvider={localProvider}
+                  address={address}
+                  writeContracts={writeContracts}
+                  tx={tx}
+                  blockExplorer={blockExplorer}
+                />
               </li>
               <li>
                 <Link to="/AuctionFactory">Sell Your NFT</Link>
@@ -112,6 +125,7 @@ const Auction2 = props => {
           </Space>
         </div>
       </header>
+
       <section id="hero" className="d-flex align-items-center">
 
         <div class={'container'}>
@@ -144,7 +158,7 @@ const Auction2 = props => {
                   <h1>Ξ {displayWeiAsEther(auctionOptions.maxBid)}</h1>
                 </div>
                 <div className="col-md-6 bid-box">
-                  <h3>Ends in <Tooltip 
+                  <h3>Ends in <Tooltip
                     title="A new top bid will extend the auction by 24 hours. There’s no advantage to waiting 
                     until the last few minutes.">
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>

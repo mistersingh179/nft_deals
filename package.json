@@ -1,6 +1,6 @@
 {
   "name": "@scaffold-eth/monorepo",
-  "license" : "UNLICENSED",
+  "license": "UNLICENSED",
   "private": true,
   "version": "1.0.0",
   "keywords": [

@@ -13,6 +13,7 @@ const useAuctionOptions = (readContracts, auctionContractAddress, localProvider)
     highestBid: ethers.BigNumber.from(0),
     maxBid: ethers.BigNumber.from(0),
     expiration: ethers.BigNumber.from(0),
+    secondsLeftInAuction: ethers.BigNumber.from(0),
     minimumBidIncrement: ethers.BigNumber.from(0),
     auctionTimeIncrementOnBid: ethers.BigNumber.from(0),
     _weHavePossessionOfNft: false,
@@ -33,11 +34,13 @@ const useAuctionOptions = (readContracts, auctionContractAddress, localProvider)
         const highestBid = await auctionContract.highestBid();
         const maxBid = await auctionContract.maxBid();
         const expiration = await auctionContract.expiration();
+        const secondsLeftInAuction = await auctionContract.secondsLeftInAuction();
         const _weHavePossessionOfNft = await auctionContract._weHavePossessionOfNft();
         const currentReward = await auctionContract.currentReward();
         updateAuctionOptions('winningAddress', winningAddress)
         updateAuctionOptions('highestBid', highestBid)
         updateAuctionOptions('expiration', expiration)
+        updateAuctionOptions('secondsLeftInAuction', secondsLeftInAuction)
         updateAuctionOptions('_weHavePossessionOfNft', _weHavePossessionOfNft)
         updateAuctionOptions('maxBid', maxBid)
         updateAuctionOptions('currentReward', currentReward)

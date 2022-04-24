@@ -202,6 +202,9 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     }
 
     function secondsLeftInAuction() external view returns(uint) {
+        console.log('in secondsLeftInAuction');
+        console.log(expiration);
+        console.log(block.timestamp);
         if(expiration == 0){
             return 0;
         } else if(expiration < block.timestamp){

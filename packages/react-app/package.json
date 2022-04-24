@@ -1,7 +1,7 @@
 {
   "name": "@scaffold-eth/react-app",
-  "license" : "UNLICENSED",
-  "private" : true,
+  "license": "UNLICENSED",
+  "private": true,
   "version": "1.0.0",
   "browserslist": {
     "production": [
