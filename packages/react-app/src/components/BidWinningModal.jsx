@@ -5,6 +5,7 @@ import useAuctionOptions from "../hooks/useAuctionOptions";
 import { useParams } from "react-router-dom";
 import { useNftOptions } from "../hooks";
 import { ethers } from "ethers";
+import { useContractReader } from 'eth-hooks'
 
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
@@ -14,6 +15,7 @@ const BidWinningModal = props => {
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider);
   const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId);
+  const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
 
   const handleOk = evt => {
     setShowWinningModal(false);
@@ -54,6 +56,7 @@ const BidWinningModal = props => {
   const rewardsExplainer = <>Get rewards every time you bid based on the number of hours
   remaining in the auction. If you bid again right now you can 
   earn {auctionOptions.currentReward.toString()} more points.</>;
+
   return (
     <>
       <Modal
@@ -71,12 +74,11 @@ const BidWinningModal = props => {
                 placement="right"
                 title={rewardsExplainer}
               >
-                <i className="bi bi-info-circle bid-info winner-info-icon"></i>
+                <i className="bi bi-info-circle bid-info winner-info-icon"/>
               </Tooltip>
             </h5>
-            {/* ADD CORRECT NUMBER OF POINTS BASED ON BALANCE */}
-            <h6>You now have 325 points.</h6>
-            <img src={rewardsImage} className="winner-modal-badge" />
+            <h6>You now have {rewards.toString()} points.</h6>
+            <img src={rewardsImage} className="winner-modal-badge"  alt={'rewards'}/>
             <h5>You will win this NFT if you're not outbid within 24 hours!</h5>
             <p>
               The highest bid is Ξ{displayWeiAsEther(auctionOptions.maxBid)}. If you win this NFT, 
