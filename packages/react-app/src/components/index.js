@@ -30,3 +30,4 @@ export { default as BidHistoryButtonModalCombo } from "./BidHistoryButtonModalCo
 export { default as AccountDrawer } from "./AccountDrawer";
 export { default as BidWinningModal } from "./BidWinningModal";
 export { default as Confetti } from "./Confetti";
+export { default as YouTubeEmbed } from "./YouTubeEmbed";

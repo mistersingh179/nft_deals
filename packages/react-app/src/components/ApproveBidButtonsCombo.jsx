@@ -101,7 +101,7 @@ const ApproveBidButtonsCombo = props => {
         }
         await tx(auctionWriter.bid(options), update => {
           console.log(update);
-          if (update.status == 1) {
+          if (update.status == 1 || update.status == 'confirmed') {
             console.log("***the bid was successful");
             setShowWinningModal(true);
             setShowConfetti((new Date()).getTime())
@@ -137,6 +137,7 @@ const ApproveBidButtonsCombo = props => {
           readContracts={readContracts}
           localProvider={localProvider}
           price={price}
+          address={address}
         />
         <Confetti
           style={canvasStyles}

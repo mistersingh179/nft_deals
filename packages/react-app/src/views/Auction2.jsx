@@ -35,6 +35,7 @@ import { Col, Row, Space, Tooltip, Typography } from 'antd'
 import NftImage from '../components/NftImage'
 import { displayWeiAsEther } from '../helpers'
 import ClaimNFTModal from '../components/ClaimNFTModal'
+import YouTubeEmbed from '../components/YouTubeEmbed'
 
 const { Text } = Typography;
 
@@ -276,9 +277,11 @@ const Auction2 = props => {
             </div>
           </div>
         </div>
-
         </div>
         </section>
+
+        <YouTubeEmbed embedId={'i2byTuH1nvo'} />
+
         <section id="cta" class="cta">
           <div class="container" data-aos="zoom-in">
 

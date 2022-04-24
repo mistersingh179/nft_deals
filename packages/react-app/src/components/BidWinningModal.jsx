@@ -9,7 +9,7 @@ import { useContractReader } from 'eth-hooks'
 
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
-  const { readContracts, localProvider } = props;
+  const { readContracts, localProvider, address } = props;
   const { price } = props;
 
   const { slug: auctionContractAddress } = useParams();
@@ -77,7 +77,7 @@ const BidWinningModal = props => {
                 <i className="bi bi-info-circle bid-info winner-info-icon"/>
               </Tooltip>
             </h5>
-            <h6>You now have {rewards.toString()} points.</h6>
+            <h6>You now have {rewards ? rewards.toString() : 0} points.</h6>
             <img src={rewardsImage} className="winner-modal-badge"  alt={'rewards'}/>
             <h5>You will win this NFT if you're not outbid within 24 hours!</h5>
             <p>
