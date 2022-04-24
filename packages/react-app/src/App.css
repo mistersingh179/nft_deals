@@ -25,3 +25,9 @@
   width: 100%;
   position: absolute;
 }
+
+.weth-bid-icon{
+  width: 1em;
+  height: 1.2em;
+  vertical-align: sub;
+}

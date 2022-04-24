@@ -172,7 +172,10 @@ const Auction2 = props => {
                       <i className="bi bi-info-circle bid-info"></i></Tooltip>
                     </h3>
                   </Space>
-                  <h1><WEthLogo className="weth-bid-icon" />{displayWeiAsEther(auctionOptions.maxBid)}</h1>
+                  <h1>
+                    <WEthLogo className="weth-bid-icon" />
+                    {displayWeiAsEther(auctionOptions.maxBid)}
+                  </h1>
                 </div>
                 <div className="col-md-6 bid-box">
                   <h3>Ends in <Tooltip
