@@ -46,8 +46,7 @@ import { useStaticJsonRPC } from "./hooks";
 
 import logo from './img/NFTD_Logo_2.png';
 
-// import TagManager from 'react-gtm-module'
-
+import TagManager from 'react-gtm-module'
 
 import "./vendor/bootstrap/css/bootstrap.css"
 import "./vendor/icofont/icofont.min.css"
@@ -142,7 +141,10 @@ function App(props) {
   const userSigner = userProviderAndSigner.signer;
 
   useEffect(() => {
-	  // TagManager.initialize({ gtmId: 'GTM-MZZ2743' });
+    TagManager.initialize({ gtmId: 'GTM-MZZ2743' });
+  }, [TagManager])
+
+  useEffect(() => {
     async function getAddress() {
       if (userSigner) {
         const newAddress = await userSigner.getAddress();
