@@ -41,6 +41,7 @@ import NftImage from '../components/NftImage'
 import { displayWeiAsEther } from '../helpers'
 import ClaimNFTModal from '../components/ClaimNFTModal'
 import YouTubeEmbed from '../components/YouTubeEmbed'
+import FeedbackModal from '../components/FeedbackModal'
 
 const { AntLink } = Anchor;
 const { Text } = Typography;
@@ -60,6 +61,7 @@ const Auction2 = props => {
   const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider)
   const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
   const [showClaimNftModal, setShowClaimNftModal] = useState(false)
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false)
 
   useEffect(() => {
     if(auctionContractAddress){
@@ -72,6 +74,10 @@ const Auction2 = props => {
     // if(auctionContractWriter){
     //   await tx(auctionContractWriter.claimNftUponWinning())
     // }
+  }
+  const feedbackButtonHandler = async (evt) => {
+    console.log('*** in feedback button handler')
+    setShowFeedbackModal(true)
   }
   function discountCalc(floor, nextBid) {
     let amount = 90;
@@ -92,9 +98,9 @@ const Auction2 = props => {
             </a>
             <nav className="nav-menu d-none d-lg-block">
               <ul>
-                <li className="active">
+                {/*<li className="active">
                   <Link to={"/AuctionList"}>Auctions</Link>
-                </li>
+                </li>*/}
                 <li>
                   <a href="javascript:void(0)" onClick={claimButtonHandler}>
                     Claim NFT
@@ -110,7 +116,11 @@ const Auction2 = props => {
                   />
                 </li>
                 <li>
-                  <Link to="/AuctionFactory">Sell Your NFT</Link>
+                  <a href="javascript:void(0)" onClick={feedbackButtonHandler}>Give Feedback</a>
+                <FeedbackModal
+                  showFeedbackModal={showFeedbackModal}
+                  setShowFeedbackModal={setShowFeedbackModal}
+                />
                 </li>
                 <li>
                   <a href="https://coral-credit-8f4.notion.site/NFT-Deals-0bdff8f05a5747d987cee55e1134129d">Docs</a>
