@@ -8,6 +8,7 @@ import anon2 from '../img/team/anon2.png'
 import logo from '../img/NFTD_Logo_2.png'
 import { ReactComponent as WEthLogo } from '../img/wrapped_ethereum_icon.svg';
 import AuctionOptionsContext from '../contexts/AuctionOptionsContext'
+import NftOptionsContext from '../contexts/NftOptionsContext'
 
 import { YoutubeFilled } from '@ant-design/icons';
 
@@ -76,13 +77,14 @@ const Auction2 = props => {
     let amount = 90;
     if(floor && nextBid){
       amount = ((1 - nextBid/floor)*100)
-      amount = Math.trunc(amount*10)/10 // <-- gives 1 digit after decimal without rounding. 
+      amount = Math.trunc(amount*10)/10 // <-- gives 1 digit after decimal without rounding.
     };
     return <>{amount}</>;
   }
   return (
     <>
       <AuctionOptionsContext.Provider value={auctionOptions}>
+      <NftOptionsContext.Provider value={nftOptions}>
         <header id="header" className={`fixed-top ${topNavClass}`}>
           <div className="container d-flex align-items-center">
             <a href="/" className="logo mr-auto">
@@ -622,6 +624,7 @@ const Auction2 = props => {
           logoutOfWeb3Modal={logoutOfWeb3Modal}
           USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
         />
+      </NftOptionsContext.Provider>
       </AuctionOptionsContext.Provider>
     </>
   );

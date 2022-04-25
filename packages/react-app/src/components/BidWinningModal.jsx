@@ -1,19 +1,18 @@
 import { Col, Modal, Row, Tooltip } from "antd";
 import rewardsImage from "../img/rewards.png";
 import { displayWeiAsEther } from "../helpers";
-import { useParams } from "react-router-dom";
-import { useNftOptions } from "../hooks";
 import { ethers } from "ethers";
 import { useContractReader } from 'eth-hooks'
 import { useContext } from 'react'
 import AuctionOptionsContext from '../contexts/AuctionOptionsContext'
+import NftOptionsContext from '../contexts/NftOptionsContext'
 
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
   const { readContracts, localProvider, address } = props;
   const { price } = props;
   const auctionOptions = useContext(AuctionOptionsContext);
-  const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId);
+  const nftOptions = useContext(NftOptionsContext);
   const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
 
   const handleOk = evt => {
@@ -52,6 +51,7 @@ const BidWinningModal = props => {
       return "Gazillion";
     }
   };
+
   const rewardsExplainer = <>Get rewards every time you bid based on the number of hours
   remaining in the auction. If you bid again right now you can 
   earn {auctionOptions.currentReward.toString()} more points.</>;
