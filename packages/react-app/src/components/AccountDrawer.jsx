@@ -17,7 +17,7 @@ const AccountDrawer = (props) => {
   const {address, mainnetProvider, blockExplorer, readContracts, yourLocalBalance} = props
   const {NETWORKCHECK,localChainId,selectedChainId,targetNetwork,logoutOfWeb3Modal,USE_NETWORK_SELECTOR} = props
   const {networkOptions, selectedNetwork, setSelectedNetwork} = props
-  const {localProvider} = props
+  const {localProvider, rewards} = props
   const [showDrawer, setShowDrawer] = useState(false);
 
   let wethBalance = useContractReader(readContracts, "WETH", "balanceOf", [address]);
@@ -29,7 +29,7 @@ const AccountDrawer = (props) => {
   if(ethBalance){
     ethBalance = parseFloat(ethers.utils.formatEther(yourLocalBalance)).toFixed(4)
   }
-  const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
+
   const rewardsEtherscanLink = blockExplorerLink(readContracts && readContracts.Reward && readContracts.Reward.address, props.blockExplorer);
 
   return (

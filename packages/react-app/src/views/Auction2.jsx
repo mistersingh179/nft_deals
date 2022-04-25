@@ -141,6 +141,7 @@ const Auction2 = props => {
                 selectedNetwork={selectedNetwork}
                 setSelectedNetwork={setSelectedNetwork}
                 localProvider={localProvider}
+                rewards={rewards}
               />
             </Space>
           </div>
@@ -261,6 +262,7 @@ const Auction2 = props => {
                   auctionContractAddress={auctionContractAddress}
                   tx={tx}
                   price={price}
+                  rewards={rewards}
                 />
                 <Row>
                   <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>

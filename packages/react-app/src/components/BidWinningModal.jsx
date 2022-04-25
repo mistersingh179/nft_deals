@@ -10,10 +10,9 @@ import NftOptionsContext from '../contexts/NftOptionsContext'
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
   const { readContracts, localProvider, address } = props;
-  const { price } = props;
+  const { price, rewards } = props;
   const auctionOptions = useContext(AuctionOptionsContext);
   const nftOptions = useContext(NftOptionsContext);
-  const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
 
   const handleOk = evt => {
     setShowWinningModal(false);
