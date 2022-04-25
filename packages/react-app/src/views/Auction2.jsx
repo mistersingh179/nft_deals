@@ -402,7 +402,7 @@ const Auction2 = props => {
             </p>
             <div class="social-links mt-4">
                 <a href="https://twitter.com/NFT_Deals_xyz" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="https://discord.gg/Q8WM4yHc" class="discord"><i class="bx bxl-discord"></i></a>
+                <a href="https://discord.gg/uKQgkteu72" class="discord"><i class="bx bxl-discord"></i></a>
                 <a href="https://medium.com/@rodrigofuentes7/" class="medium"><i class="bx bxl-medium"></i></a>
             </div>
           </div>
@@ -453,7 +453,7 @@ const Auction2 = props => {
                 </p>
                 <div class="social-links mt-3">
                   <a href="https://twitter.com/NFT_Deals_xyz" class="twitter"><i class="bx bxl-twitter"></i></a>
-                  <a href="https://discord.gg/Q8WM4yHc" class="discord"><i class="bx bxl-discord"></i></a>
+                  <a href="https://discord.gg/uKQgkteu72" class="discord"><i class="bx bxl-discord"></i></a>
                   <a href="https://medium.com/@rodrigofuentes7/" class="medium"><i class="bx bxl-medium"></i></a>
                 </div>
               </div>

@@ -27,7 +27,8 @@ const BidHistoryButtonModalCombo = props => {
               onOk={handleOk} onCancel={handleCancel}
               footer={[
                 <Button className="etherscan-link"
-                  type="link"  
+                  type="link"
+                  target="_blank"  
                   href={auctionEtherscanLink}
                 >
                   View all bids on Etherscan
