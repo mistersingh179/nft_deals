@@ -42,3 +42,9 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - there should **not** be any package-lock.json
 - e.g. `yarn workspace @scaffold-eth/react-app add react-canvas-confetti`
 
+## how do i deploy?
+
+- For FE do `yarn build-and-surge`
+- For BE do `yarn deploy --network rinkeby`
+- Note BE deployments require having a deployer account. 
+- Preferred to use same company deployer account so  it is easier to track stuff.
