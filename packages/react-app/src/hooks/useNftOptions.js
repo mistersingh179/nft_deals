@@ -41,25 +41,22 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
     init()
   }, [nftOptions.name]);
 
-  useEffect(() => {
-    // this is the way to see latest state, not printing after setting it, as set is async
-    // console.log('*** nftOptions: ', nftOptions)
-  }, [nftOptions])
 
   useEffect(() => {
     const init = async () => {
       try{
         if(nftContractAddress && localProvider && tokenId){
+          console.log('*** getting nft data: ', tokenId.toString())
           const myErc721 = new ethers.Contract(
             nftContractAddress,
             ERC721PresetMinterPauserAutoIdABI,
             localProvider
           );
           let tokenUri = await myErc721.tokenURI(tokenId)
-          updateOptions('tokenUri', tokenUri);
           const name = await myErc721.name()
-          updateOptions('name', name);
           const symbol = await myErc721.symbol()
+          updateOptions('name', name);
+          updateOptions('tokenUri', tokenUri);
           updateOptions('symbol', symbol);
         }
       }catch(e){

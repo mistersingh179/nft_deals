@@ -7,6 +7,8 @@ import anon1 from '../img/team/anon1.png'
 import anon2 from '../img/team/anon2.png'
 import logo from '../img/NFTD_Logo_2.png'
 import { ReactComponent as WEthLogo } from '../img/wrapped_ethereum_icon.svg';
+import AuctionOptionsContext from '../contexts/AuctionOptionsContext'
+import NftOptionsContext from '../contexts/NftOptionsContext'
 
 import { YoutubeFilled } from '@ant-design/icons';
 
@@ -60,7 +62,7 @@ const Auction2 = props => {
   const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
   const [showClaimNftModal, setShowClaimNftModal] = useState(false)
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
-  
+
   useEffect(() => {
     if(auctionContractAddress){
       setBlockExplorerLink(`${blockExplorer || "https://etherscan.io/"}address/${auctionContractAddress}`)
@@ -76,186 +78,236 @@ const Auction2 = props => {
   const feedbackButtonHandler = async (evt) => {
     console.log('*** in feedback button handler')
     setShowFeedbackModal(true)
-  }  
+  }
   function discountCalc(floor, nextBid) {
     let amount = 90;
     if(floor && nextBid){
       amount = ((1 - nextBid/floor)*100)
-      amount = Math.trunc(amount*10)/10 // <-- gives 1 digit after decimal without rounding. 
+      amount = Math.trunc(amount*10)/10 // <-- gives 1 digit after decimal without rounding.
     };
     return <>{amount}</>;
   }
   return (
     <>
-      <header id="header" className={`fixed-top ${topNavClass}`}>
-        <div className="container d-flex align-items-center">
-          <a href="/" className="logo mr-auto">
-            <img src={logo} alt="" className="img-fluid" />
-          </a>
-          <nav className="nav-menu d-none d-lg-block">
-            <ul>
-              {/* <li className="active">
-                <Link to={'/AuctionList'}>Auctions</Link>
-              </li> */}
-              <li>
-                <a href="javascript:void(0)" onClick={claimButtonHandler}>Claim NFT</a>
-                <ClaimNFTModal
-                  showClaimNftModal={showClaimNftModal}
-                  setShowClaimNftModal={setShowClaimNftModal}
-                  readContracts={readContracts}
-                  localProvider={localProvider}
-                  address={address}
-                  writeContracts={writeContracts}
-                  tx={tx}
-                  blockExplorer={blockExplorer}
-                />
-              </li>
-              <li>
-                <a href="javascript:void(0)" onClick={feedbackButtonHandler}>Give Feedback</a>
+      <AuctionOptionsContext.Provider value={auctionOptions}>
+      <NftOptionsContext.Provider value={nftOptions}>
+        <header id="header" className={`fixed-top ${topNavClass}`}>
+          <div className="container d-flex align-items-center">
+            <a href="/" className="logo mr-auto">
+              <img src={logo} alt="" className="img-fluid" />
+            </a>
+            <nav className="nav-menu d-none d-lg-block">
+              <ul>
+                {/*<li className="active">
+                  <Link to={"/AuctionList"}>Auctions</Link>
+                </li>*/}
+                <li>
+                  <a href="javascript:void(0)" onClick={claimButtonHandler}>
+                    Claim NFT
+                  </a>
+                  <ClaimNFTModal
+                    showClaimNftModal={showClaimNftModal}
+                    setShowClaimNftModal={setShowClaimNftModal}
+                    localProvider={localProvider}
+                    address={address}
+                    writeContracts={writeContracts}
+                    tx={tx}
+                    blockExplorer={blockExplorer}
+                  />
+                </li>
+                <li>
+                  <a href="javascript:void(0)" onClick={feedbackButtonHandler}>Give Feedback</a>
                 <FeedbackModal
                   showFeedbackModal={showFeedbackModal}
                   setShowFeedbackModal={setShowFeedbackModal}
-                />                
-              </li>
-              <li><a href="https://coral-credit-8f4.notion.site/NFT-Deals-0bdff8f05a5747d987cee55e1134129d">Docs</a></li>
-            </ul>
-          </nav>
+                />
+                </li>
+                <li>
+                  <a href="https://coral-credit-8f4.notion.site/NFT-Deals-0bdff8f05a5747d987cee55e1134129d">Docs</a>
+                </li>
+              </ul>
+            </nav>
 
-          <Space>
-            <LoginLogoutButton
-              web3Modal={web3Modal}
-              loadWeb3Modal={loadWeb3Modal}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              className="get-started-btn scrollto"
-            />
-            <AccountDrawer
-              address={address}
-              mainnetProvider={mainnetProvider}
-              blockExplorer={blockExplorer}
-              readContracts={readContracts}
-              yourLocalBalance={yourLocalBalance}
-              NETWORKCHECK={NETWORKCHECK}
-              localChainId={localChainId}
-              selectedChainId={selectedChainId}
-              targetNetwork={targetNetwork}
-              logoutOfWeb3Modal={logoutOfWeb3Modal}
-              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-              networkOptions={networkOptions}
-              selectedNetwork={selectedNetwork}
-              setSelectedNetwork={setSelectedNetwork}
-              localProvider={localProvider}
-            />
-          </Space>
-        </div>
-      </header>
-
-      <section id="hero" className="d-flex align-items-center">
-
-        <div class={'container'}>
-          <div className="row">
-            <div className="col-lg-12 d-flex flex-column justify-content-center" data-aos="fade-up" data-aos-delay="200">
-              <div className="explainer-banner text-center">
-                <p>🎉 Bid to win this NFT 
-                  for {discountCalc(nftOptions.floor_price, displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)))}% 
-                  off floor price??? 
-                  Ok, STFU, <a href="#video" title="Watch Video" className="video-link">show me how <YoutubeFilled /></a>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-
-            <div className="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-2 order-sm-2"
-                 data-aos="fade-up" data-aos-delay="200">
-              <h1>{nftOptions.name && nftOptions.name === 'BoredApeYachtClub' ? 'Bored Ape Yacht Club' : nftOptions.name} #{auctionOptions.tokenId.toString()}</h1>
-              <h2>
-                Collection Floor Price: Ξ {nftOptions.floor_price}
-                <span className="smaller-usdc">
-                  (~{nftOptions.floor_price && price && `$${ethers.utils.commify((nftOptions.floor_price * price).toFixed(2))}`})
-                </span>
-              </h2>
-              <div className="row">
-                <div className="col-md-6 bid-box">
-                  <Space>
-                    <h3>Top Bid <Tooltip title="The top bidder when the timer ends will win the auction.">
-                      <i className="bi bi-info-circle bid-info"></i></Tooltip>
-                    </h3>
-                  </Space>
-                  <h1>
-                    <WEthLogo className="weth-bid-icon" />
-                    {displayWeiAsEther(auctionOptions.maxBid)}
-                  </h1>
-                </div>
-                <div className="col-md-6 bid-box">
-                  <h3>Ends in <Tooltip
-                    title="A new top bid will extend the auction by 24 hours. There’s no advantage to waiting 
-                    until the last few minutes.">
-                      <i className="bi bi-info-circle bid-info"></i></Tooltip>
-                  </h3>
-                  <h1 id="end-timer">
-                    <Duration durationToExpire={durationToExpire} />
-                  </h1>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-6 bid-box">
-                  <h3>Next Bid <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
-                    <i className="bi bi-info-circle bid-info"></i></Tooltip>
-                  </h3>
-                  <h1><WEthLogo className="weth-bid-icon" />{displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement))} </h1>
-                </div>
-                <div className="col-md-6 bid-box">
-                  <h3>
-                    Current Winner{' '}
-                    <Tooltip title="The address which can claim the NFT on expiration provided it is not outbid.">
-                      <i className="bi bi-info-circle bid-info"></i>
-                    </Tooltip>
-                  </h3>
-                  <h1>
-                    <CurrentWinner className="current-winner" user_address={address} address={auctionOptions.winningAddress} ensProvider={mainnetProvider} blockExplorer={blockExplorer} />
-                  </h1>
-                </div>
-              </div>
-              <ApproveBidButtonsCombo
-                    writeContracts={writeContracts}
-                    readContracts={readContracts}
-                    address={address}
-                    localProvider={localProvider}
-                    auctionContractAddress={auctionContractAddress}
-                    tx={tx}
-                    price={price}
+            <Space>
+              <LoginLogoutButton
+                web3Modal={web3Modal}
+                loadWeb3Modal={loadWeb3Modal}
+                logoutOfWeb3Modal={logoutOfWeb3Modal}
+                className="get-started-btn scrollto"
               />
-              <Row>
-                <Col lg={{offset: 0,span: 10}} xs={{span: 24}}>
-                  <BidHistoryButtonModalCombo
-                    readContracts = {readContracts}
-                    auctionContractAddress={auctionContractAddress}
-                    mainnetProvider={mainnetProvider}
-                    localProvider={localProvider}
-                    address={address}
-                    blockExplorer={blockExplorer}
-                    rewards={rewards}
-                  />
-                </Col>
-                <Col lg={{offset: 2,span: 10}} xs={{span: 24}}>
-                  <a href={blockExplorerLink} className="ant-btn btn btn-secondary btn-sm btn-block bid-details-btn" target="_blank">
-                    <i className="bi bi-patch-check-fill btn-icon" /> Inspect Auction on Etherscan
-                  </a>
-                </Col>
-              </Row>
-            </div>
-            <div className="col-lg-6 order-1 order-lg-1 order-sm-1 hero-img" data-aos="zoom-in" data-aos-delay="200">
-              <NftImage
-                nftContractAddress={auctionOptions.nftContract}
-                tokenId={auctionOptions.tokenId}
+              <AccountDrawer
+                address={address}
+                mainnetProvider={mainnetProvider}
+                blockExplorer={blockExplorer}
+                readContracts={readContracts}
+                yourLocalBalance={yourLocalBalance}
+                NETWORKCHECK={NETWORKCHECK}
+                localChainId={localChainId}
+                selectedChainId={selectedChainId}
+                targetNetwork={targetNetwork}
+                logoutOfWeb3Modal={logoutOfWeb3Modal}
+                USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+                networkOptions={networkOptions}
+                selectedNetwork={selectedNetwork}
+                setSelectedNetwork={setSelectedNetwork}
                 localProvider={localProvider}
-                className="img-fluid"
+                rewards={rewards}
               />
+            </Space>
+          </div>
+        </header>
+
+        <section id="hero" className="d-flex align-items-center">
+          <div class={"container"}>
+            <div className="row">
+              <div
+                className="col-lg-12 d-flex flex-column justify-content-center"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <div className="explainer-banner text-center">
+                  <p>
+                    🎉 Bid to win this NFT for{" "}
+                    {discountCalc(
+                      nftOptions.floor_price,
+                      displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)),
+                    )}
+                    % off floor price??? Ok, STFU,{" "}
+                    <a href="#video" title="Watch Video" className="video-link">
+                      show me how <YoutubeFilled />
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div
+                className="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-2 order-sm-2"
+                data-aos="fade-up"
+                data-aos-delay="200"
+              >
+                <h1>
+                  {nftOptions.name && nftOptions.name === "BoredApeYachtClub"
+                    ? "Bored Ape Yacht Club"
+                    : nftOptions.name}{" "}
+                  #{auctionOptions.tokenId.toString()}
+                </h1>
+                <h2>
+                  Collection Floor Price: Ξ {nftOptions.floor_price}
+                  <span className="smaller-usdc">
+                    (~
+                    {nftOptions.floor_price &&
+                      price &&
+                      `$${ethers.utils.commify((nftOptions.floor_price * price).toFixed(2))}`}
+                    )
+                  </span>
+                </h2>
+                <div className="row">
+                  <div className="col-md-6 bid-box">
+                    <Space>
+                      <h3>
+                        Top Bid{" "}
+                        <Tooltip title="The top bidder when the timer ends will win the auction.">
+                          <i className="bi bi-info-circle bid-info"></i>
+                        </Tooltip>
+                      </h3>
+                    </Space>
+                    <h1>
+                      <WEthLogo className="weth-bid-icon" />
+                      {displayWeiAsEther(auctionOptions.maxBid)}
+                    </h1>
+                  </div>
+                  <div className="col-md-6 bid-box">
+                    <h3>
+                      Ends in{" "}
+                      <Tooltip
+                        title="A new top bid will extend the auction by 24 hours. There’s no advantage to waiting
+                      until the last few minutes."
+                      >
+                        <i className="bi bi-info-circle bid-info"></i>
+                      </Tooltip>
+                    </h3>
+                    <h1 id="end-timer">
+                      <Duration durationToExpire={durationToExpire} />
+                    </h1>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-md-6 bid-box">
+                    <h3>
+                      Next Bid{" "}
+                      <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
+                        <i className="bi bi-info-circle bid-info"></i>
+                      </Tooltip>
+                    </h3>
+                    <h1>
+                      <WEthLogo className="weth-bid-icon" />
+                      {displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement))}{" "}
+                    </h1>
+                  </div>
+                  <div className="col-md-6 bid-box">
+                    <h3>
+                      Current Winner{" "}
+                      <Tooltip title="The address which can claim the NFT on expiration provided it is not outbid.">
+                        <i className="bi bi-info-circle bid-info"></i>
+                      </Tooltip>
+                    </h3>
+                    <h1>
+                      <CurrentWinner
+                        className="current-winner"
+                        user_address={address}
+                        address={auctionOptions.winningAddress}
+                        ensProvider={mainnetProvider}
+                        blockExplorer={blockExplorer}
+                      />
+                    </h1>
+                  </div>
+                </div>
+                <ApproveBidButtonsCombo
+                  writeContracts={writeContracts}
+                  readContracts={readContracts}
+                  address={address}
+                  localProvider={localProvider}
+                  auctionContractAddress={auctionContractAddress}
+                  tx={tx}
+                  price={price}
+                  rewards={rewards}
+                />
+                <Row>
+                  <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
+                    <BidHistoryButtonModalCombo
+                      readContracts={readContracts}
+                      auctionContractAddress={auctionContractAddress}
+                      mainnetProvider={mainnetProvider}
+                      localProvider={localProvider}
+                      address={address}
+                      blockExplorer={blockExplorer}
+                      rewards={rewards}
+                    />
+                  </Col>
+                  <Col lg={{ offset: 2, span: 10 }} xs={{ span: 24 }}>
+                    <a
+                      href={blockExplorerLink}
+                      className="ant-btn btn btn-secondary btn-sm btn-block bid-details-btn"
+                      target="_blank"
+                    >
+                      <i className="bi bi-patch-check-fill btn-icon" /> Inspect Auction on Etherscan
+                    </a>
+                  </Col>
+                </Row>
+              </div>
+              <div className="col-lg-6 order-1 order-lg-1 order-sm-1 hero-img" data-aos="zoom-in" data-aos-delay="200">
+                <NftImage
+                  nftContractAddress={auctionOptions.nftContract}
+                  tokenId={auctionOptions.tokenId}
+                  localProvider={localProvider}
+                  className="img-fluid"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       <main id="main">
         <section id="services" class="services section-bg">
@@ -411,30 +463,40 @@ const Auction2 = props => {
         </section>
       </main>
 
-      <footer id="footer">
-        <div class="footer-top">
-          <div class="container">
-            <div class="row">
+        <footer id="footer">
+          <div class="footer-top">
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-3 col-md-6 footer-contact">
+                  <a href="index.html" class="logo">
+                    <img src="../img/NFTD_Logo_2.png" alt="" class="img-fluid  footer-logo" />
+                  </a>
+                  <p>
+                    Made with ❤️
+                    <p>in Texas and New York</p>
+                    <p>
+                      <strong>Email:</strong> info_at_nftdeals.xyz
+                    </p>
+                  </p>
+                </div>
 
-              <div class="col-lg-3 col-md-6 footer-contact">
-                <a href="index.html" class="logo"><img src="../img/NFTD_Logo_2.png" alt="" class="img-fluid  footer-logo" /></a>
-                <p>
-                  Made with ❤️
-                  <p>in Texas and New York</p>
-                  <p><strong>Email:</strong> info_at_nftdeals.xyz</p>
-                </p>
-              </div>
-
-              <div class="col-lg-3 col-md-6 footer-links">
-                <h4>Useful Links</h4>
-                <ul>
-                  <li><i class="bx bx-chevron-right"></i> <a href="#">Bid to Win</a></li>
-                  <li><i class="bx bx-chevron-right"></i> <a href="#team">About Us</a></li>
-                  <li><i class="bx bx-chevron-right"></i> <a href="#">Claim Your NFT</a></li>
-                  <li><i class="bx bx-chevron-right"></i> <a href="#">Sell Your NFT</a></li>
-
-                </ul>
-              </div>
+                <div class="col-lg-3 col-md-6 footer-links">
+                  <h4>Useful Links</h4>
+                  <ul>
+                    <li>
+                      <i class="bx bx-chevron-right"></i> <a href="#">Bid to Win</a>
+                    </li>
+                    <li>
+                      <i class="bx bx-chevron-right"></i> <a href="#team">About Us</a>
+                    </li>
+                    <li>
+                      <i class="bx bx-chevron-right"></i> <a href="#">Claim Your NFT</a>
+                    </li>
+                    <li>
+                      <i class="bx bx-chevron-right"></i> <a href="#">Sell Your NFT</a>
+                    </li>
+                  </ul>
+                </div>
 
               <div class="col-lg-3 col-md-6 footer-links">
                 <h4>Our Services</h4>
@@ -462,22 +524,28 @@ const Auction2 = props => {
           </div>
         </div>
 
-        <div class="container footer-bottom clearfix">
-          <div class="copyright">
-            &copy; Copyright <strong><span>Masalsa Inc.</span></strong>. All Rights Reserved
+          <div class="container footer-bottom clearfix">
+            <div class="copyright">
+              &copy; Copyright{" "}
+              <strong>
+                <span>Masalsa Inc.</span>
+              </strong>
+              . All Rights Reserved
+            </div>
           </div>
-        </div>
-      </footer>
-      <NetworkDisplay
-        NETWORKCHECK={NETWORKCHECK}
-        localChainId={localChainId}
-        selectedChainId={selectedChainId}
-        targetNetwork={targetNetwork}
-        logoutOfWeb3Modal={logoutOfWeb3Modal}
-        USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-      />
+        </footer>
+        <NetworkDisplay
+          NETWORKCHECK={NETWORKCHECK}
+          localChainId={localChainId}
+          selectedChainId={selectedChainId}
+          targetNetwork={targetNetwork}
+          logoutOfWeb3Modal={logoutOfWeb3Modal}
+          USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+        />
+      </NftOptionsContext.Provider>
+      </AuctionOptionsContext.Provider>
     </>
-  )
+  );
 }
 
 const Duration = ({durationToExpire}) => {

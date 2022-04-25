@@ -6,13 +6,28 @@ const { Text } = Typography;
 const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
 
 const BidHistoryButtonModalCombo = props => {
-  const {readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer, rewards} = props
-  const [showBidHistoryModal, setShowBidHistoryModal] = useState(false)
-  const handleOk = evt => {setShowBidHistoryModal(false)}
-  const handleCancel = evt => {setShowBidHistoryModal(false)};
+  const { readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer, rewards } =
+    props;
+  const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
+  const handleOk = evt => {
+    setShowBidHistoryModal(false);
+  };
+  const handleCancel = evt => {
+    setShowBidHistoryModal(false);
+  };
   const auctionEtherscanLink = blockExplorerLink(auctionContractAddress, props.blockExplorer);
 
-  const recentBidsTitle = <Text>Recent Bids <Tooltip placement="right" title="This table shows the latest five bids according to on-chain data from the last 5,000 blocks."><i className="bi bi-info-circle info-icon"></i></Tooltip></Text>; 
+  const recentBidsTitle = (
+    <Text>
+      Recent Bids{" "}
+      <Tooltip
+        placement="right"
+        title="This table shows the latest five bids according to on-chain data from the last 5,000 blocks."
+      >
+        <i className="bi bi-info-circle info-icon"></i>
+      </Tooltip>
+    </Text>
+  );
 
   return (
     <>
@@ -23,17 +38,17 @@ const BidHistoryButtonModalCombo = props => {
         <i className="bi bi-card-checklist btn-icon"></i>
         Recent Bids 
       </Button>
-      <Modal  className="bid-history-modal" title={recentBidsTitle} visible={showBidHistoryModal} 
-              onOk={handleOk} onCancel={handleCancel}
-              footer={[
-                <Button className="etherscan-link"
-                  type="link"
-                  target="_blank"  
-                  href={auctionEtherscanLink}
-                >
-                  View all bids on Etherscan
-                </Button>,
-              ]}
+      <Modal
+        className="bid-history-modal"
+        title={recentBidsTitle}
+        visible={showBidHistoryModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button className="etherscan-link" type="link" href={auctionEtherscanLink} target="_blank">
+            View all bids on Etherscan
+          </Button>,
+        ]}
       >
         <p>
           <BidEvents
@@ -49,7 +64,7 @@ const BidHistoryButtonModalCombo = props => {
         </p>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default BidHistoryButtonModalCombo
+export default BidHistoryButtonModalCombo;
