@@ -1,19 +1,18 @@
 import { Col, Modal, Row, Tooltip } from "antd";
 import rewardsImage from "../img/rewards.png";
 import { displayWeiAsEther } from "../helpers";
-import useAuctionOptions from "../hooks/useAuctionOptions";
 import { useParams } from "react-router-dom";
 import { useNftOptions } from "../hooks";
 import { ethers } from "ethers";
 import { useContractReader } from 'eth-hooks'
+import { useContext } from 'react'
+import AuctionOptionsContext from '../contexts/AuctionOptionsContext'
 
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
   const { readContracts, localProvider, address } = props;
   const { price } = props;
-
-  const { slug: auctionContractAddress } = useParams();
-  const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider);
+  const auctionOptions = useContext(AuctionOptionsContext);
   const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId);
   const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
 
