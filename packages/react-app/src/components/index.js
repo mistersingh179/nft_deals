@@ -31,3 +31,8 @@ export { default as AccountDrawer } from "./AccountDrawer";
 export { default as BidWinningModal } from "./BidWinningModal";
 export { default as Confetti } from "./Confetti";
 export { default as YouTubeEmbed } from "./YouTubeEmbed";
+export { default as TheHeader } from "./TheHeader";
+export { default as MainContentSection } from "./MainContentSection";
+export { default as Footer } from "./Footer";
+export { default as TopBannerRow } from "./TopBannerRow";
+export { default as NftInteractionRow } from "./NftInteractionRow";
