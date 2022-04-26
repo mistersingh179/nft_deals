@@ -6,7 +6,7 @@ const { Text } = Typography;
 const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
 
 const BidHistoryButtonModalCombo = props => {
-  const { readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer, rewards } =
+  const { readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer } =
     props;
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
   const handleOk = evt => {

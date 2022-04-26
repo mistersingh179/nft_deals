@@ -36,6 +36,8 @@ import "./Reward.sol";
 
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
@@ -73,6 +75,57 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     event NftOut(address to, uint tokenId);
     event NftIn(address from, uint tokenId);
     event AuctionExtended(uint from, uint to);
+
+    struct AllData {
+        uint platformFeeInBasisPoints;
+        uint listerFeeInBasisPoints;
+        IERC20 weth;
+        uint minimumBidIncrement;
+        uint auctionTimeIncrementOnBid;
+        address nftListerAddress;
+        uint initialAuctionLength;
+        Reward rewardContract;
+        IERC721 nftContract;
+        uint tokenId;
+        bool _weHavePossessionOfNft;
+        uint expiration;
+        address winningAddress;
+        uint highestBid;
+        uint _platformFeesAccumulated;
+        uint _listerFeesAccumulated;
+        uint maxBid;
+        uint secondsLeftInAuction;
+        uint currentReward;
+        uint rewards;
+        uint wethBalance;
+    }
+
+    function getAllData(address me) public view returns(AllData memory) {
+        AllData memory data;
+
+        data.platformFeeInBasisPoints = platformFeeInBasisPoints;
+        data.listerFeeInBasisPoints = listerFeeInBasisPoints;
+        data.weth = weth;
+        data.minimumBidIncrement = minimumBidIncrement;
+        data.auctionTimeIncrementOnBid = auctionTimeIncrementOnBid;
+        data.nftListerAddress = nftListerAddress;
+        data.initialAuctionLength = initialAuctionLength;
+        data.rewardContract = rewardContract;
+        data.nftContract = nftContract;
+        data._weHavePossessionOfNft = _weHavePossessionOfNft;
+        data.expiration = expiration;
+        data.winningAddress = winningAddress;
+        data.highestBid = highestBid;
+        data._platformFeesAccumulated = _platformFeesAccumulated;
+        data._listerFeesAccumulated = _listerFeesAccumulated;
+        data.maxBid = maxBid;
+        data.secondsLeftInAuction = secondsLeftInAuction();
+        data.currentReward = currentReward();
+        data.rewards = rewardContract.rewards(me);
+        data.wethBalance = weth.balanceOf(me);
+
+        return data;
+    }
 
     constructor(
         address _nftContractAddress,
@@ -201,7 +254,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         maxBid = highestBid;
     }
 
-    function secondsLeftInAuction() external view returns(uint) {
+    function secondsLeftInAuction() public view returns(uint) {
         console.log('in secondsLeftInAuction');
         console.log(expiration);
         console.log(block.timestamp);

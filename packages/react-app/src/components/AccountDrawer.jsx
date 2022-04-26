@@ -3,11 +3,11 @@ import { Button, Col, Drawer, Row, Space, Tooltip, Typography } from "antd";
 import { ReactComponent as WEthLogo } from "../img/wrapped_ethereum_icon.svg";
 import { ReactComponent as EthLogo } from "../img/ethereum_icon.svg";
 import { ethers } from "ethers";
-import React, { useState } from "react";
-import { useContractReader } from "eth-hooks";
+import React, { useContext, useMemo, useState } from "react";
 import Blockies from "react-blockies";
 import rewardsImage from "../img/rewards.png";
 import alphaBackToken from "../img/AlphaBackToken-small.png";
+import { AuctionOptionsContext } from "../contexts";
 
 const { Text } = Typography;
 
@@ -27,13 +27,13 @@ const AccountDrawer = props => {
   const { localProvider } = props;
 
   const [showDrawer, setShowDrawer] = useState(false);
+  const auctionOptions = useContext(AuctionOptionsContext);
 
-  let wethBalance = useContractReader(readContracts, "WETH", "balanceOf", [
-    address,
-  ]);
-  if (wethBalance) {
-    wethBalance = parseFloat(ethers.utils.formatEther(wethBalance)).toFixed(4);
-  }
+  const formattedWethBalance = useMemo(() => {
+    return parseFloat(
+      ethers.utils.formatEther(auctionOptions.wethBalance),
+    ).toFixed(4);
+  }, [auctionOptions.wethBalance]);
 
   let ethBalance = yourLocalBalance;
   if (ethBalance) {
@@ -41,9 +41,7 @@ const AccountDrawer = props => {
       4,
     );
   }
-  const rewards = useContractReader(readContracts, "Reward", "rewards", [
-    address,
-  ]);
+
   const rewardsEtherscanLink = blockExplorerLink(
     readContracts && readContracts.Reward && readContracts.Reward.address,
     props.blockExplorer,
@@ -98,7 +96,7 @@ const AccountDrawer = props => {
             </Col>
             <Col span={4} push={12}>
               <Space>
-                <Text>{wethBalance}</Text>
+                <Text>{formattedWethBalance}</Text>
               </Space>
             </Col>
           </Row>
@@ -166,7 +164,7 @@ const AccountDrawer = props => {
             </Col>
             <Col span={4} push={12}>
               <Space>
-                <Text>{rewards ? ethers.utils.commify(rewards) : 0}</Text>
+                <Text>{ethers.utils.commify(auctionOptions.rewards)}</Text>
               </Space>
             </Col>
           </Row>

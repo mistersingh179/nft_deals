@@ -37,7 +37,11 @@ const Auction2 = props => {
   } = props;
 
   return (
-    <AuctionOptionsProvider readContracts={readContracts} localProvider={localProvider}>
+    <AuctionOptionsProvider
+      readContracts={readContracts}
+      localProvider={localProvider}
+      address={address}
+    >
       <NftOptionsProvider localProvider={localProvider}>
         <TheHeader
           address={address}

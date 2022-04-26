@@ -23,9 +23,6 @@ const NftInteractionRow = props => {
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useContext(AuctionOptionsContext);
   const nftOptions = useContext(NftOptionsContext);
-  const rewards = useContractReader(readContracts, "Reward", "rewards", [
-    address,
-  ]);
   const blockExplorerLink = useBlockExplorerLink(blockExplorer);
 
   return (
@@ -126,7 +123,6 @@ const NftInteractionRow = props => {
           auctionContractAddress={auctionContractAddress}
           tx={tx}
           price={price}
-          rewards={rewards}
         />
         <Row>
           <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
@@ -137,7 +133,6 @@ const NftInteractionRow = props => {
               localProvider={localProvider}
               address={address}
               blockExplorer={blockExplorer}
-              rewards={rewards}
             />
           </Col>
           <Col lg={{ offset: 2, span: 10 }} xs={{ span: 24 }}>

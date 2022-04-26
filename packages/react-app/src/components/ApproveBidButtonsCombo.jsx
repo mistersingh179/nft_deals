@@ -9,7 +9,6 @@ import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 const ApproveBidButtonsCombo = props => {
   const auctionOptions = useContext(AuctionOptionsContext);
   const { address, writeContracts, readContracts, tx, price, localProvider, auctionContractAddress } = props;
-  const { rewards } = props;
   const approvalAmount = "100000000000000000000000";
   const [desiredApprovalAmount, setDesiredApprovalAmount] = useState(ethers.BigNumber.from(0));
   const [fundsApproved, setFundsApproved] = useState(ethers.BigNumber.from(0));
@@ -124,7 +123,6 @@ const ApproveBidButtonsCombo = props => {
           localProvider={localProvider}
           price={price}
           address={address}
-          rewards={rewards}
         />
         <Confetti
           style={canvasStyles}

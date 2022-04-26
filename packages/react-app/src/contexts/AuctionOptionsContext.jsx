@@ -8,13 +8,14 @@ export default AuctionOptionsContext;
 
 export const AuctionOptionsProvider = props => {
   const { children } = props;
-  const { readContracts, localProvider } = props;
+  const { readContracts, localProvider, address } = props;
 
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useAuctionOptions(
     readContracts,
     auctionContractAddress,
     localProvider,
+    address
   );
 
   return (

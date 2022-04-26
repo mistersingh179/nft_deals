@@ -1,5 +1,15 @@
-import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
-import React, { useState } from "react";
+import {
+  Button,
+  Card,
+  DatePicker,
+  Divider,
+  Input,
+  Progress,
+  Slider,
+  Spin,
+  Switch,
+} from "antd";
+import React, { useEffect, useState } from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
 
@@ -17,14 +27,44 @@ export default function ExampleUI({
   writeContracts,
 }) {
   const [newPurpose, setNewPurpose] = useState("loading...");
+  const [data, setData] = useState({});
+  const updateData = (key, val) => {
+    console.log('***in update data with: ', key, val)
+    setData(prev => {
+      return { ...prev, [key]: val };
+    });
+  };
+  useEffect(() => {
+    const getData = async () => {
+      if (readContracts && readContracts.YourContract) {
+        const answer = await readContracts.Auction.getAllData();
+        console.log('*** answer: ', answer)
+        Object.keys(answer).map(key => {
+          if(window.isNaN(key)){
+            updateData(key, answer[key]);
+          }
+        });
+      }
+    };
+    getData();
+  }, [readContracts && readContracts.YourContract]);
 
   return (
     <div>
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
-      <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
+      <div
+        style={{
+          border: "1px solid #cccccc",
+          padding: 16,
+          width: 400,
+          margin: "auto",
+          marginTop: 64,
+        }}
+      >
         <h2>Example UI:</h2>
+        data.a: {data && data.a}
         <h4>purpose: {purpose}</h4>
         <Divider />
         <div style={{ margin: 8 }}>
@@ -38,21 +78,29 @@ export default function ExampleUI({
             onClick={async () => {
               /* look how you call setPurpose on your contract: */
               /* notice how you pass a call back for tx updates too */
-              const result = tx(writeContracts.YourContract.setPurpose(newPurpose), update => {
-                console.log("📡 Transaction Update:", update);
-                if (update && (update.status === "confirmed" || update.status === 1)) {
-                  console.log(" 🍾 Transaction " + update.hash + " finished!");
-                  console.log(
-                    " ⛽️ " +
-                      update.gasUsed +
-                      "/" +
-                      (update.gasLimit || update.gas) +
-                      " @ " +
-                      parseFloat(update.gasPrice) / 1000000000 +
-                      " gwei",
-                  );
-                }
-              });
+              const result = tx(
+                writeContracts.YourContract.setPurpose(newPurpose),
+                update => {
+                  console.log("📡 Transaction Update:", update);
+                  if (
+                    update &&
+                    (update.status === "confirmed" || update.status === 1)
+                  ) {
+                    console.log(
+                      " 🍾 Transaction " + update.hash + " finished!",
+                    );
+                    console.log(
+                      " ⛽️ " +
+                        update.gasUsed +
+                        "/" +
+                        (update.gasLimit || update.gas) +
+                        " @ " +
+                        parseFloat(update.gasPrice) / 1000000000 +
+                        " gwei",
+                    );
+                  }
+                },
+              );
               console.log("awaiting metamask/web3 confirm result...", result);
               console.log(await result);
             }}
@@ -62,7 +110,11 @@ export default function ExampleUI({
         </div>
         <Divider />
         Your Address:
-        <Address address={address} ensProvider={mainnetProvider} fontSize={16} />
+        <Address
+          address={address}
+          ensProvider={mainnetProvider}
+          fontSize={16}
+        />
         <Divider />
         ENS Address Example:
         <Address
@@ -72,19 +124,33 @@ export default function ExampleUI({
         />
         <Divider />
         {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
+        <h2>
+          Your Balance:{" "}
+          {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}
+        </h2>
         <div>OR</div>
         <Balance address={address} provider={localProvider} price={price} />
         <Divider />
         <div>🐳 Example Whale Balance:</div>
-        <Balance balance={utils.parseEther("1000")} provider={localProvider} price={price} />
+        <Balance
+          balance={utils.parseEther("1000")}
+          provider={localProvider}
+          price={price}
+        />
         <Divider />
         {/* use utils.formatEther to display a BigNumber: */}
-        <h2>Your Balance: {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}</h2>
+        <h2>
+          Your Balance:{" "}
+          {yourLocalBalance ? utils.formatEther(yourLocalBalance) : "..."}
+        </h2>
         <Divider />
         Your Contract Address:
         <Address
-          address={readContracts && readContracts.YourContract ? readContracts.YourContract.address : null}
+          address={
+            readContracts && readContracts.YourContract
+              ? readContracts.YourContract.address
+              : null
+          }
           ensProvider={mainnetProvider}
           fontSize={16}
         />
@@ -121,9 +187,12 @@ export default function ExampleUI({
             onClick={() => {
               /* look how we call setPurpose AND send some value along */
               tx(
-                writeContracts.YourContract.setPurpose("💵 Paying for this one!", {
-                  value: utils.parseEther("0.001"),
-                }),
+                writeContracts.YourContract.setPurpose(
+                  "💵 Paying for this one!",
+                  {
+                    value: utils.parseEther("0.001"),
+                  },
+                ),
               );
               /* this will fail until you make the setPurpose function payable */
             }}
@@ -138,9 +207,10 @@ export default function ExampleUI({
               tx({
                 to: writeContracts.YourContract.address,
                 value: utils.parseEther("0.001"),
-                data: writeContracts.YourContract.interface.encodeFunctionData("setPurpose(string)", [
-                  "🤓 Whoa so 1337!",
-                ]),
+                data: writeContracts.YourContract.interface.encodeFunctionData(
+                  "setPurpose(string)",
+                  ["🤓 Whoa so 1337!"],
+                ),
               });
               /* this should throw an error about "no fallback nor receive function" until you add it */
             }}
@@ -163,7 +233,14 @@ export default function ExampleUI({
         startBlock={1}
       />
 
-      <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 256 }}>
+      <div
+        style={{
+          width: 600,
+          margin: "auto",
+          marginTop: 32,
+          paddingBottom: 256,
+        }}
+      >
         <Card>
           Check out all the{" "}
           <a
@@ -178,7 +255,11 @@ export default function ExampleUI({
         <Card style={{ marginTop: 32 }}>
           <div>
             There are tons of generic components included from{" "}
-            <a href="https://ant.design/components/overview/" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://ant.design/components/overview/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               🐜 ant.design
             </a>{" "}
             too!

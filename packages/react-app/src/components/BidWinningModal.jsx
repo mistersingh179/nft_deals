@@ -2,7 +2,6 @@ import { Col, Modal, Row, Tooltip } from "antd";
 import rewardsImage from "../img/rewards.png";
 import { displayWeiAsEther } from "../helpers";
 import { ethers } from "ethers";
-import { useContractReader } from 'eth-hooks'
 import { useContext } from 'react'
 import AuctionOptionsContext from '../contexts/AuctionOptionsContext'
 import NftOptionsContext from '../contexts/NftOptionsContext'
@@ -10,7 +9,7 @@ import NftOptionsContext from '../contexts/NftOptionsContext'
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
   const { readContracts, localProvider, address } = props;
-  const { price, rewards } = props;
+  const { price } = props;
   const auctionOptions = useContext(AuctionOptionsContext);
   const nftOptions = useContext(NftOptionsContext);
 
@@ -75,7 +74,7 @@ const BidWinningModal = props => {
                 <i className="bi bi-info-circle bid-info winner-info-icon"/>
               </Tooltip>
             </h5>
-            <h6>You now have {rewards ? rewards.toString() : 0} points.</h6>
+            <h6>You now have {auctionOptions.rewards.toString()} points.</h6>
             <img src={rewardsImage} className="winner-modal-badge"  alt={'rewards'}/>
             <h5>You will win this NFT if you're not outbid within 24 hours!</h5>
             <p>

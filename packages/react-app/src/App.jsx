@@ -102,7 +102,7 @@ function App(props) {
   const networkOptions = [...new Set([initialNetwork.name, "mainnet", "rinkeby"])];
 
   const [injectedProvider, setInjectedProvider] = useState();
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState(ethers.constants.AddressZero);
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptions[0]);
 
   const targetNetwork = NETWORKS[selectedNetwork];
@@ -186,17 +186,17 @@ function App(props) {
   const mainnetContracts = useContractLoader(mainnetProvider, contractConfig);
 
   // If you want to call a function on a new block
-  useOnBlock(mainnetProvider, () => {
-    console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
-  });
+  // useOnBlock(mainnetProvider, () => {
+  //   console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
+  // });
 
   // Then read your DAI balance like:
-  const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
-    "0x34aA3F359A9D614239015126635CE7732c18fDF3",
-  ]);
+  // const myMainnetDAIBalance = useContractReader(mainnetContracts, "DAI", "balanceOf", [
+  //   "0x34aA3F359A9D614239015126635CE7732c18fDF3",
+  // ]);
 
   // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts, "YourContract", "purpose");
+  // const purpose = useContractReader(readContracts, "YourContract", "purpose");
   // const wethBalance = useContractReader(readContracts, "WETH", "balanceOf", [address]);
   // console.log('*** WETH', wethBalance && wethBalance.toString(), ' at :', address)
   /*YourContract
@@ -228,7 +228,7 @@ function App(props) {
       console.log("💵 yourMainnetBalance", yourMainnetBalance ? ethers.utils.formatEther(yourMainnetBalance) : "...");
       console.log("📝 readContracts", readContracts);
       console.log("🌍 DAI contract on mainnet:", mainnetContracts);
-      console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
+      // console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
       console.log("🔐 writeContracts", writeContracts);
     }
   }, [
@@ -240,8 +240,7 @@ function App(props) {
     readContracts,
     writeContracts,
     mainnetContracts,
-    localChainId,
-    myMainnetDAIBalance,
+    localChainId
   ]);
 
   const loadWeb3Modal = useCallback(async () => {
@@ -372,7 +371,7 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                purpose={purpose}/>
+                />
             </Route>
             <Route exact path="/WETH">
               <WETH
@@ -385,7 +384,7 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                purpose={purpose}/>
+                />
             </Route>
             <Route exact path="/AuctionFactory">
               <AuctionFactory
@@ -398,7 +397,6 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                purpose={purpose}
                 blockExplorer={blockExplorer}
               />
             </Route>
@@ -413,7 +411,6 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                purpose={purpose}
                 blockExplorer={blockExplorer}
               />
             </Route>
@@ -428,7 +425,6 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                purpose={purpose}
                 blockExplorer={blockExplorer}
               />
             </Route>
@@ -495,6 +491,17 @@ function App(props) {
                       contractConfig={contractConfig}
                     />
                   </TabPane>
+                  <TabPane tab="YourContract" key="6">
+                    <Contract
+                      name="YourContract"
+                      price={price}
+                      signer={userSigner}
+                      provider={localProvider}
+                      address={address}
+                      blockExplorer={blockExplorer}
+                      contractConfig={contractConfig}
+                    />
+                  </TabPane>
                 </Tabs>
               </>
             </Route>
@@ -517,7 +524,6 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                purpose={purpose}
               />
             </Route>
             <Route path="/mainnetdai">

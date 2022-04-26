@@ -64,7 +64,7 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
       }
     }
     init()
-  }, [nftContractAddress && localProvider && tokenId]);
+  }, [nftContractAddress, localProvider, tokenId]);
 
   useEffect(() => {
     const getImageFromUrl = async (url) => {

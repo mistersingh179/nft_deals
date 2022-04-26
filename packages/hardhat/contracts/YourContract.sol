@@ -19,7 +19,21 @@ contract YourContract {
   event SetPurpose(address sender, string purpose);
 
   string public purpose = "Building Unstoppable Apps!!!";
+  string public name = 'foo bar';
 
+  struct Foo{
+      string a;
+      string b;
+      string c;
+  }
+
+  function getAllInfo() public view returns(Foo memory){
+      Foo memory foo;
+      foo.a = purpose;
+      foo.b = name;
+      foo.c = 'hi';
+      return foo;
+  }
   constructor() payable {
     // what should we do on deploy?
   }
