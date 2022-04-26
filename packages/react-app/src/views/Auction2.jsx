@@ -6,91 +6,61 @@ import sandeep from '../img/team/sandeep.jpg'
 import anon1 from '../img/team/anon1.png'
 import anon2 from '../img/team/anon2.png'
 import logo from '../img/NFTD_Logo_2.png'
-import { ReactComponent as WEthLogo } from '../img/wrapped_ethereum_icon.svg';
-import AuctionOptionsContext from '../contexts/AuctionOptionsContext'
-import NftOptionsContext from '../contexts/NftOptionsContext'
 
-import { YoutubeFilled } from '@ant-design/icons';
+import { AuctionOptionsProvider } from '../contexts/AuctionOptionsContext'
+import { NftOptionsProvider } from '../contexts/NftOptionsContext'
+
 
 import {
   AccountDrawer,
-  ApproveBidButtonsCombo,
   LoginLogoutButton,
   NetworkDisplay,
 } from '../components'
 
-import CurrentWinner from '../components/CurrentWinner'
 
 import React, { useEffect, useState } from 'react'
 
 import FAQ from '../components/FAQ'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   useAuctionContract,
-  useAuctionOptions,
-  useNftOptions,
   useTopNavClass,
 } from '../hooks'
-import useExpiration from '../hooks/useExpiration'
-import BidHistoryButtonModalCombo
-  from '../components/BidHistoryButtonModalCombo'
-import { ethers } from 'ethers'
-import { useContractReader } from 'eth-hooks'
-import { Col, Row, Space, Tooltip, Typography, Anchor } from 'antd'
-import NftImage from '../components/NftImage'
-import { displayWeiAsEther } from '../helpers'
+
+import { Space, Typography, Anchor } from 'antd'
 import ClaimNFTModal from '../components/ClaimNFTModal'
 import YouTubeEmbed from '../components/YouTubeEmbed'
 import FeedbackModal from '../components/FeedbackModal'
+import TopBannerRow from '../components/TopBannerRow'
+import NftInteractionRow from '../components/NftInteractionRow'
 
-const { AntLink } = Anchor;
-const { Text } = Typography;
 
 const Auction2 = props => {
   const {NETWORKCHECK, localChainId, selectedChainId, targetNetwork, logoutOfWeb3Modal, USE_NETWORK_SELECTOR} = props
-  const {useBurner, address, localProvider, userSigner, mainnetProvider, price, web3Modal,
+  const {address, localProvider, mainnetProvider, price, web3Modal,
     loadWeb3Modal, blockExplorer, readContracts, writeContracts,
-    networkOptions, selectedNetwork, setSelectedNetwork, USE_BURNER_WALLET, yourLocalBalance, tx} = props
+    networkOptions, selectedNetwork, setSelectedNetwork, yourLocalBalance, tx} = props
 
   const { slug: auctionContractAddress } = useParams();
   const topNavClass = useTopNavClass()
-  const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
-  const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
-  const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId)
-  const [blockExplorerLink, setBlockExplorerLink] = useState('')
-  const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider)
-  const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);
+
   const [showClaimNftModal, setShowClaimNftModal] = useState(false)
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
 
-  useEffect(() => {
-    if(auctionContractAddress){
-      setBlockExplorerLink(`${blockExplorer || "https://etherscan.io/"}address/${auctionContractAddress}`)
-    }
-  }, [auctionContractAddress, blockExplorer])
   const claimButtonHandler = async (evt) => {
-    console.log('*** in claim button handler')
     setShowClaimNftModal(true)
-    // if(auctionContractWriter){
-    //   await tx(auctionContractWriter.claimNftUponWinning())
-    // }
   }
   const feedbackButtonHandler = async (evt) => {
-    console.log('*** in feedback button handler')
     setShowFeedbackModal(true)
   }
-  function discountCalc(floor, nextBid) {
-    let amount = 90;
-    if(floor && nextBid){
-      amount = ((1 - nextBid/floor)*100)
-      amount = Math.trunc(amount*10)/10 // <-- gives 1 digit after decimal without rounding.
-    };
-    return <>{amount}</>;
-  }
+
   return (
     <>
-      <AuctionOptionsContext.Provider value={auctionOptions}>
-      <NftOptionsContext.Provider value={nftOptions}>
+      <AuctionOptionsProvider
+        readContracts={readContracts}
+        auctionContractAddress={auctionContractAddress}
+        localProvider={localProvider}>
+      <NftOptionsProvider localProvider={localProvider}>
         <header id="header" className={`fixed-top ${topNavClass}`}>
           <div className="container d-flex align-items-center">
             <a href="/" className="logo mr-auto">
@@ -151,7 +121,6 @@ const Auction2 = props => {
                 selectedNetwork={selectedNetwork}
                 setSelectedNetwork={setSelectedNetwork}
                 localProvider={localProvider}
-                rewards={rewards}
               />
             </Space>
           </div>
@@ -159,153 +128,18 @@ const Auction2 = props => {
 
         <section id="hero" className="d-flex align-items-center">
           <div class={"container"}>
-            <div className="row">
-              <div
-                className="col-lg-12 d-flex flex-column justify-content-center"
-                data-aos="fade-up"
-                data-aos-delay="200"
-              >
-                <div className="explainer-banner text-center">
-                  <p>
-                    🎉 Bid to win this NFT for{" "}
-                    {discountCalc(
-                      nftOptions.floor_price,
-                      displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)),
-                    )}
-                    % off floor price??? Ok, STFU,{" "}
-                    <a href="#video" title="Watch Video" className="video-link">
-                      show me how <YoutubeFilled />
-                    </a>
-                  </p>
-                </div>
-              </div>
-            </div>
+            <TopBannerRow />
 
-            <div className="row">
-              <div
-                className="col-lg-6 d-flex flex-column justify-content-center pt-4 pt-lg-0 order-2 order-lg-2 order-sm-2"
-                data-aos="fade-up"
-                data-aos-delay="200"
-              >
-                <h1>
-                  {nftOptions.name && nftOptions.name === "BoredApeYachtClub"
-                    ? "Bored Ape Yacht Club"
-                    : nftOptions.name}{" "}
-                  #{auctionOptions.tokenId.toString()}
-                </h1>
-                <h2>
-                  Collection Floor Price: Ξ {nftOptions.floor_price}
-                  <span className="smaller-usdc">
-                    (~
-                    {nftOptions.floor_price &&
-                      price &&
-                      `$${ethers.utils.commify((nftOptions.floor_price * price).toFixed(2))}`}
-                    )
-                  </span>
-                </h2>
-                <div className="row">
-                  <div className="col-md-6 bid-box">
-                    <Space>
-                      <h3>
-                        Top Bid{" "}
-                        <Tooltip title="The top bidder when the timer ends will win the auction.">
-                          <i className="bi bi-info-circle bid-info"></i>
-                        </Tooltip>
-                      </h3>
-                    </Space>
-                    <h1>
-                      <WEthLogo className="weth-bid-icon" />
-                      {displayWeiAsEther(auctionOptions.maxBid)}
-                    </h1>
-                  </div>
-                  <div className="col-md-6 bid-box">
-                    <h3>
-                      Ends in{" "}
-                      <Tooltip
-                        title="A new top bid will extend the auction by 24 hours. There’s no advantage to waiting
-                      until the last few minutes."
-                      >
-                        <i className="bi bi-info-circle bid-info"></i>
-                      </Tooltip>
-                    </h3>
-                    <h1 id="end-timer">
-                      <Duration durationToExpire={durationToExpire} />
-                    </h1>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-md-6 bid-box">
-                    <h3>
-                      Next Bid{" "}
-                      <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
-                        <i className="bi bi-info-circle bid-info"></i>
-                      </Tooltip>
-                    </h3>
-                    <h1>
-                      <WEthLogo className="weth-bid-icon" />
-                      {displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement))}{" "}
-                    </h1>
-                  </div>
-                  <div className="col-md-6 bid-box">
-                    <h3>
-                      Current Winner{" "}
-                      <Tooltip title="The address which can claim the NFT on expiration provided it is not outbid.">
-                        <i className="bi bi-info-circle bid-info"></i>
-                      </Tooltip>
-                    </h3>
-                    <h1>
-                      <CurrentWinner
-                        className="current-winner"
-                        user_address={address}
-                        address={auctionOptions.winningAddress}
-                        ensProvider={mainnetProvider}
-                        blockExplorer={blockExplorer}
-                      />
-                    </h1>
-                  </div>
-                </div>
-                <ApproveBidButtonsCombo
-                  writeContracts={writeContracts}
-                  readContracts={readContracts}
-                  address={address}
-                  localProvider={localProvider}
-                  auctionContractAddress={auctionContractAddress}
-                  tx={tx}
-                  price={price}
-                  rewards={rewards}
-                />
-                <Row>
-                  <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
-                    <BidHistoryButtonModalCombo
-                      readContracts={readContracts}
-                      auctionContractAddress={auctionContractAddress}
-                      mainnetProvider={mainnetProvider}
-                      localProvider={localProvider}
-                      address={address}
-                      blockExplorer={blockExplorer}
-                      rewards={rewards}
-                    />
-                  </Col>
-                  <Col lg={{ offset: 2, span: 10 }} xs={{ span: 24 }}>
-                    <a
-                      href={blockExplorerLink}
-                      className="ant-btn btn btn-secondary btn-sm btn-block bid-details-btn"
-                      target="_blank"
-                    >
-                      <i className="bi bi-patch-check-fill btn-icon" /> Inspect Auction on Etherscan
-                    </a>
-                  </Col>
-                </Row>
-              </div>
-              <div className="col-lg-6 order-1 order-lg-1 order-sm-1 hero-img" data-aos="zoom-in" data-aos-delay="200">
-                <NftImage
-                  nftContractAddress={auctionOptions.nftContract}
-                  tokenId={auctionOptions.tokenId}
-                  localProvider={localProvider}
-                  className="img-fluid"
-                />
-              </div>
-            </div>
+           <NftInteractionRow
+             readContracts={readContracts}
+             localProvider={localProvider}
+             address={address}
+             writeContracts={writeContracts}
+             tx={tx}
+             mainnetProvider={mainnetProvider}
+             blockExplorer={blockExplorer}
+             price={price}
+           />
           </div>
         </section>
 
@@ -542,25 +376,12 @@ const Auction2 = props => {
           logoutOfWeb3Modal={logoutOfWeb3Modal}
           USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
         />
-      </NftOptionsContext.Provider>
-      </AuctionOptionsContext.Provider>
+      </NftOptionsProvider>
+      </AuctionOptionsProvider>
     </>
   );
 }
 
-const Duration = ({durationToExpire}) => {
-  const getDays = () => {
-    if(durationToExpire.days() > 0){
-      return `${durationToExpire.days()} d`
-    }else {
-      return ''
-    }
-  }
-  return <>
-    {durationToExpire && durationToExpire.as('seconds') > 0 &&  `${getDays()} ${durationToExpire.hours()}h ${durationToExpire.minutes()}m ${durationToExpire.seconds()}s`}
-    {durationToExpire && durationToExpire.as('seconds') <= 0 && `Expired`}
-  </>
-}
 
 
 export default Auction2
