@@ -9,7 +9,6 @@ export default (props) => {
     if (web3Modal.cachedProvider) {
       modalButtons.push(
         <Link
-          to={'javascipt:void(0)'}
           className={className}
           key="logoutbutton"
           onClick={logoutOfWeb3Modal}
@@ -20,7 +19,6 @@ export default (props) => {
     } else {
       modalButtons.push(
         <Link
-          to={'javascipt:void(0)'}
           className={className}
           key="loginbutton"
           onClick={loadWeb3Modal}
