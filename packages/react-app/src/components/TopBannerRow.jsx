@@ -4,6 +4,8 @@ import { useContext } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 
 const TopBannerRow = props => {
+  const auctionOptions = useContext(AuctionOptionsContext);
+
   const discountCalc = (floor, nextBid) => {
     let amount = 90;
     if (floor && nextBid) {
@@ -12,8 +14,6 @@ const TopBannerRow = props => {
     }
     return <>{amount}</>;
   };
-
-  const auctionOptions = useContext(AuctionOptionsContext);
 
   return (
     <div className="row">

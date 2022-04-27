@@ -52,7 +52,6 @@ const useAuctionOptions = (
           const allData = await auctionContract.getAllData(address);
           Object.keys(allData).map(key => {
             if (window.isNaN(key)) {
-              console.log("*** fetched: ", key, allData[key]);
               updateAuctionOptions(key, allData[key]);
             }
           });
@@ -136,7 +135,7 @@ const useAuctionOptions = (
       }
     }
     init()
-  }, [auctionContractAddress.name]);
+  }, [auctionOptions.name]);
 
   return auctionOptions;
 };
