@@ -98,6 +98,9 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         uint currentReward;
         uint rewards;
         uint wethBalance;
+        string name;
+        string symbol;
+        string tokenURI;
     }
 
     function getAllData(address me) public view returns(AllData memory) {
@@ -112,6 +115,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         data.initialAuctionLength = initialAuctionLength;
         data.rewardContract = rewardContract;
         data.nftContract = nftContract;
+        data.tokenId = tokenId;
         data._weHavePossessionOfNft = _weHavePossessionOfNft;
         data.expiration = expiration;
         data.winningAddress = winningAddress;
@@ -123,7 +127,12 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         data.currentReward = currentReward();
         data.rewards = rewardContract.rewards(me);
         data.wethBalance = weth.balanceOf(me);
-
+        if(nftContract.supportsInterface(type(IERC721Metadata).interfaceId) == true){
+            IERC721Metadata nft_contract_meta = IERC721Metadata(address(nftContract));
+            data.name = nft_contract_meta.name();
+            data.symbol = nft_contract_meta.symbol();
+            data.tokenURI = nft_contract_meta.tokenURI(tokenId);
+        }
         return data;
     }
 

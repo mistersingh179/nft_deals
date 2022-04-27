@@ -1,7 +1,6 @@
 import { displayWeiAsEther } from "../helpers";
 import { YoutubeFilled } from "@ant-design/icons";
 import { useContext } from "react";
-import NftOptionsContext from "../contexts/NftOptionsContext";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 
 const TopBannerRow = props => {
@@ -14,7 +13,6 @@ const TopBannerRow = props => {
     return <>{amount}</>;
   };
 
-  const nftOptions = useContext(NftOptionsContext);
   const auctionOptions = useContext(AuctionOptionsContext);
 
   return (
@@ -28,7 +26,7 @@ const TopBannerRow = props => {
           <p>
             🎉 Bid to win this NFT for{" "}
             {discountCalc(
-              nftOptions.floor_price,
+              auctionOptions.stats.floor_price,
               displayWeiAsEther(
                 auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement),
               ),

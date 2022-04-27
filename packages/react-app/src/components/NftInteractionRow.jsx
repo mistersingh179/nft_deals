@@ -5,7 +5,6 @@ import { ReactComponent as WEthLogo } from "../img/wrapped_ethereum_icon.svg";
 import { ApproveBidButtonsCombo } from "./index";
 import BidHistoryButtonModalCombo from "./BidHistoryButtonModalCombo";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
-import NftOptionsContext from "../contexts/NftOptionsContext";
 import { ethers } from "ethers";
 import { useParams } from "react-router-dom";
 import { useContractReader } from "eth-hooks";
@@ -22,7 +21,6 @@ const NftInteractionRow = props => {
 
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useContext(AuctionOptionsContext);
-  const nftOptions = useContext(NftOptionsContext);
   const blockExplorerLink = useBlockExplorerLink(blockExplorer);
 
   return (
@@ -33,19 +31,19 @@ const NftInteractionRow = props => {
         data-aos-delay="200"
       >
         <h1>
-          {nftOptions.name && nftOptions.name === "BoredApeYachtClub"
+          {auctionOptions.name && auctionOptions.name === "BoredApeYachtClub"
             ? "Bored Ape Yacht Club"
-            : nftOptions.name}{" "}
+            : auctionOptions.name}{" "}
           #{auctionOptions.tokenId.toString()}
         </h1>
         <h2>
-          Collection Floor Price: Ξ {nftOptions.floor_price}
+          Collection Floor Price: Ξ {auctionOptions.stats.floor_price}
           <span className="smaller-usdc">
             (~
-            {nftOptions.floor_price &&
+            {auctionOptions.stats.floor_price &&
               price &&
               `$${ethers.utils.commify(
-                (nftOptions.floor_price * price).toFixed(2),
+                (auctionOptions.stats.floor_price * price).toFixed(2),
               )}`}
             )
           </span>

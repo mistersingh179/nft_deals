@@ -1,34 +1,22 @@
 import { Skeleton, Typography } from "antd";
-import React, { useContext, useEffect, useState } from 'react'
-import { useThemeSwitcher } from "react-css-theme-switcher";
-import Blockies from "react-blockies";
-import { useLookupAddress } from "eth-hooks/dapps/ens";
-import {ethers} from "ethers";
-import ERC721PresetMinterPauserAutoIdABI from "../abis/ERC721PresetMinterPauserAutoIdABI.json";
-import {Address} from "./index";
-import NftOptions from '../contexts/NftOptionsContext'
-import NftOptionsContext from '../contexts/NftOptionsContext'
-
-const { Text } = Typography;
+import React, { useContext, useEffect, useState } from "react";
+import { AuctionOptionsContext } from "../contexts";
 
 export default function NftImage(props) {
-  const {
-    nftContractAddress,
-    tokenId,
-    localProvider,
-    width,
-    height,
-    className,
-    style
-  } = props
+  const { width, height, className, style } = props;
 
-  const nftOptions = useContext(NftOptionsContext)
-  if(!nftOptions.imageUrl){
-    return <Skeleton />
+  const auctionOptions = useContext(AuctionOptionsContext);
+  if (!auctionOptions.imageUrl) {
+    return <Skeleton />;
   }
   return (
     <div style={style}>
-      <img src={nftOptions.imageUrl} width={width} height={height} className={className} /><br/><br/>
+      <img
+        src={auctionOptions.imageUrl}
+        width={width}
+        height={height}
+        className={className}
+      />
     </div>
   );
 }

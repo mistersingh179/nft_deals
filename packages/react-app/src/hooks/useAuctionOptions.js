@@ -2,7 +2,7 @@ import { useAuctionContract } from "./index";
 import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber } from "eth-hooks";
-import axios from 'axios'
+import axios from "axios";
 
 const useAuctionOptions = (
   readContracts,
@@ -32,10 +32,11 @@ const useAuctionOptions = (
     currentReward: ethers.BigNumber.from(0),
     rewards: ethers.BigNumber.from(0),
     wethBalance: ethers.BigNumber.from(0),
-    /*sybmol: "",
+    symbol: "",
     name: "",
-    tokenUri: "",
-    imageUrl: "",*/
+    tokenURI: "",
+    imageUrl: "",
+    stats: {}
   });
 
   const updateAuctionOptions = (name, value) => {
@@ -64,53 +65,78 @@ const useAuctionOptions = (
     getAllAuctionData();
   }, [auctionContract, blockNumber, address]);
 
-  /*useEffect(() => {
-    const getImageFromUrl = async (url) => {
+  useEffect(() => {
+    const getImageFromUrl = async url => {
       const result = await axios({
-        method: 'get',
+        method: "get",
         url: url,
         headers: {
-          'Accept': 'application/json'
-        }
-      })
-      const imageUrl = result.data.image
-      return imageUrl
+          Accept: "application/json",
+        },
+      });
+      const imageUrl = result.data.image;
+      return imageUrl;
     };
 
     const init = async () => {
-      const tokenUri = auctionOptions.tokenUri
+      const tokenURI = auctionOptions.tokenURI;
       var imageUrl;
-      if(tokenUri.indexOf('http') == 0){
-        const imageUrl = await getImageFromUrl(tokenUri)
-        updateAuctionOptions('imageUrl', imageUrl)
+      if (tokenURI.indexOf("http") == 0) {
+        const imageUrl = await getImageFromUrl(tokenURI);
+        updateAuctionOptions("imageUrl", imageUrl);
+      } else if (tokenURI.indexOf("ipfs://") == 0) {
+        const ipfsHash = tokenURI.split("ipfs://")[1];
+        const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
+        imageUrl = await getImageFromUrl(ipfsUrl);
+        console.log("*** imageUrl: ", imageUrl);
 
-      }else if (tokenUri.indexOf('ipfs://') == 0){
-        const ipfsHash = tokenUri.split("ipfs://")[1]
-        const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`
-        imageUrl = await getImageFromUrl(ipfsUrl)
-        console.log('*** imageUrl: ', imageUrl)
-
-        if(imageUrl.indexOf('http') == 0){
-          updateAuctionOptions('imageUrl', imageUrl)
-        }else if(imageUrl.indexOf('ipfs://') == 0){
-          const ipfsHash = imageUrl.split("ipfs://")[1]
-          imageUrl = `https://ipfs.io/ipfs/${ipfsHash}`
-          updateAuctionOptions('imageUrl', imageUrl)
-        }else{
-          updateAuctionOptions('imageUrl', '')
+        if (imageUrl.indexOf("http") == 0) {
+          updateAuctionOptions("imageUrl", imageUrl);
+        } else if (imageUrl.indexOf("ipfs://") == 0) {
+          const ipfsHash = imageUrl.split("ipfs://")[1];
+          imageUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
+          updateAuctionOptions("imageUrl", imageUrl);
+        } else {
+          updateAuctionOptions("imageUrl", "");
         }
+      } else if (tokenURI.indexOf("data:application/json;base64,") == 0) {
+        const base64DataObj = tokenURI.replace(
+          "data:application/json;base64,",
+          "",
+        );
+        const dataObj = JSON.parse(atob(base64DataObj));
+        const imageUrl = dataObj.image;
+        updateAuctionOptions("imageUrl", imageUrl);
+      } else {
+        updateAuctionOptions("imageUrl", "");
+      }
+    };
+    init();
+  }, [auctionOptions.tokenURI]);
 
-      }else if (tokenUri.indexOf('data:application/json;base64,') == 0){
-        const base64DataObj = tokenUri.replace('data:application/json;base64,', '')
-        const dataObj = JSON.parse(atob(base64DataObj))
-        const imageUrl = dataObj.image
-        updateAuctionOptions('imageUrl', imageUrl)
-      }else {
-        updateAuctionOptions('imageUrl', '')
+  useEffect(()=> {
+    const init = async () => {
+      try{
+        if(auctionOptions.name){
+          console.log('*** lets call opensea and get details for: ', auctionOptions.name)
+          const result = await axios({
+            method: 'get',
+            url: `https://api.opensea.io/api/v1/collection/${auctionOptions.name.toLowerCase()}/stats`,
+            headers: {
+              'Accept': 'application/json'
+            },
+          })
+          console.log('*** opensea gave: ', result)
+          setAuctionOptions(prevObj => {
+            return {...prevObj, stats: result.data.stats}
+          })
+        }
+      }catch(e){
+        console.error('unable to get nft options')
       }
     }
     init()
-  }, [updateAuctionOptions.tokenUri])*/
+  }, [auctionContractAddress.name]);
 
   return auctionOptions;
 };

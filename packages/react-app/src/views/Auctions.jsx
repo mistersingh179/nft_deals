@@ -18,7 +18,7 @@ import Blockies from "react-blockies";
 
 import FAQ from '../components/FAQ';
 import {Link, useParams} from "react-router-dom";
-import {useAuctionOptions, useTopNavClass, useNftOptions, useAuctionContract} from "../hooks";
+import {useAuctionOptions, useTopNavClass, useAuctionContract} from "../hooks";
 import useExpiration from "../hooks/useExpiration";
 import BidHistoryButtonModalCombo from "../components/BidHistoryButtonModalCombo";
 import {ethers, utils} from "ethers";
@@ -41,7 +41,6 @@ const Auctions = props => {
   const topNavClass = useTopNavClass()
   const durationToExpire = useExpiration(readContracts, auctionContractAddress, localProvider)
   const auctionOptions = useAuctionOptions(readContracts, auctionContractAddress, localProvider)
-  const nftOptions = useNftOptions(auctionOptions.nftContract, localProvider, auctionOptions.tokenId)
   const [blockExplorerLink, setBlockExplorerLink] = useState('')
   const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider)
   const rewards = useContractReader(readContracts, "Reward", "rewards", [address]);

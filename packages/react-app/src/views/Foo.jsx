@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useBlockNumber} from "eth-hooks";
-import {useAuctionOptions, useTopNavClass, useNftOptions, useAuctionContract} from "../hooks";
+import {useAuctionOptions, useTopNavClass, useAuctionContract} from "../hooks";
 import {useParams} from "react-router-dom";
 import moment from "moment";
 
