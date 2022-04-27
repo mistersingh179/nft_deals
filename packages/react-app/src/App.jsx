@@ -1,4 +1,4 @@
-import {Button, Col, Input, Menu, Row, Tabs} from "antd";
+import { Button, Col, Input, Menu, Row, Tabs } from "antd";
 
 import "antd/dist/antd.css";
 import {
@@ -24,37 +24,29 @@ import {
   NetworkDisplay,
   FaucetHint,
   NetworkSwitch,
-  TopNavMenu
+  TopNavMenu,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
 import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import {
-  Home,
-  ExampleUI,
-  Hints,
-  Subgraph,
-  BestNFT,
-  WETH,
-  AuctionFactory,
-  Auction,
-  AuctionList, Foo
-} from "./views";
+import { Home, ExampleUI, Hints, Subgraph, BestNFT, WETH, AuctionFactory, Auction, AuctionList, Foo } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
-import logo from './img/NFTD_Logo_2.png';
+import logo from "./img/NFTD_Logo_2.png";
 
-import TagManager from 'react-gtm-module'
+import TagManager from "react-gtm-module";
 
-import "./vendor/bootstrap/css/bootstrap.css"
-import "./vendor/icofont/icofont.min.css"
-import "./css/style.css"
+import "./vendor/bootstrap/css/bootstrap.css";
+import "./vendor/icofont/icofont.min.css";
+import "./css/style.css";
 import Auction2 from "./views/Auction2";
 import Auctions from "./views/Auctions";
 import FaucetAndInfo from "./components/FaucetAndInfo";
 import AccountAndOthers from "./components/AccountAndOthers";
+
+import LogRocket from "logrocket";
 /*
     Welcome to 🏗 scaffold-eth !
 
@@ -75,16 +67,17 @@ import AccountAndOthers from "./components/AccountAndOthers";
 */
 
 const { ethers } = require("ethers");
+LogRocket.init("frc24s/nftdealsxyz");
 
 /// 📡 What chain are your contracts deployed to?
-console.log('***process.env.REACT_APP_INITIAL_NETWORK: ', process.env.REACT_APP_INITIAL_NETWORK)
+console.log("***process.env.REACT_APP_INITIAL_NETWORK: ", process.env.REACT_APP_INITIAL_NETWORK);
 const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET === 'true'; // toggle burner wallet feature
-console.log('*** USE_BURNER_WALLET', USE_BURNER_WALLET);
+const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET === "true"; // toggle burner wallet feature
+console.log("*** USE_BURNER_WALLET", USE_BURNER_WALLET);
 const USE_NETWORK_SELECTOR = true;
 
 const web3Modal = Web3ModalSetup();
@@ -141,8 +134,8 @@ function App(props) {
   const userSigner = userProviderAndSigner.signer;
 
   useEffect(() => {
-    TagManager.initialize({ gtmId: 'GTM-MZZ2743' });
-  }, [TagManager])
+    TagManager.initialize({ gtmId: "GTM-MZZ2743" });
+  }, [TagManager]);
 
   useEffect(() => {
     async function getAddress() {
@@ -240,7 +233,7 @@ function App(props) {
     readContracts,
     writeContracts,
     mainnetContracts,
-    localChainId
+    localChainId,
   ]);
 
   const loadWeb3Modal = useCallback(async () => {
@@ -271,30 +264,37 @@ function App(props) {
     }
   }, [loadWeb3Modal]);
 
-
   const { TabPane } = Tabs;
 
-  const [auctionContract, setAuctionContract] = useState('')
+  const [auctionContract, setAuctionContract] = useState("");
 
-  const handleAuctionAddressChange = (auctionAddress) => {
-    if(!auctionAddress || !ethers.utils.isAddress(auctionAddress)) {
-      setAuctionContract('')
+  const handleAuctionAddressChange = auctionAddress => {
+    if (!auctionAddress || !ethers.utils.isAddress(auctionAddress)) {
+      setAuctionContract("");
       return;
     }
     try {
-      if(readContracts && readContracts.Auction){
+      if (readContracts && readContracts.Auction) {
         const auctionContract = new ethers.Contract(
           auctionAddress,
           readContracts.Auction.interface.format(ethers.utils.FormatTypes.full),
-          userSigner
-        )
+          userSigner,
+        );
         setAuctionContract(auctionContract);
       }
-    }catch(e){console.log('*** handled it', e)}
-  }
+    } catch (e) {
+      console.log("*** handled it", e);
+    }
+  };
 
   const location = useLocation();
 
+  useEffect(() => {
+    if (LogRocket && address !== ethers.constants.AddressZero) {
+      LogRocket.identify(address, {});
+    }
+  }, [LogRocket, address])
+  
   return (
     <Switch>
       <Route exact path="/auction2/:slug">
@@ -352,7 +352,7 @@ function App(props) {
           yourLocalBalance={yourLocalBalance}
           tx={tx}
         />
-      </Route>      
+      </Route>
       <Route>
         <div className="App">
           <Header />
@@ -371,7 +371,7 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                />
+              />
             </Route>
             <Route exact path="/WETH">
               <WETH
@@ -384,7 +384,7 @@ function App(props) {
                 tx={tx}
                 writeContracts={writeContracts}
                 readContracts={readContracts}
-                />
+              />
             </Route>
             <Route exact path="/AuctionFactory">
               <AuctionFactory
@@ -433,7 +433,11 @@ function App(props) {
                 <TopNavMenu location={location} />
                 <Tabs defaultActiveKey="1" centered>
                   <TabPane tab="Auction" key="1">
-                    <Input placeholder={'an auction address'} onChange={e => handleAuctionAddressChange(e.target.value)} style={{width: 400}} />
+                    <Input
+                      placeholder={"an auction address"}
+                      onChange={e => handleAuctionAddressChange(e.target.value)}
+                      style={{ width: 400 }}
+                    />
                     <Contract
                       customContract={auctionContract}
                       name="Auction"
@@ -616,7 +620,6 @@ function App(props) {
             targetNetwork={targetNetwork}
             mainnetProvider={mainnetProvider}
           />
-
         </div>
       </Route>
     </Switch>
