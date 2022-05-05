@@ -36,7 +36,7 @@ function mnemonic() {
   } catch (e) {
     if (defaultNetwork !== "localhost") {
       console.log(
-        "☢️ WARNING: No mnemonic file created for a deploy account. Try `yarn run generate` and then `yarn run account`."
+        "☢️ WARNING: No mnemonic file created for a deploy account. Try `yarn run generate` and then `yarn run account`.",
       );
     }
   }
@@ -52,8 +52,12 @@ module.exports = {
    * More here: https://hardhat.org/plugins/hardhat-gas-reporter.html
    */
   gasReporter: {
+    token: "ETH",
+    gasPrice: "500",
+    gasPriceApi:
+      "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK",
     currency: "USD",
-    coinmarketcap: process.env.COINMARKETCAP || null,
+    coinmarketcap: "df001212-260d-48cb-8785-069fb5d39ac8",
   },
 
   // if you want to deploy to a testnet, mainnet, or xdai, you will need to configure:
@@ -66,8 +70,8 @@ module.exports = {
   networks: {
     hardhat: {
       mining: {
-        auto: false,
-        interval: 1000,
+        // auto: false,
+        // interval: 1000,
       },
     },
     localhost: {
@@ -339,7 +343,7 @@ task("wallet", "Create a wallet (pk) link", async (_, { ethers }) => {
 task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
   .addOptionalParam(
     "amount",
-    "Amount of ETH to send to wallet after generating"
+    "Amount of ETH to send to wallet after generating",
   )
   .addOptionalParam("url", "URL to add pk to")
   .setAction(async (taskArgs, { network, ethers }) => {
@@ -366,7 +370,7 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
     // IF NOT SEND USING LOCAL HARDHAT NODE:
     if (localDeployerMnemonic) {
       let deployerWallet = new ethers.Wallet.fromMnemonic(
-        localDeployerMnemonic
+        localDeployerMnemonic,
       );
       deployerWallet = deployerWallet.connect(ethers.provider);
       console.log(
@@ -374,7 +378,7 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
           amount +
           " ETH to " +
           randomWallet.address +
-          " using deployer account"
+          " using deployer account",
       );
       const sendresult = await deployerWallet.sendTransaction(tx);
       console.log("\n" + url + "/pk#" + privateKey + "\n");
@@ -384,7 +388,7 @@ task("fundedwallet", "Create a wallet (pk) link and fund it with deployer?")
           amount +
           " ETH to " +
           randomWallet.address +
-          " using local node"
+          " using local node",
       );
       console.log("\n" + url + "/pk#" + privateKey + "\n");
       return send(ethers.provider.getSigner(), tx);
@@ -415,20 +419,20 @@ task(
     console.log(
       "🔐 Account Generated as " +
         address +
-        " and set as mnemonic in packages/hardhat"
+        " and set as mnemonic in packages/hardhat",
     );
     console.log(
-      "💬 Use 'yarn run account' to get more information about the deployment account."
+      "💬 Use 'yarn run account' to get more information about the deployment account.",
     );
 
     fs.writeFileSync("./" + address + ".txt", mnemonic.toString());
     fs.writeFileSync("./mnemonic.txt", mnemonic.toString());
-  }
+  },
 );
 
 task(
   "mineContractAddress",
-  "Looks for a deployer account that will give leading zeros"
+  "Looks for a deployer account that will give leading zeros",
 )
   .addParam("searchFor", "String to search for")
   .setAction(async (taskArgs, { network, ethers }) => {
@@ -475,19 +479,19 @@ task(
     console.log(
       "⛏  Account Mined as " +
         address +
-        " and set as mnemonic in packages/hardhat"
+        " and set as mnemonic in packages/hardhat",
     );
     console.log(
       "📜 This will create the first contract: " +
-        chalk.magenta("0x" + contract_address)
+        chalk.magenta("0x" + contract_address),
     );
     console.log(
-      "💬 Use 'yarn run account' to get more information about the deployment account."
+      "💬 Use 'yarn run account' to get more information about the deployment account.",
     );
 
     fs.writeFileSync(
       "./" + address + "_produces" + contract_address + ".txt",
-      mnemonic.toString()
+      mnemonic.toString(),
     );
     fs.writeFileSync("./mnemonic.txt", mnemonic.toString());
   });
@@ -522,13 +526,13 @@ task(
         // console.log(config.networks[n],n)
         try {
           const provider = new ethers.providers.JsonRpcProvider(
-            config.networks[n].url
+            config.networks[n].url,
           );
           const balance = await provider.getBalance(address);
           console.log(" -- " + n + " --  -- -- 📡 ");
           console.log("   balance: " + ethers.utils.formatEther(balance));
           console.log(
-            "   nonce: " + (await provider.getTransactionCount(address))
+            "   nonce: " + (await provider.getTransactionCount(address)),
           );
         } catch (e) {
           if (DEBUG) {
@@ -539,10 +543,10 @@ task(
     } catch (err) {
       console.log(`--- Looks like there is no mnemonic file created yet.`);
       console.log(
-        `--- Please run ${chalk.greenBright("yarn generate")} to create one`
+        `--- Please run ${chalk.greenBright("yarn generate")} to create one`,
       );
     }
-  }
+  },
 );
 
 async function addr(ethers, addr) {
@@ -558,7 +562,7 @@ async function addr(ethers, addr) {
 
 task("accounts", "Prints the list of accounts", async (_, { ethers }) => {
   const accounts = await ethers.provider.listAccounts();
-  accounts.forEach((account) => console.log(account));
+  accounts.forEach(account => console.log(account));
 });
 
 task("blockNumber", "Prints the block number", async (_, { ethers }) => {
@@ -570,7 +574,7 @@ task("balance", "Prints an account's balance")
   .addPositionalParam("account", "The account's address")
   .setAction(async (taskArgs, { ethers }) => {
     const balance = await ethers.provider.getBalance(
-      await addr(ethers, taskArgs.account)
+      await addr(ethers, taskArgs.account),
     );
     console.log(formatUnits(balance, "ether"), "ETH");
   });
@@ -609,12 +613,12 @@ task("send", "Send ETH")
       to,
       value: parseUnits(
         taskArgs.amount ? taskArgs.amount : "0",
-        "ether"
+        "ether",
       ).toHexString(),
       nonce: await fromSigner.getTransactionCount(),
       gasPrice: parseUnits(
         taskArgs.gasPrice ? taskArgs.gasPrice : "1.001",
-        "gwei"
+        "gwei",
       ).toHexString(),
       gasLimit: taskArgs.gasLimit ? taskArgs.gasLimit : 24000,
       chainId: network.config.chainId,

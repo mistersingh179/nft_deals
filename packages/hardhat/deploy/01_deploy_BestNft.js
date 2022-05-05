@@ -13,7 +13,8 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   if (chainId !== localChainId) {
     console.warn("This is not local hardhat chain. beware.");
   }
-  // deploy options https://github.com/wighawag/hardhat-deploy#deploymentsdeployname-options
+  // deploy options
+  // https://github.com/wighawag/hardhat-deploy#deploymentsdeployname-options
   await deploy("BestNft", {
     from: deployer,
     log: true,

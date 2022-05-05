@@ -18,7 +18,7 @@ contract YourContract {
 
   event SetPurpose(address sender, string purpose);
 
-  string public purpose = "Building Unstoppable Apps!!!";
+  string public purpose = "Building Unstoppable Apps!!!!!!!!";
   string public name = 'foo bar';
 
   struct Foo{

@@ -31,10 +31,8 @@ export default function AuctionFactory({
   const [nftContractAddress, setNftContractAddress] = useState("");
   const [nftTokenId, setNftTokenId] = useState("");
   const [nftOwner, setNftOwner] = useState("");
-  const [listerAddress, setListerAddress] = useState(address);
   const [auctionOptions, setAuctionOptions] = useState({
     startingBid: '0',
-    initialAuctionLength: (24*60*60)+"",
     auctionTimeIncrementOnBid: (24*60*60)+"",
     minimumBidIncrement: '300000000000000',
     listerFeeInBasisPoints: '100'
@@ -48,11 +46,9 @@ export default function AuctionFactory({
         nftTokenId,
         nftContractAddress,
         auctionOptions.startingBid,
-        auctionOptions.initialAuctionLength,
         auctionOptions.auctionTimeIncrementOnBid,
         auctionOptions.minimumBidIncrement,
-        listerAddress,
-        auctionOptions.listerFeeInBasisPoints
+        auctionOptions.listerFeeInBasisPoints,
       ), update => {
         console.log('*** create auction: ', update);
       }
@@ -162,20 +158,6 @@ export default function AuctionFactory({
         <Space direction={'vertical'} style={{marginTop: 8}}>
           <Row gutter={16}>
             <Col span={6}>
-              Lister Address
-            </Col>
-            <Col span={18}>
-              <AddressInput
-                autoFocus
-                ensProvider={mainnetProvider}
-                placeholder="Enter Lister Address"
-                value={listerAddress}
-                onChange={setListerAddress}
-              />
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={6}>
               Lister Fee
             </Col>
             <Col span={18}>
@@ -195,18 +177,6 @@ export default function AuctionFactory({
                 value={auctionOptions.startingBid}
                 placeholder="Enter starting bid amount in wei"
                 onChange={e => updateAuctionOptions('startingBid', e.target.value)}
-              />
-            </Col>
-          </Row>
-          <Row gutter={16}>
-            <Col span={6}>
-              Auction Length
-            </Col>
-            <Col span={18}>
-              <Input
-                value={auctionOptions.initialAuctionLength}
-                placeholder="Enter initial auction length in seconds"
-                onChange={e => updateAuctionOptions('initialAuctionLength', e.target.value)}
               />
             </Col>
           </Row>

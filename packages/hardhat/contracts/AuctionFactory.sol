@@ -13,64 +13,120 @@ import "./Auction.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./Reward.sol";
 
 contract AuctionFactory is Ownable {
-    Auction[] public auctions;
-    uint public auctionsCount;
-    mapping(address => Auction[]) public auctionsByLister;
-    mapping(address => uint) public auctionSizeByLister;
-    mapping(address => bool) public allAuctionsHash;
+    using EnumerableSet for EnumerableSet.AddressSet;
+
+    EnumerableSet.AddressSet private myAuctionsSet;
+    EnumerableSet.AddressSet private bidderAddressesWithRewards;
+
     address public immutable wethAddress;
+    address public immutable adminOneAddress;
+    address public immutable adminTwoAddress;
 
-    Reward public rewardContract;
+    mapping(address => uint) public rewards;
 
-    constructor(address _addr){
+    event RewardGiven(address to, uint rewardAmout);
+    event RewardSet(address to, uint rewardAmout);
+    event AuctionGenerated(address nftOwner, address auctionContractAddress);
+
+    modifier youAreAnAuction(){
+        require(myAuctionsSet.contains(msg.sender) == true, 'you are not an auction');
+        _;
+    }
+
+    function giveReward(address to, uint reward) youAreAnAuction public {
+        console.log('going to give reward');
+        console.log(to);
+        console.log(reward);
+        rewards[to] += reward;
+        bidderAddressesWithRewards.add(to);
+        emit RewardGiven(to, reward);
+    }
+
+    constructor(address _addr, address _adminOneAddress, address _adminTwoAddress){
         wethAddress = _addr;
+        adminOneAddress = _adminOneAddress;
+        adminTwoAddress = _adminTwoAddress;
     }
-
-    function setRewardContractAddress(address _rewardContractAddress) onlyOwner public{
-        rewardContract = Reward(_rewardContractAddress);
-    }
-
-    function getAuction(uint index) public view returns(Auction){
-        return auctions[index];
-    }
-
-    event AuctionGenerated(address _nftListerAddress, address auctionContractAddress);
 
     function createAuction(
         uint tokenId,
         address nftContract,
         uint startBidAmount,
-        uint _initialAuctionLength,
         uint _auctionTimeIncrementOnBid,
         uint _minimumBidIncrement,
-        address _nftListerAddress,
         uint _listerFeeInBasisPoints
     ) external{
-        Auction pennyAuction = new Auction(
+        Auction auction = new Auction(
             nftContract, // _nftContractAddress
             tokenId,
             startBidAmount, // 1 eth // startBidAmount
-            _initialAuctionLength, // 5 minutes // _initialAuctionLength
             _auctionTimeIncrementOnBid, // 1 minute // _auctionTimeIncrementOnBid
             _minimumBidIncrement, // 0.1 eth // _minimumBidIncrement
-            _nftListerAddress, // chrome // _nftListerAddress
+            msg.sender, // chrome // nftOwner
             _listerFeeInBasisPoints, // 100 basis points // 1%
             wethAddress, // address given to us when constructed per chain.
-            address(rewardContract) // _rewardContractAddress
+            adminOneAddress,
+            adminTwoAddress
         );
-        _saveNewAuction(_nftListerAddress, pennyAuction);
+        _saveNewAuction(msg.sender, address(auction));
     }
 
-    function _saveNewAuction(address _nftListerAddress, Auction pennyAuction) private {
-        auctions.push(pennyAuction);
-        auctionsCount += 1;
-        auctionsByLister[_nftListerAddress].push(pennyAuction);
-        auctionSizeByLister[_nftListerAddress] += 1;
-        allAuctionsHash[address(pennyAuction)] = true;
-        rewardContract.addAuctionAddress(address(pennyAuction));
-        emit AuctionGenerated(_nftListerAddress, address(pennyAuction));
+    function _saveNewAuction(address nftOwner, address auctionAddress) private {
+        myAuctionsSet.add(auctionAddress);
+        emit AuctionGenerated(nftOwner, address(auctionAddress));
+    }
+
+    function setRewardBalance(address bidderAddress, uint amount) public onlyOwner {
+        rewards[bidderAddress] = amount;
+        bidderAddressesWithRewards.add(bidderAddress);
+        emit RewardSet(bidderAddress, amount);
+    }
+
+    function getAuction(uint index) public view returns(address){
+        return  myAuctionsSet.at(index);
+    }
+
+    function removeAuction(address _auction) public onlyOwner returns(bool) {
+        return myAuctionsSet.remove(_auction);
+    }
+
+    function addAuction(address[] memory _auctions) public onlyOwner {
+        console.log('i am in addAuction');
+        for(uint i=0;i<_auctions.length;i++){
+            console.log('adding auction');
+            console.log(_auctions[i]);
+            Auction tempAuction = Auction(_auctions[i]);
+            _saveNewAuction(tempAuction.nftOwner(), _auctions[i]);
+        }
+    }
+
+    function auctions() public view returns(address[] memory){
+        return myAuctionsSet.values();
+    }
+
+    function isAnAuction(address _auctionAddress) public view returns(bool) {
+        return myAuctionsSet.contains(_auctionAddress);
+    }
+
+    function auctionsLength() public view returns(uint){
+        return myAuctionsSet.length();
+    }
+
+    function numberOfBidderAddressesWithRewards() public view returns(uint){
+        return bidderAddressesWithRewards.length();
+    }
+
+    function addressWithRewardAtIndex(uint index) public view returns(address){
+        return bidderAddressesWithRewards.at(index);
+    }
+
+    function allAddressesWithRewards() public view returns(address[] memory){
+        return bidderAddressesWithRewards.values();
+    }
+
+    function selfDestruct() onlyOwner external {
+        selfdestruct(payable(msg.sender));
     }
 }

@@ -47,6 +47,7 @@ const Auction2 = props => {
         mainnetProvider={mainnetProvider}
         blockExplorer={blockExplorer}
         readContracts={readContracts}
+        writeContracts={writeContracts}
         yourLocalBalance={yourLocalBalance}
         targetNetwork={targetNetwork}
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
@@ -60,6 +61,7 @@ const Auction2 = props => {
         NETWORKCHECK={NETWORKCHECK}
         localChainId={localChainId}
         selectedChainId={selectedChainId}
+        tx={tx}
       />
 
       <section id="hero" className="d-flex align-items-center">

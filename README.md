@@ -10,6 +10,7 @@ yarn deploy --network rinkeby
 yarn verify --network rinkeby
 cd packages/hardhat
 npx hardhat --network rinkeby etherscan-verify
+chokidar **/*.js -c "yarn test"
 ```
 
 # questions
@@ -41,6 +42,7 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - it should update package.json at the workspace level
 - there should **not** be any package-lock.json
 - e.g. `yarn workspace @scaffold-eth/react-app add react-canvas-confetti`
+- for dev purposes `yarn workspace @scaffold-eth/hardhat add --dev solidity-coverage`
 
 ## how do i deploy?
 
@@ -48,3 +50,21 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - For BE do `yarn deploy --network rinkeby`
 - Note BE deployments require having a deployer account. 
 - Preferred to use same company deployer account so  it is easier to track stuff.
+
+## documentation
+
+- contracts use natspec to document themselves
+- `hh docgen` to produce docs
+- then `npx serve` to browser them.
+
+## running out memory?
+- increase heap space for node
+- `NODE_OPTIONS=--max_old_space_size=12288`
+- this should always be less than total machine space
+- also give hardhat more space
+- `HARDHAT_MAX_MEMORY=12288`
+- best to do this in your `.zshrc` profile.
+
+## get wrong block.timestamp?
+- hardhat maybe set to mine only where there is a transaction
+- create empty transaction to move block.timestamp forward

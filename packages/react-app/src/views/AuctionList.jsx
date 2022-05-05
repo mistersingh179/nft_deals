@@ -38,12 +38,12 @@ export default function AuctionList({
         console.log('not getting auctions data as auction factory is not there!')
         return
       }
-      const auctionsCount = await readContracts.AuctionFactory.auctionsCount()
+      const auctionsLength = await readContracts.AuctionFactory.auctionsLength()
       const auctions = [];
       const auctionsDataByAddress = {};
       const auctionsArray = [];
-      for(var i=0;i<auctionsCount;i++){
-        const auctionContractAddress = await readContracts.AuctionFactory.auctions(i);
+      for(var i=0;i<auctionsLength;i++){
+        const auctionContractAddress = await readContracts.AuctionFactory.getAuction(i);
         const auctionCode = await localProvider.getCode(auctionContractAddress);
         if(auctionCode == '0x'){
           continue
