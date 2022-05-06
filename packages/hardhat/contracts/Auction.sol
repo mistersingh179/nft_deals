@@ -162,6 +162,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             listerFeeInBasisPoints = _listerFeeInBasisPoints;
             platformFeeInBasisPoints = _listerFeeInBasisPoints > 100 ? _listerFeeInBasisPoints : 100;
             highestBid = startBidAmount;
+            maxBid = highestBid; // need to get rid of this
             auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;
             minimumBidIncrement = _minimumBidIncrement;
             createdAt = block.timestamp;

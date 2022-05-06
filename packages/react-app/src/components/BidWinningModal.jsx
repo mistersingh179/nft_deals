@@ -65,6 +65,20 @@ const BidWinningModal = props => {
     </>
   );
 
+  const RewardsMessage = () => {
+    return (
+      <>
+        <h5>
+          You got rewards just for bidding!{" "}
+          <Tooltip placement="right" title={rewardsExplainer}>
+            <i className="bi bi-info-circle bid-info winner-info-icon" />
+          </Tooltip>
+        </h5>
+        <h6>You now have {auctionOptions.rewards.toString()} points.</h6>
+      </>
+    )
+  }
+
   return (
     <>
       <Modal
@@ -77,13 +91,7 @@ const BidWinningModal = props => {
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={18} align="middle">
             <h1>Congratulations</h1>
-            <h5>
-              You got rewards just for bidding!{" "}
-              <Tooltip placement="right" title={rewardsExplainer}>
-                <i className="bi bi-info-circle bid-info winner-info-icon" />
-              </Tooltip>
-            </h5>
-            <h6>You now have {auctionOptions.rewards.toString()} points.</h6>
+            {auctionOptions.qualifiesForRewards && <RewardsMessage />}
             <img
               src={rewardsImage}
               className="winner-modal-badge"

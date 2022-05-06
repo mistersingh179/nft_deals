@@ -29,7 +29,7 @@ const TheHeader = props => {
   return (
     <header id="header" className={`fixed-top ${topNavClass}`}>
       <div className="container d-flex align-items-center">
-        <a href="/" className="logo mr-auto">
+        <a href="//alphaback.xyz" className="logo mr-auto">
           <img src={logo} alt="" className="img-fluid" />
         </a>
         <nav className="nav-menu d-none d-lg-block">

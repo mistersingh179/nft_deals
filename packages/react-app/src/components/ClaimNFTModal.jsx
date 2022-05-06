@@ -163,7 +163,7 @@ const ClaimNFTModal = props => {
       {!youAreWinner() && !auctionHasExpired() && <InspireTempLooser />}
 
       {/* inspire bidder who lost && auction expired */}
-      {!youAreWinner() && auctionHasExpired() && <InstructFinalWinner />}
+      {!youAreWinner() && auctionHasExpired() && <ComfortFinalLooser />}
     </Modal>
   );
 };
