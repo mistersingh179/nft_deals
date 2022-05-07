@@ -45,7 +45,7 @@ const AuctionCol = props => {
       <Link to={`/auction2/${auctionContractAddress}`}>
         <Card
           hoverable
-          style={{ width: "80%", margin: "0 auto" }}
+          style={{ width: "80%", margin: "0 auto", marginBottom: "1em", marginTop: "1em" }}
           cover={<img src={auctionOptions.imageUrl} className={"img-fluid"} />}
         >
           <Meta
