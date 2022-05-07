@@ -6,6 +6,7 @@ import { useBlockNumber } from "eth-hooks";
 import { BidWinningModal, Confetti, LoginLogoutButton } from "./index";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 import { Link } from "react-router-dom";
+import TransactionPendingModal from "./TransactionPendingModal";
 
 const ApproveBidButtonsCombo = props => {
   const auctionOptions = useContext(AuctionOptionsContext);
@@ -134,6 +135,7 @@ const ApproveBidButtonsCombo = props => {
   const [disableApprove, setDisableApprove] = useState(true);
   const [disableBid, setDisableBid] = useState(true);
   const [showWinningModal, setShowWinningModal] = useState(false);
+  const [showTransactionModal, setShowTransactionModal] = useState(true); // hardwired to style it. please wire with logic @sandeep
   const [showConfetti, setShowConfetti] = useState(undefined);
 
   if (address === ethers.constants.AddressZero) {
@@ -171,6 +173,14 @@ const ApproveBidButtonsCombo = props => {
           >
             Place Bid
           </Button>
+          <TransactionPendingModal
+            showTransactionModal={showTransactionModal}
+            setShowTransactionModal={setShowTransactionModal}
+            readContracts={readContracts}
+            localProvider={localProvider}
+            price={price}
+            address={address}
+          />          
           <BidWinningModal
             showWinningModal={showWinningModal}
             setShowWinningModal={setShowWinningModal}
