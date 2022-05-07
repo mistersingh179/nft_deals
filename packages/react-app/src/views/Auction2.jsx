@@ -77,6 +77,9 @@ const Auction2 = props => {
             mainnetProvider={mainnetProvider}
             blockExplorer={blockExplorer}
             price={price}
+            web3Modal={web3Modal}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
           />
         </div>
       </section>

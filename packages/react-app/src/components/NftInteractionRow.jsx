@@ -19,6 +19,7 @@ const NftInteractionRow = props => {
   const { readContracts, localProvider } = props;
   const { address, writeContracts, tx } = props;
   const { mainnetProvider, blockExplorer } = props;
+    const {web3Modal, loadWeb3Modal, logoutOfWeb3Modal} = props
 
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useContext(AuctionOptionsContext);
@@ -120,6 +121,9 @@ const NftInteractionRow = props => {
           auctionContractAddress={auctionContractAddress}
           tx={tx}
           price={price}
+          web3Modal={web3Modal}
+          loadWeb3Modal={loadWeb3Modal}
+          logoutOfWeb3Modal={logoutOfWeb3Modal}
         />
         <Row>
           <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>

@@ -3,14 +3,26 @@ import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useBlockNumber } from "eth-hooks";
-import { BidWinningModal, Confetti } from "./index";
+import { BidWinningModal, Confetti, LoginLogoutButton } from "./index";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
+import { Link } from "react-router-dom";
 
 const ApproveBidButtonsCombo = props => {
   const auctionOptions = useContext(AuctionOptionsContext);
-  const { address, writeContracts, readContracts, tx, price, localProvider, auctionContractAddress } = props;
+  const {
+    address,
+    writeContracts,
+    readContracts,
+    tx,
+    price,
+    localProvider,
+    auctionContractAddress,
+  } = props;
+  const { web3Modal, loadWeb3Modal, logoutOfWeb3Modal } = props;
   const approvalAmount = "100000000000000000000000";
-  const [desiredApprovalAmount, setDesiredApprovalAmount] = useState(ethers.BigNumber.from(0));
+  const [desiredApprovalAmount, setDesiredApprovalAmount] = useState(
+    ethers.BigNumber.from(0),
+  );
   const [fundsApproved, setFundsApproved] = useState(ethers.BigNumber.from(0));
   const blockNumber = useBlockNumber(localProvider);
 
@@ -27,20 +39,35 @@ const ApproveBidButtonsCombo = props => {
   useEffect(async () => {
     const highestBid = auctionOptions.highestBid;
     const minimumBidIncrement = auctionOptions.minimumBidIncrement;
-    const desiredApprovalAmount = highestBid.add(BigNumber.from(minimumBidIncrement).mul(1000));
+    const desiredApprovalAmount = highestBid.add(
+      BigNumber.from(minimumBidIncrement).mul(1000),
+    );
     setDesiredApprovalAmount(desiredApprovalAmount);
   }, [auctionOptions.highestBid, auctionOptions.minimumBidIncrement]);
 
   useEffect(async () => {
     try {
-      if (readContracts && readContracts.WETH && address && auctionContractAddress) {
-        const result = await readContracts.WETH.allowance(address, auctionContractAddress);
+      if (
+        readContracts &&
+        readContracts.WETH &&
+        address &&
+        auctionContractAddress
+      ) {
+        const result = await readContracts.WETH.allowance(
+          address,
+          auctionContractAddress,
+        );
         setFundsApproved(result);
       }
     } catch (e) {
       console.error("unable to get approved funds", e);
     }
-  }, [readContracts && readContracts.WETH, address, auctionContractAddress, blockNumber]);
+  }, [
+    readContracts && readContracts.WETH,
+    address,
+    auctionContractAddress,
+    blockNumber,
+  ]);
 
   useEffect(() => {
     if (fundsApproved.gt(desiredApprovalAmount)) {
@@ -61,7 +88,9 @@ const ApproveBidButtonsCombo = props => {
     if (writeContracts && writeContracts.WETH && auctionContractAddress) {
       try {
         setDisableApprove(true);
-        const result = await tx(writeContracts.WETH.approve(auctionContractAddress, approvalAmount));
+        const result = await tx(
+          writeContracts.WETH.approve(auctionContractAddress, approvalAmount),
+        );
         console.log("approval result: ", result);
       } catch (e) {
         console.error("failed to run approval");
@@ -72,7 +101,9 @@ const ApproveBidButtonsCombo = props => {
   };
   const bidButtonHandler = async () => {
     if (writeContracts && writeContracts.Auction && auctionContractAddress) {
-      const auctionWriter = writeContracts.Auction.attach(auctionContractAddress);
+      const auctionWriter = writeContracts.Auction.attach(
+        auctionContractAddress,
+      );
       try {
         setDisableBid(true);
         const options = {};
@@ -105,33 +136,58 @@ const ApproveBidButtonsCombo = props => {
   const [showWinningModal, setShowWinningModal] = useState(false);
   const [showConfetti, setShowConfetti] = useState(undefined);
 
-  return (
-    <Row>
-      <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
-        <Button onClick={approveButtonHandler} className="btn-primary bid-btn" size={"large"} disabled={disableApprove}>
-          Approve WETH
-        </Button>
-      </Col>
-      <Col lg={{ offset: 2, span: 10 }} xs={{ span: 24 }}>
-        <Button disabled={disableBid} className="btn-primary bid-btn" size={"large"} onClick={bidButtonHandler}>
-          Place Bid
-        </Button>
-        <BidWinningModal
-          showWinningModal={showWinningModal}
-          setShowWinningModal={setShowWinningModal}
-          readContracts={readContracts}
-          localProvider={localProvider}
-          price={price}
-          address={address}
-        />
-        <Confetti
-          style={canvasStyles}
-          fireConfetti={showConfetti}
-          // nextFn={() => setShowWinningModal(true)}
-        />
-      </Col>
-    </Row>
-  );
+  if (address === ethers.constants.AddressZero) {
+    return (
+      <Row style={{ marginBottom: 20 }}>
+        <Col span={6} offset={6}>
+          <LoginLogoutButton
+            web3Modal={web3Modal}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            className="get-started-btn scrollto"
+          />
+        </Col>
+      </Row>
+    );
+  } else {
+    return (
+      <Row>
+        <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
+          <Button
+            onClick={approveButtonHandler}
+            className="btn-primary bid-btn"
+            size={"large"}
+            disabled={disableApprove}
+          >
+            Approve WETH
+          </Button>
+        </Col>
+        <Col lg={{ offset: 2, span: 10 }} xs={{ span: 24 }}>
+          <Button
+            disabled={disableBid}
+            className="btn-primary bid-btn"
+            size={"large"}
+            onClick={bidButtonHandler}
+          >
+            Place Bid
+          </Button>
+          <BidWinningModal
+            showWinningModal={showWinningModal}
+            setShowWinningModal={setShowWinningModal}
+            readContracts={readContracts}
+            localProvider={localProvider}
+            price={price}
+            address={address}
+          />
+          <Confetti
+            style={canvasStyles}
+            fireConfetti={showConfetti}
+            // nextFn={() => setShowWinningModal(true)}
+          />
+        </Col>
+      </Row>
+    );
+  }
 };
 
 export default ApproveBidButtonsCombo;
