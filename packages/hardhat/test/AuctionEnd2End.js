@@ -7,7 +7,7 @@ const {
   constants,
 } = ethers;
 
-describe("AuctionEnd2End and more", () => {
+describe.only("AuctionEnd2End and more", () => {
   const startBidAmount = 1000;
   const auctionTimeIncrementOnBid = 24 * 60 * 60;
   const minimumBidIncrement = 1000;
@@ -126,7 +126,7 @@ describe("AuctionEnd2End and more", () => {
     expect(await auction.expiration()).to.not.be.equal(0);
   });
 
-  it("can take a few bids", async () => {
+  it("can take a few bids and emit events", async () => {
     await weth.connect(chrome).approve(auction.address, approvalAmount);
     await weth.connect(firefox).approve(auction.address, approvalAmount);
     await weth.connect(safari).approve(auction.address, approvalAmount);
@@ -135,11 +135,34 @@ describe("AuctionEnd2End and more", () => {
       ethers.constants.AddressZero,
     );
 
+    await expect(auction.connect(chrome).bid())
+      .to.emit(auction, "Bid")
+      .withArgs(chrome.address, [], []);
+
     await auction.connect(chrome).bid();
+
     await auction.connect(firefox).bid();
     await auction.connect(safari).bid();
 
     expect(await auction.winningAddress()).to.be.equal(safari.address);
+  });
+
+  it("emits event with remaining time when bid comes in", async () => {
+    const timeToPass = 60 * 60 * 5;
+    auction.provider.send("evm_increaseTime", [timeToPass]);
+    auction.provider.send("evm_mine");
+    const result = await auction.connect(safari).bid();
+    const receipt = await result.wait();
+    const events = receipt.events;
+    const bidEvent = events[events.length - 1];
+    console.log(
+      "the bid event has secondsLeftInAuction: ",
+      bidEvent.args.secondsLeftInAuction.toNumber(),
+    );
+    expect(bidEvent.args.secondsLeftInAuction.toNumber()).to.be.closeTo(
+      auctionTimeIncrementOnBid - timeToPass,
+      5,
+    );
   });
 
   it("has earned fees", async () => {

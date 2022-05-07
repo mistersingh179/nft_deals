@@ -10,7 +10,7 @@ yarn deploy --network rinkeby
 yarn verify --network rinkeby
 cd packages/hardhat
 npx hardhat --network rinkeby etherscan-verify
-chokidar **/*.js -c "yarn test"
+chokidar "**/*.js, **/*.sol" -c "yarn test"
 ```
 
 # questions
