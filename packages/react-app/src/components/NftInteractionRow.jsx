@@ -12,6 +12,7 @@ import CurrentWinner from "../components/CurrentWinner";
 import useBlockExplorerLink from "../hooks/useBlockExplorerLink";
 import NftImage from './NftImage'
 import { displayWeiAsEther } from '../helpers'
+import nftNameFixer from '../helpers/nftNameFixer'
 
 const NftInteractionRow = props => {
   const { price } = props;
@@ -31,9 +32,7 @@ const NftInteractionRow = props => {
         data-aos-delay="200"
       >
         <h1>
-          {auctionOptions.name && auctionOptions.name === "BoredApeYachtClub"
-            ? "Bored Ape Yacht Club"
-            : auctionOptions.name}{" "}
+          {auctionOptions.name && nftNameFixer(auctionOptions.name)}{" "}
           #{auctionOptions.tokenId.toString()}
         </h1>
         <h2>

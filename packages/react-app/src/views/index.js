@@ -8,3 +8,4 @@ export { default as AuctionFactory } from "./AuctionFactory";
 export { default as Auction } from "./Auction";
 export { default as AuctionList } from "./AuctionList";
 export { default as Foo } from "./Foo";
+export { default as Auctions } from "./Auctions";

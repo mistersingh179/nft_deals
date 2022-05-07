@@ -5,6 +5,7 @@ import { Space } from "antd";
 import { AccountDrawer, LoginLogoutButton } from "./index";
 import { useTopNavClass } from "../hooks";
 import { useState } from "react";
+import { Link } from 'react-router-dom'
 
 const TheHeader = props => {
   const { localProvider, address, writeContracts, tx, blockExplorer } = props;
@@ -29,11 +30,14 @@ const TheHeader = props => {
   return (
     <header id="header" className={`fixed-top ${topNavClass}`}>
       <div className="container d-flex align-items-center">
-        <a href="//alphaback.xyz" className="logo mr-auto">
+        <a href="//nftdeals.xyz" className="logo mr-auto">
           <img src={logo} alt="" className="img-fluid" />
         </a>
         <nav className="nav-menu d-none d-lg-block">
           <ul>
+            <li>
+              <Link to="/auctions">Browse Auctions</Link>
+            </li>
             <li>
               <a href="javascript:void(0)" onClick={claimButtonHandler}>
                 Claim NFT
