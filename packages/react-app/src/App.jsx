@@ -297,6 +297,9 @@ function App(props) {
   
   return (
     <Switch>
+      <Route exact path="/">
+          <Redirect to={"auctions"} />
+      </Route>
       <Route exact path="/auction2/:slug">
         <Auction2
           NETWORKCHECK={NETWORKCHECK}
@@ -358,7 +361,7 @@ function App(props) {
           <Header />
           <Switch>
             <Route exact path="/">
-              <Redirect to={"BestNft"} />
+              <Redirect to={"debug"} />
             </Route>
             <Route exact path="/BestNft">
               <BestNFT

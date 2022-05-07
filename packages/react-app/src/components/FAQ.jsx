@@ -6,16 +6,16 @@ export default function Account(props) {
     
     const faq = (
         <>
-            <section id="faq" class="faq">
-                <div class="container" data-aos="fade-up">
-                    <div class="section-title">
+            <section id="faq" className="faq">
+                <div className="container" data-aos="fade-up">
+                    <div className="section-title">
                         <h2>Frequently Asked Questions</h2>
                         <p>
                         NFT Deals is an experimental and pioneering implementation of our novel auction format. Our goal is to routinely sell the most premium NFTs at 30-90% off the prevailing floor price. In time, we aim to decentralize our protocol so that it is governed by a DAO that empowers even the smallest entrepreneurs to benefit from NFT sales.
                         </p>
                     </div>
 
-                    <div class="faq-list">
+                    <div className="faq-list">
 
                         <Collapse bordered={false} defaultActiveKey={['1']}>
                             <Panel header="This looks too good to be true. What’s the catch?" key="1">

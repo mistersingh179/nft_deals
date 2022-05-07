@@ -97,6 +97,7 @@ const ExploreAuctionsSection = props => {
           {auctions.map(auctionContractAddress => {
             return (
               <AuctionCol
+                key={auctionContractAddress}
                 readContracts={readContracts}
                 localProvider={localProvider}
                 address={address}
