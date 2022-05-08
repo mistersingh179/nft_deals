@@ -2,8 +2,8 @@ import { Button, Col, Modal, Row } from "antd";
 import { useAuctionContract } from "../hooks";
 import { useParams } from "react-router-dom";
 import NftImage from "./NftImage";
-import happyPepe from "../img/happy-clap-pepe.gif";
-import excitedPepe from "../img/excited-pepe.gif";
+import gameOver from "../img/game_over.gif";
+import nopeRooster from "../img/nope_rooster.gif";
 import { useCallback, useContext } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 
@@ -116,7 +116,7 @@ const ClaimNFTModal = props => {
       <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
         <Col span={18} align="middle">
           <h1>Keep Trying!</h1>
-          <img src={excitedPepe} className="winner-modal-badge" />
+          <img src={nopeRooster} className="winner-modal-badge" />
           <h4>You can't claim the NFT because you're not the winner.</h4>
           <p>But there's still time left! Bid again to stay on top.</p>
         </Col>
@@ -127,12 +127,12 @@ const ClaimNFTModal = props => {
   const ComfortFinalLooser = useCallback(props => {
     return (
       <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
-        <Col span={18} align="middle">
-          <h1>Sorry, you didn't win this time.</h1>
-          <img src={happyPepe} className="winner-modal-badge" alt={"Happy Pepe"} />
-          <h4>But there will be more auctions!</h4>
+        <Col span={22} align="middle">
+          <h1>Try Again Next Time</h1>
+          <img src={gameOver} className="winner-modal-badge" alt={"game over"} />
+          <h4>You did not win this auction.</h4>
           <p>
-            Be sure to come back to bid in the next auction. In the meantime, follow us on Twitter for the latest
+            But there will be more auctions, so come back to bid on the next one. In the meantime, follow us on Twitter for the latest
             announcements:
           </p>
           <div className="social-links mt-4">
