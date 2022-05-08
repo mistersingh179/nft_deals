@@ -27,17 +27,17 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const theWETHContract = await ethers.getContract("WETH", deployer);
   console.log("deployed WETH contract here: ", theWETHContract.address);
 
-  try {
-    if (chainId !== localChainId) {
-      console.log("will verify");
-      await run("verify:verify", {
-        address: theWETHContract.address,
-        contract: "contracts/WETH.sol:WETH",
-        constructorArguments: [],
-      });
-    }
-  } catch (error) {
-    console.error(error);
-  }
+  // try {
+  //   if (chainId !== localChainId) {
+  //     console.log("will verify");
+  //     await run("verify:verify", {
+  //       address: theWETHContract.address,
+  //       contract: "contracts/WETH.sol:WETH",
+  //       constructorArguments: [],
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  // }
 };
 module.exports.tags = ["WETH"];

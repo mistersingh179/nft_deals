@@ -15,6 +15,9 @@ const AuctionCardDesc = props => {
     auctionContractAddress,
     auctionOptions,
   } = props;
+  if (auctionOptions._weHavePossessionOfNft === false) {
+    return <p>Coming Soon</p>;
+  }
   return (
     <>
       <p>Collection Floor Price: Ξ {auctionOptions.stats.floor_price}</p>
@@ -40,9 +43,10 @@ const AuctionCol = props => {
     localProvider,
     address,
   );
+
   return (
     <Col className="gutter-row" span={8}>
-      <Link to={`/auction2/${auctionContractAddress}`}>
+      <Link to={`/auction2/${auctionContractAddress}`} disabled={!auctionOptions._weHavePossessionOfNft}>
         <Card
           hoverable
           style={{ width: "80%", margin: "0 auto", marginBottom: "1em", marginTop: "1em" }}

@@ -137,17 +137,19 @@ describe.only("AuctionEnd2End and more", () => {
 
     await expect(auction.connect(chrome).bid())
       .to.emit(auction, "Bid")
-      .withArgs(chrome.address, [], []);
+      .withArgs(chrome.address, ethers.constants.AddressZero, [], []);
 
     await auction.connect(chrome).bid();
+    await expect(auction.connect(firefox).bid())
+      .to.emit(auction, "Bid")
+      .withArgs(firefox.address, chrome.address, [], []);
 
-    await auction.connect(firefox).bid();
     await auction.connect(safari).bid();
 
     expect(await auction.winningAddress()).to.be.equal(safari.address);
   });
 
-  it("emits event with remaining time when bid comes in", async () => {
+  xit("emits event with remaining time when bid comes in", async () => {
     const timeToPass = 60 * 60 * 5;
     auction.provider.send("evm_increaseTime", [timeToPass]);
     auction.provider.send("evm_mine");

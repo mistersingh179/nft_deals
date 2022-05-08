@@ -42,21 +42,21 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     theAuctionFactoryContract.address,
   );
 
-  try {
-    if (chainId !== localChainId) {
-      console.log("will verify");
-      await run("verify:verify", {
-        address: theAuctionFactoryContract.address,
-        contract: "contracts/AuctionFactory.sol:AuctionFactory",
-        constructorArguments: [
-          wethAddress[chainId],
-          adminOneAddress[chainId],
-          adminTwoAddress[chainId],
-        ],
-      });
-    }
-  } catch (error) {
-    console.error(error);
-  }
+  // try {
+  //   if (chainId !== localChainId) {
+  //     console.log("will verify");
+  //     await run("verify:verify", {
+  //       address: theAuctionFactoryContract.address,
+  //       contract: "contracts/AuctionFactory.sol:AuctionFactory",
+  //       constructorArguments: [
+  //         wethAddress[chainId],
+  //         adminOneAddress[chainId],
+  //         adminTwoAddress[chainId],
+  //       ],
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  // }
 };
 module.exports.tags = ["AuctionBuilder"];

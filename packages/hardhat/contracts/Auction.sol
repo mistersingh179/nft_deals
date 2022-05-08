@@ -71,7 +71,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     bool public paused;
 
 
-    event Bid(address from, uint amount, uint secondsLeftInAuction);
+    event Bid(address from, address previousWinnersAddress, uint amount, uint secondsLeftInAuction);
     event MoneyOut(address to, uint amount);
     event FailedToSendMoney(address to, uint amount);
     event NftOut(address to, uint tokenId);
@@ -297,6 +297,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         require(weth.balanceOf(msg.sender) >= totalNextBid, 'WETH insufficient  funds');
         require(weth.transferFrom(msg.sender, address(this), totalNextBid), 'WETH transfer failed!');
 
+        emit Bid(msg.sender, winningAddress, totalNextBid, secondsLeftInAuction());
+
         _sendPreviousWinnerTheirBidBack(winningAddress, highestBid);
         giveReward();
 
@@ -312,7 +314,6 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         console.log(auctionTimeIncrementOnBid);
         console.log(block.timestamp + auctionTimeIncrementOnBid);
         emit AuctionExtended(expiration, block.timestamp + auctionTimeIncrementOnBid);
-        emit Bid(msg.sender, totalNextBid, secondsLeftInAuction());
         expiration = block.timestamp + auctionTimeIncrementOnBid;
 
         maxBid = highestBid;

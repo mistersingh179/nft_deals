@@ -24,17 +24,17 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const theBestNftContract = await ethers.getContract("BestNft", deployer);
   console.log("deployed BestNft contract here: ", theBestNftContract.address);
 
-  try {
-    if (chainId !== localChainId) {
-      console.log("will verify");
-      await run("verify:verify", {
-        address: theBestNftContract.address,
-        contract: "contracts/BestNft.sol:BestNft",
-        constructorArguments: [],
-      });
-    }
-  } catch (error) {
-    console.error(error);
-  }
+  // try {
+  //   if (chainId !== localChainId) {
+  //     console.log("will verify");
+  //     await run("verify:verify", {
+  //       address: theBestNftContract.address,
+  //       contract: "contracts/BestNft.sol:BestNft",
+  //       constructorArguments: [],
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  // }
 };
 module.exports.tags = ["BestNft"];
