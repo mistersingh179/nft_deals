@@ -23884,3 +23884,6 @@ div.ant-typography-edit-content.ant-typography-rtl {
   font-size: 0.8em;
   font-weight: 300;
 }
+.notifications-form-button{
+  width: 100%;
+}
