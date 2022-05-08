@@ -4,6 +4,14 @@ const { ethers } = require("hardhat");
 
 const localChainId = "31337";
 
+const sleep = ms =>
+  new Promise(r =>
+    setTimeout(() => {
+      console.log(`waited for ${(ms / 1000).toFixed(3)} seconds`);
+      r();
+    }, ms),
+  );
+
 module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
@@ -24,17 +32,29 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const theBestNftContract = await ethers.getContract("BestNft", deployer);
   console.log("deployed BestNft contract here: ", theBestNftContract.address);
 
-  // try {
-  //   if (chainId !== localChainId) {
-  //     console.log("will verify");
-  //     await run("verify:verify", {
-  //       address: theBestNftContract.address,
-  //       contract: "contracts/BestNft.sol:BestNft",
-  //       constructorArguments: [],
-  //     });
-  //   }
-  // } catch (error) {
-  //   console.error(error);
-  // }
+  const balance = await theBestNftContract.balanceOf(deployer);
+  console.log("deployer : ", deployer, " has balance of: ", balance.toNumber());
+
+  if (balance.toNumber() === 0) {
+    console.log("will mint deployer a nft");
+    const mintResult = await theBestNftContract.mint(deployer);
+    console.log("mintResult: ", mintResult);
+    const mintReceipt = await mintResult.wait();
+    console.log("mintReceipt: ", mintReceipt);
+  }
+
+  try {
+    if (chainId !== localChainId) {
+      console.log("will verify");
+      await sleep(5000);
+      await run("verify:verify", {
+        address: theBestNftContract.address,
+        contract: "contracts/BestNft.sol:BestNft",
+        constructorArguments: [],
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 module.exports.tags = ["BestNft"];

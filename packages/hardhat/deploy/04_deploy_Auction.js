@@ -9,13 +9,13 @@ const {
 
 const localChainId = "31337";
 
-// const sleep = (ms) =>
-//   new Promise((r) =>
-//     setTimeout(() => {
-//       console.log(`waited for ${(ms / 1000).toFixed(3)} seconds`);
-//       r();
-//     }, ms)
-//   );
+const sleep = ms =>
+  new Promise(r =>
+    setTimeout(() => {
+      console.log(`waited for ${(ms / 1000).toFixed(3)} seconds`);
+      r();
+    }, ms),
+  );
 
 module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
@@ -31,12 +31,9 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
   const bestNft = await ethers.getContract("BestNft", deployer);
   console.log("we have deployer as: ", deployer);
-  await bestNft.mint(deployer);
-  const balance = (await bestNft.balanceOf(deployer)).toNumber();
-  const tokenId = (
-    await bestNft.tokenOfOwnerByIndex(deployer, balance - 1)
-  ).toNumber();
-  console.log("minted token: ", tokenId);
+
+  const tokenId = (await bestNft.tokenOfOwnerByIndex(deployer, 0)).toNumber();
+  console.log("deployer has token id: ", tokenId);
 
   await deploy("Auction", {
     // Learn more about args here:
@@ -64,6 +61,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   try {
     if (chainId !== localChainId) {
       console.log("will verify");
+      await sleep(5000);
       await run("verify:verify", {
         address: theAuctionContract.address,
         contract: "contracts/Auction.sol:Auction",

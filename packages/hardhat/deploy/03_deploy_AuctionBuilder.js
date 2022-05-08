@@ -9,6 +9,14 @@ const {
   adminTwoAddress,
 } = require("../constants");
 
+const sleep = ms =>
+  new Promise(r =>
+    setTimeout(() => {
+      console.log(`waited for ${(ms / 1000).toFixed(3)} seconds`);
+      r();
+    }, ms),
+  );
+
 module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
@@ -42,21 +50,22 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     theAuctionFactoryContract.address,
   );
 
-  // try {
-  //   if (chainId !== localChainId) {
-  //     console.log("will verify");
-  //     await run("verify:verify", {
-  //       address: theAuctionFactoryContract.address,
-  //       contract: "contracts/AuctionFactory.sol:AuctionFactory",
-  //       constructorArguments: [
-  //         wethAddress[chainId],
-  //         adminOneAddress[chainId],
-  //         adminTwoAddress[chainId],
-  //       ],
-  //     });
-  //   }
-  // } catch (error) {
-  //   console.error(error);
-  // }
+  try {
+    if (chainId !== localChainId) {
+      console.log("will verify");
+      await sleep(5000);
+      await run("verify:verify", {
+        address: theAuctionFactoryContract.address,
+        contract: "contracts/AuctionFactory.sol:AuctionFactory",
+        constructorArguments: [
+          wethAddress[chainId],
+          adminOneAddress[chainId],
+          adminTwoAddress[chainId],
+        ],
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 module.exports.tags = ["AuctionBuilder"];

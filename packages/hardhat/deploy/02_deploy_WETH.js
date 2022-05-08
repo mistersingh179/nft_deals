@@ -11,13 +11,14 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
   if (chainId !== localChainId) {
     console.warn(
-      "will not deploy WETH as the chain is not localhost (i.e. 31337)"
+      "will not deploy WETH as the chain is not localhost (i.e. 31337)",
     );
     return;
   }
 
   await deploy("WETH", {
-    // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
+    // Learn more about args here:
+    // https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
     args: [],
     log: true,

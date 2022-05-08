@@ -70,3 +70,10 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - `yarn clean`
 - `yarn deploy --reset`
 - this is per network.
+
+## contract changes not showing up in the front end?
+- front end maybe referring to old contracts
+- first `yarn deploy --network rinkeby`
+- this updates `react-app/src/contracts/hardhat_cotnracts.json`
+- then commit & push the front end app
+- now cloudfront will build front end which will point to new contracts

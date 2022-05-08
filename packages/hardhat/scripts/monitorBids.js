@@ -22,7 +22,7 @@ const main = async () => {
   console.log("polling: ", provider.polling, provider.pollingInterval);
   // console.log("auctionArtifact: ", AuctionArtifact);
   // const auctionInterface = new ethers.utils.Interface(AuctionArtifact.abi);
-  const auctionAddress = "0x6A358FD7B7700887b0cd974202CdF93208F793E2";
+  const auctionAddress = "0x23bCD828AA2B37Ff01262665Efff1608f1e142c3";
   const auction = new ethers.Contract(
     auctionAddress,
     AuctionArtifact.abi,

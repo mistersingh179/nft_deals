@@ -71,12 +71,12 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     bool public paused;
 
 
-    event Bid(address from, address previousWinnersAddress, uint amount, uint secondsLeftInAuction);
-    event MoneyOut(address to, uint amount);
+    event Bid(address from, address previousWinnersAddress, uint amount, uint secondsLeftInAuction); // 0xd21fbaad97462831ad0c216f300fefb33a10b03bb18bb70ed668562e88d15d53
+    event MoneyOut(address to, uint amount); // 0xaa5104f3b880c559a2c9963136d875c3b268db1fcf707c4c9d4de8fc66c4dd31
     event FailedToSendMoney(address to, uint amount);
     event NftOut(address to, uint tokenId);
-    event NftIn(address from, uint tokenId);
-    event AuctionExtended(uint from, uint to);
+    event NftIn(address from, uint tokenId); // 0x270b0537fbe35e949092b004eb85c1e939d99ddda2f82538811664a576ca6c6f
+    event AuctionExtended(uint from, uint to); // 0x6e912a3a9105bdd2af817ba5adc14e6c127c1035b5b648faa29ca0d58ab8ff4e
 
     struct AllData {
         uint platformFeeInBasisPoints;
