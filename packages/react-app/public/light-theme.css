@@ -23862,3 +23862,25 @@ div.ant-typography-edit-content.ant-typography-rtl {
       opacity: 0; 
     }
   }  
+
+.confirmBidTable .ant-table-thead{
+  display:none;
+}
+.confirmBidTable .ant-table-cell{
+  padding:16px 0px 16px 0px;
+}
+
+.confirmBidItem{
+  margin: 1em 0px 1em 0px;
+}
+.rebateLink{
+  color: white;
+}
+.rebateLink:hover{
+  color: lightpink;
+}
+.rebateDecrease{
+  color: lightslategray;
+  font-size: 0.8em;
+  font-weight: 300;
+}

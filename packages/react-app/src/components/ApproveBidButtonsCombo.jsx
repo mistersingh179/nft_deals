@@ -7,6 +7,7 @@ import { BidWinningModal, Confetti, LoginLogoutButton } from "./index";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 import { Link } from "react-router-dom";
 import TransactionPendingModal from "./TransactionPendingModal";
+import CheckoutModal from "./CheckoutModal";
 
 const ApproveBidButtonsCombo = props => {
   const auctionOptions = useContext(AuctionOptionsContext);
@@ -135,7 +136,8 @@ const ApproveBidButtonsCombo = props => {
   const [disableApprove, setDisableApprove] = useState(true);
   const [disableBid, setDisableBid] = useState(true);
   const [showWinningModal, setShowWinningModal] = useState(false);
-  const [showTransactionModal, setShowTransactionModal] = useState(true); // hardwired to style it. please wire with logic @sandeep
+  const [showTransactionModal, setShowTransactionModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
+  const [showCheckoutModal, setshowCheckoutModal] = useState(true); // hardwired to style it. please wire with logic @sandeep  
   const [showConfetti, setShowConfetti] = useState(undefined);
 
   if (address === ethers.constants.AddressZero) {
@@ -180,7 +182,15 @@ const ApproveBidButtonsCombo = props => {
             localProvider={localProvider}
             price={price}
             address={address}
-          />          
+          />
+          <CheckoutModal
+            showCheckoutModal={showCheckoutModal}
+            setshowCheckoutModal={setshowCheckoutModal}
+            readContracts={readContracts}
+            localProvider={localProvider}
+            price={price}
+            address={address}
+          />                    
           <BidWinningModal
             showWinningModal={showWinningModal}
             setShowWinningModal={setShowWinningModal}
