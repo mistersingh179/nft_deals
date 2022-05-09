@@ -157,12 +157,12 @@ const ApproveBidButtonsCombo = props => {
   if (address === ethers.constants.AddressZero) {
     return (
       <Row style={{ marginBottom: 20 }}>
-        <Col span={6} offset={6}>
+        <Col span={24}>
           <LoginLogoutButton
             web3Modal={web3Modal}
             loadWeb3Modal={loadWeb3Modal}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
-            className="get-started-btn scrollto"
+            className="connect-wallet-btn scrollto"
           />
         </Col>
       </Row>

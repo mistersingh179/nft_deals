@@ -23890,3 +23890,23 @@ div.ant-typography-edit-content.ant-typography-rtl {
 .transfer-btn{
   width: 100%;
 }
+
+.connect-wallet-btn{
+  color: #fff;
+  background-color: #211a1d;
+  border-radius: 5px;
+  padding: 6px 25px 7px;
+  white-space: nowrap;
+  transition: .3s;
+  font-size: 14px;
+  display: inline-block;
+  border: 2px solid #211a1d;
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+}
+
+.connect-wallet-btn:hover{
+  color: #211a1d;
+  background-color: #fff;
+}
