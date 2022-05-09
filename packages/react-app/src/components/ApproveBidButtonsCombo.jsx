@@ -138,8 +138,8 @@ const ApproveBidButtonsCombo = props => {
   const [disableBid, setDisableBid] = useState(true);
   const [showWinningModal, setShowWinningModal] = useState(false);
   const [showTransactionModal, setShowTransactionModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
-  const [showCheckoutModal, setshowCheckoutModal] = useState(false); // hardwired to style it. please wire with logic @sandeep  
-  const [showNotificationsModal, setshowNotificationsModal] = useState(true); // hardwired to style it. please wire with logic @sandeep  
+  const [showCheckoutModal, setshowCheckoutModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
+  const [showNotificationsModal, setshowNotificationsModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
   const [showConfetti, setShowConfetti] = useState(undefined);
 
   if (address === ethers.constants.AddressZero) {

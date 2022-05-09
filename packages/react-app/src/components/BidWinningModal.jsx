@@ -1,14 +1,46 @@
-import { Col, Modal, Row, Tooltip } from "antd";
+import {
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Select,
+  Space,
+  Tooltip,
+} from "antd";
 import rewardsImage from "../img/rewards.png";
 import { displayWeiAsEther } from "../helpers";
 import { ethers } from "ethers";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
-  const { price } = props;
+  const { price, address } = props;
   const auctionOptions = useContext(AuctionOptionsContext);
+  const [email, setEmail] = useState(null);
+
+  const handleSubmit = async evt => {
+    try {
+      await axios({
+        method: "post",
+        url: `${process.env.REACT_APP_NFT_DEALS_BE_DOMAIN}/users`,
+        data: {
+          walletAddress: address,
+          emailAddress: email,
+        },
+      });
+    } catch (e) {
+      console.log("unable to save email address: ", e);
+    }
+
+    setShowWinningModal(false);
+  };
 
   const handleOk = evt => {
     setShowWinningModal(false);
@@ -76,8 +108,8 @@ const BidWinningModal = props => {
         </h5>
         <h6>You now have {auctionOptions.rewards.toString()} points.</h6>
       </>
-    )
-  }
+    );
+  };
 
   return (
     <>
@@ -104,6 +136,18 @@ const BidWinningModal = props => {
               profit.
             </p>
             <h6>That's a {roi()}x ROI! 🤑</h6>
+            <p>Our notification bot can email in case you are outbid.</p>
+            <Input.Group compact>
+              <Input
+                style={{ width: "calc(100% - 100px)" }}
+                placeholder="your-email@you.com"
+                value={email}
+                onChange={evt => setEmail(evt.target.value)}
+              />
+              <Button type="primary" onClick={handleSubmit}>
+                Submit
+              </Button>
+            </Input.Group>
           </Col>
         </Row>
       </Modal>
