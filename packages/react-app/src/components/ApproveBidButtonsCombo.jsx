@@ -110,7 +110,7 @@ const ApproveBidButtonsCombo = props => {
       );
       try {
         setDisableBid(true);
-        setShowTransactionModal(true)
+        setShowTransactionModal(true);
         const options = {};
         try {
           const estimate = await auctionWriter.estimateGas.bid();
@@ -121,19 +121,25 @@ const ApproveBidButtonsCombo = props => {
           console.error("failed to get estimate");
         }
         // await sleep(5000);
-        await tx(auctionWriter.bid(options), update => {
-          console.log(update);
+        const result = await tx(auctionWriter.bid(options), update => {
+          console.log('*** bid result: ',update);
+          console.log('*** bid hash: ', update.hash);
           if (update.status == 1 || update.status == "confirmed") {
             console.log("***the bid was successful");
             setShowWinningModal(true);
             setShowConfetti(new Date().getTime());
           }
         });
+        console.log('*** bid result: ', result);
+        if(result.hash){
+          setTransactionHash(result.hash);
+        }
       } catch (e) {
         console.error("failed placing bid: ", e);
       } finally {
         setDisableBid(false);
         setShowTransactionModal(false);
+        setTransactionHash(null)
       }
     }
   };
@@ -142,6 +148,7 @@ const ApproveBidButtonsCombo = props => {
   const [disableBid, setDisableBid] = useState(true);
   const [showWinningModal, setShowWinningModal] = useState(false);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [transactionHash, setTransactionHash] = useState(null);
   const [showCheckoutModal, setshowCheckoutModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
   const [showNotificationsModal, setshowNotificationsModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
   const [showConfetti, setShowConfetti] = useState(undefined);
@@ -184,6 +191,7 @@ const ApproveBidButtonsCombo = props => {
           <TransactionPendingModal
             showTransactionModal={showTransactionModal}
             setShowTransactionModal={setShowTransactionModal}
+            transactionHash={transactionHash}
             readContracts={readContracts}
             localProvider={localProvider}
             price={price}
