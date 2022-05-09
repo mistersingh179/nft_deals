@@ -76,4 +76,4 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - first `yarn deploy --network rinkeby`
 - this updates `react-app/src/contracts/hardhat_cotnracts.json`
 - then commit & push the front end app
-- now cloudfront will build front end which will point to new contracts
+- now wait for cloudfront to finish building front end
