@@ -111,6 +111,7 @@ const ApproveBidButtonsCombo = props => {
       );
       try {
         setDisableBid(true);
+        setTransactionHash(null);
         setShowTransactionModal(true);
         const options = {};
         try {
@@ -140,7 +141,6 @@ const ApproveBidButtonsCombo = props => {
       } finally {
         setDisableBid(false);
         setShowTransactionModal(false);
-        setTransactionHash(null);
       }
     }
   };
