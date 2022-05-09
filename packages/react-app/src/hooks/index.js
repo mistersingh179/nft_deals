@@ -5,4 +5,5 @@ export { default as useTopNavClass } from "./useTopNavClass";
 export { default as useAuctionContract } from "./useAuctionContract";
 export { default as useAuctionOptions } from "./useAuctionOptions";
 export { default as useNftOptions } from "./useNftOptions";
+export { default as usePing } from "./usePing";
 export * from "./useContractConfig";

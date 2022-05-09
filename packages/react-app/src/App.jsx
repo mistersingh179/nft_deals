@@ -59,6 +59,7 @@ import AccountAndOthers from "./components/AccountAndOthers";
 
 import LogRocket from "logrocket";
 import axios from "axios";
+import {usePing} from './hooks'
 /*
     Welcome to 🏗 scaffold-eth !
 
@@ -343,17 +344,7 @@ function App(props) {
     }
   }, [LogRocket, address]);
 
-  useEffect(async () => {
-    try {
-      console.log("pinging");
-      await axios({
-        method: "get",
-        url: `${process.env.REACT_APP_NFT_DEALS_BE_DOMAIN}/ping`,
-      });
-    } catch (err) {
-      console.log("errror pinging be: ", err);
-    }
-  }, [address]);
+  usePing(address);
 
   return (
     <Switch>
