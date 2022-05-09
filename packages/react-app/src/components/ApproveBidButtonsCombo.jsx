@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import TransactionPendingModal from "./TransactionPendingModal";
 import CheckoutModal from "./CheckoutModal";
 import NotificationsModal from "./NotificationsModal";
-import { sleep } from '../helpers'
+import { sleep } from "../helpers";
 
 const ApproveBidButtonsCombo = props => {
   const auctionOptions = useContext(AuctionOptionsContext);
@@ -23,6 +23,7 @@ const ApproveBidButtonsCombo = props => {
     auctionContractAddress,
   } = props;
   const { web3Modal, loadWeb3Modal, logoutOfWeb3Modal } = props;
+  const { blockExplorer } = props;
   const approvalAmount = "100000000000000000000000";
   const [desiredApprovalAmount, setDesiredApprovalAmount] = useState(
     ethers.BigNumber.from(0),
@@ -122,16 +123,16 @@ const ApproveBidButtonsCombo = props => {
         }
         // await sleep(5000);
         const result = await tx(auctionWriter.bid(options), update => {
-          console.log('*** bid result: ',update);
-          console.log('*** bid hash: ', update.hash);
+          console.log("*** bid result: ", update);
+          console.log("*** bid hash: ", update.hash);
           if (update.status == 1 || update.status == "confirmed") {
             console.log("***the bid was successful");
             setShowWinningModal(true);
             setShowConfetti(new Date().getTime());
           }
         });
-        console.log('*** bid result: ', result);
-        if(result.hash){
+        console.log("*** bid result: ", result);
+        if (result.hash) {
           setTransactionHash(result.hash);
         }
       } catch (e) {
@@ -139,7 +140,7 @@ const ApproveBidButtonsCombo = props => {
       } finally {
         setDisableBid(false);
         setShowTransactionModal(false);
-        setTransactionHash(null)
+        setTransactionHash(null);
       }
     }
   };
@@ -196,6 +197,7 @@ const ApproveBidButtonsCombo = props => {
             localProvider={localProvider}
             price={price}
             address={address}
+            blockExplorer={blockExplorer}
           />
           <CheckoutModal
             showCheckoutModal={showCheckoutModal}
@@ -204,7 +206,7 @@ const ApproveBidButtonsCombo = props => {
             localProvider={localProvider}
             price={price}
             address={address}
-          />                    
+          />
           <NotificationsModal
             showNotificationsModal={showNotificationsModal}
             setshowNotificationsModal={setshowNotificationsModal}
@@ -212,7 +214,7 @@ const ApproveBidButtonsCombo = props => {
             localProvider={localProvider}
             price={price}
             address={address}
-          />                              
+          />
           <BidWinningModal
             showWinningModal={showWinningModal}
             setShowWinningModal={setShowWinningModal}

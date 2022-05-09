@@ -121,6 +121,7 @@ const NftInteractionRow = props => {
           auctionContractAddress={auctionContractAddress}
           tx={tx}
           price={price}
+          blockExplorer={blockExplorer}
           web3Modal={web3Modal}
           loadWeb3Modal={loadWeb3Modal}
           logoutOfWeb3Modal={logoutOfWeb3Modal}

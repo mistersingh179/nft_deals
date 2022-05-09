@@ -4,10 +4,10 @@ import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 
 const TransactionPendingModal = props => {
   const { showTransactionModal, setShowTransactionModal } = props;
-  const { transactionHash } = props;
+  const { transactionHash, blockExplorer } = props;
 
   const transactionLink = () => {
-    return `https://etherscan.io/tx/${transactionHash}`;
+    return `${blockExplorer || "https://etherscan.io/"}tx/${transactionHash}`;
   };
 
   return (
