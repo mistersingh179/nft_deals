@@ -37,3 +37,4 @@ export { default as Footer } from "./Footer";
 export { default as TopBannerRow } from "./TopBannerRow";
 export { default as NftInteractionRow } from "./NftInteractionRow";
 export { default as ExploreAuctionsSection } from "./ExploreAuctionsSection";
+export { default as EmailCapture } from "./EmailCapture";

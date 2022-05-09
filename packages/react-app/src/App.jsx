@@ -31,7 +31,18 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph, BestNFT, WETH, AuctionFactory, Auction, AuctionList, Foo } from "./views";
+import {
+  Home,
+  ExampleUI,
+  Hints,
+  Subgraph,
+  BestNFT,
+  WETH,
+  AuctionFactory,
+  Auction,
+  AuctionList,
+  Foo,
+} from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 import logo from "./img/NFTD_Logo_2.png";
@@ -47,6 +58,7 @@ import FaucetAndInfo from "./components/FaucetAndInfo";
 import AccountAndOthers from "./components/AccountAndOthers";
 
 import LogRocket from "logrocket";
+import axios from "axios";
 /*
     Welcome to 🏗 scaffold-eth !
 
@@ -70,7 +82,10 @@ const { ethers } = require("ethers");
 LogRocket.init("frc24s/nftdealsxyz");
 
 /// 📡 What chain are your contracts deployed to?
-console.log("***process.env.REACT_APP_INITIAL_NETWORK: ", process.env.REACT_APP_INITIAL_NETWORK);
+console.log(
+  "***process.env.REACT_APP_INITIAL_NETWORK: ",
+  process.env.REACT_APP_INITIAL_NETWORK,
+);
 const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
@@ -92,7 +107,9 @@ const providers = [
 function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
-  const networkOptions = [...new Set([initialNetwork.name, "mainnet", "rinkeby"])];
+  const networkOptions = [
+    ...new Set([initialNetwork.name, "mainnet", "rinkeby"]),
+  ];
 
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState(ethers.constants.AddressZero);
@@ -105,7 +122,9 @@ function App(props) {
 
   // load all your providers
   const localProvider = useStaticJsonRPC([
-    process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : targetNetwork.rpcUrl,
+    process.env.REACT_APP_PROVIDER
+      ? process.env.REACT_APP_PROVIDER
+      : targetNetwork.rpcUrl,
   ]);
   const mainnetProvider = useStaticJsonRPC(providers);
 
@@ -116,7 +135,11 @@ function App(props) {
 
   const logoutOfWeb3Modal = async () => {
     await web3Modal.clearCachedProvider();
-    if (injectedProvider && injectedProvider.provider && typeof injectedProvider.provider.disconnect == "function") {
+    if (
+      injectedProvider &&
+      injectedProvider.provider &&
+      typeof injectedProvider.provider.disconnect == "function"
+    ) {
       await injectedProvider.provider.disconnect();
     }
     setTimeout(() => {
@@ -130,7 +153,11 @@ function App(props) {
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
   const gasPrice = useGasPrice(targetNetwork, "fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
-  const userProviderAndSigner = useUserProviderAndSigner(injectedProvider, localProvider, USE_BURNER_WALLET);
+  const userProviderAndSigner = useUserProviderAndSigner(
+    injectedProvider,
+    localProvider,
+    USE_BURNER_WALLET,
+  );
   const userSigner = userProviderAndSigner.signer;
 
   useEffect(() => {
@@ -148,9 +175,13 @@ function App(props) {
   }, [userSigner]);
 
   // You can warn the user if you would like them to be on a specific network
-  const localChainId = localProvider && localProvider._network && localProvider._network.chainId;
+  const localChainId =
+    localProvider && localProvider._network && localProvider._network.chainId;
   const selectedChainId =
-    userSigner && userSigner.provider && userSigner.provider._network && userSigner.provider._network.chainId;
+    userSigner &&
+    userSigner.provider &&
+    userSigner.provider._network &&
+    userSigner.provider._network.chainId;
 
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
@@ -165,13 +196,20 @@ function App(props) {
 
   // const contractConfig = useContractConfig();
 
-  const contractConfig = { deployedContracts: deployedContracts || {}, externalContracts: externalContracts || {} };
+  const contractConfig = {
+    deployedContracts: deployedContracts || {},
+    externalContracts: externalContracts || {},
+  };
 
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
 
   // If you want to make 🔐 write transactions to your contracts, use the userSigner:
-  const writeContracts = useContractLoader(userSigner, contractConfig, localChainId);
+  const writeContracts = useContractLoader(
+    userSigner,
+    contractConfig,
+    localChainId,
+  );
 
   // EXTERNAL CONTRACT EXAMPLE:
   //
@@ -212,13 +250,23 @@ function App(props) {
       writeContracts &&
       mainnetContracts
     ) {
-      console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
+      console.log(
+        "_____________________________________ 🏗 scaffold-eth _____________________________________",
+      );
       console.log("🌎 mainnetProvider", mainnetProvider);
       console.log("🏠 localChainId", localChainId);
       console.log("👩‍💼 selected address:", address);
       console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
-      console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
-      console.log("💵 yourMainnetBalance", yourMainnetBalance ? ethers.utils.formatEther(yourMainnetBalance) : "...");
+      console.log(
+        "💵 yourLocalBalance",
+        yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...",
+      );
+      console.log(
+        "💵 yourMainnetBalance",
+        yourMainnetBalance
+          ? ethers.utils.formatEther(yourMainnetBalance)
+          : "...",
+      );
       console.log("📝 readContracts", readContracts);
       console.log("🌍 DAI contract on mainnet:", mainnetContracts);
       // console.log("💵 yourMainnetDAIBalance", myMainnetDAIBalance);
@@ -293,12 +341,24 @@ function App(props) {
     if (LogRocket && address !== ethers.constants.AddressZero) {
       LogRocket.identify(address, {});
     }
-  }, [LogRocket, address])
-  
+  }, [LogRocket, address]);
+
+  useEffect(async () => {
+    try {
+      console.log("pinging");
+      await axios({
+        method: "get",
+        url: `${process.env.REACT_APP_NFT_DEALS_BE_DOMAIN}/ping`,
+      });
+    } catch (err) {
+      console.log("errror pinging be: ", err);
+    }
+  }, [address]);
+
   return (
     <Switch>
       <Route exact path="/">
-          <Redirect to={"auctions"} />
+        <Redirect to={"auctions"} />
       </Route>
       <Route exact path="/auction2/:slug">
         <Auction2
@@ -536,7 +596,11 @@ function App(props) {
             <Route path="/mainnetdai">
               <Contract
                 name="DAI"
-                customContract={mainnetContracts && mainnetContracts.contracts && mainnetContracts.contracts.DAI}
+                customContract={
+                  mainnetContracts &&
+                  mainnetContracts.contracts &&
+                  mainnetContracts.contracts.DAI
+                }
                 signer={userSigner}
                 provider={mainnetProvider}
                 address={address}

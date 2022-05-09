@@ -18,6 +18,7 @@ import { useContext, useState } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
+import EmailCapture from "./EmailCapture";
 
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
@@ -136,18 +137,7 @@ const BidWinningModal = props => {
               profit.
             </p>
             <h6>That's a {roi()}x ROI! 🤑</h6>
-            <p>Our notification bot can email in case you are outbid.</p>
-            <Input.Group compact>
-              <Input
-                style={{ width: "calc(100% - 100px)" }}
-                placeholder="your-email@you.com"
-                value={email}
-                onChange={evt => setEmail(evt.target.value)}
-              />
-              <Button type="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
-            </Input.Group>
+            <EmailCapture address={address} />
           </Col>
         </Row>
       </Modal>
