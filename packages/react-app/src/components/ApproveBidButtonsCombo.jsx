@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import TransactionPendingModal from "./TransactionPendingModal";
 import CheckoutModal from "./CheckoutModal";
 import NotificationsModal from "./NotificationsModal";
+import { sleep } from '../helpers'
 
 const ApproveBidButtonsCombo = props => {
   const auctionOptions = useContext(AuctionOptionsContext);
@@ -109,6 +110,7 @@ const ApproveBidButtonsCombo = props => {
       );
       try {
         setDisableBid(true);
+        setShowTransactionModal(true)
         const options = {};
         try {
           const estimate = await auctionWriter.estimateGas.bid();
@@ -118,6 +120,7 @@ const ApproveBidButtonsCombo = props => {
         } catch (e) {
           console.error("failed to get estimate");
         }
+        // await sleep(5000);
         await tx(auctionWriter.bid(options), update => {
           console.log(update);
           if (update.status == 1 || update.status == "confirmed") {
@@ -130,6 +133,7 @@ const ApproveBidButtonsCombo = props => {
         console.error("failed placing bid: ", e);
       } finally {
         setDisableBid(false);
+        setShowTransactionModal(false);
       }
     }
   };
@@ -137,7 +141,7 @@ const ApproveBidButtonsCombo = props => {
   const [disableApprove, setDisableApprove] = useState(true);
   const [disableBid, setDisableBid] = useState(true);
   const [showWinningModal, setShowWinningModal] = useState(false);
-  const [showTransactionModal, setShowTransactionModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
   const [showCheckoutModal, setshowCheckoutModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
   const [showNotificationsModal, setshowNotificationsModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
   const [showConfetti, setShowConfetti] = useState(undefined);

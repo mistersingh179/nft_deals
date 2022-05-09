@@ -5,21 +5,13 @@ import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 const TransactionPendingModal = props => {
   const { showTransactionModal, setShowTransactionModal } = props;
 
-  const handleOk = evt => {
-    setShowTransactionModal(false);
-  };
-  const handleCancel = evt => {
-    setShowTransactionModal(false);
-  };
-
   return (
     <>
       <Modal
         className="winner-modal"
         title="Latest Bids"
         visible={showTransactionModal}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        closeIcon={<></>}
       >
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={18} align="middle">
