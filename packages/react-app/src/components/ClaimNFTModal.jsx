@@ -63,7 +63,7 @@ const ClaimNFTModal = props => {
 
             {!auctionOptions._weHavePossessionOfNft && (
               <>
-                <a className="rewards-contract" href={blockExplorerLink(auctionContractAddress, blockExplorer)}>
+                <a className="rewards-contract" target="_blank" href={blockExplorerLink(auctionContractAddress, blockExplorer)}>
                   View this transaction on Etherscan
                 </a>
               </>
