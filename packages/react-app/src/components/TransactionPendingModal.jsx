@@ -1,14 +1,14 @@
 import { Col, Modal, Row, Button } from "antd";
-import { useContext } from "react";
+import { useContext, useMemo } from 'react'
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 
 const TransactionPendingModal = props => {
   const { showTransactionModal, setShowTransactionModal } = props;
   const { transactionHash, blockExplorer } = props;
 
-  const transactionLink = () => {
+  const transactionLink = useMemo(() => {
     return `${blockExplorer || "https://etherscan.io/"}tx/${transactionHash}`;
-  };
+  }, [blockExplorer, transactionHash]);
 
   return (
     <>
@@ -32,12 +32,12 @@ const TransactionPendingModal = props => {
               Your bid should be confirmed on the blockchain soon. You may
               navigate away from this modal.
             </p>
-            {/* @sandeep: need to update the HREF below to include the transaction URL for this bid. */}
             <Button
               className="etherscan-link"
               type="link"
-              href={transactionLink()}
+              href={transactionLink}
               target="_blank"
+              disabled={transactionHash == null}
             >
               View your transaction on Etherscan.
             </Button>

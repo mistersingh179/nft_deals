@@ -3497,7 +3497,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+          "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
           "abi": [
             {
               "inputs": [
@@ -3912,7 +3912,7 @@
           ]
         },
         "Auction": {
-          "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+          "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
           "abi": [
             {
               "inputs": [
@@ -4552,6 +4552,19 @@
                   "internalType": "struct Auction.AllData",
                   "name": "",
                   "type": "tuple"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getPlatformFeeInBasisPoints",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",

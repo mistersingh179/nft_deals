@@ -36,9 +36,10 @@ const EmailCapture = props => {
           emailAddress: email,
         },
       });
-      setMessage(`Our bot will notify ${email} in case you are outbid`);
     } catch (e) {
       console.log("*** unable to save email address: ", e);
+    } finally {
+      setMessage(`Our bot will notify ${email} in case you are outbid.`);
     }
   };
   console.log("*** message: ", message);
@@ -54,6 +55,7 @@ const EmailCapture = props => {
           style={{ width: "calc(100% - 100px)" }}
           placeholder="your-email@you.com"
           value={email}
+          onKeyPress={evt => evt.key == 'Enter' && handleSubmit()}
           onChange={evt => setEmail(evt.target.value)}
         />
         <Button type="primary" onClick={handleSubmit}>

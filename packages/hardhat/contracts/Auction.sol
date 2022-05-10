@@ -107,41 +107,6 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         bool paused;
     }
 
-    function getAllData(address me) public view returns(AllData memory) {
-        AllData memory data;
-
-        data.platformFeeInBasisPoints = platformFeeInBasisPoints;
-        data.listerFeeInBasisPoints = listerFeeInBasisPoints;
-        data.weth = weth;
-        data.minimumBidIncrement = minimumBidIncrement;
-        data.auctionTimeIncrementOnBid = auctionTimeIncrementOnBid;
-        data.nftContract = nftContract;
-        data.tokenId = tokenId;
-        data._weHavePossessionOfNft = _weHavePossessionOfNft;
-        data.expiration = expiration;
-        data.winningAddress = winningAddress;
-        data.highestBid = highestBid;
-        data._platformFeesAccumulated = _platformFeesAccumulated;
-        data._listerFeesAccumulated = _listerFeesAccumulated;
-        data.maxBid = maxBid;
-        data.secondsLeftInAuction = secondsLeftInAuction();
-        data.currentReward = currentReward();
-        data.rewards = auctionFactory.rewards(me);
-        data.wethBalance = weth.balanceOf(me);
-        if(nftContract.supportsInterface(type(IERC721Metadata).interfaceId) == true){
-            IERC721Metadata nft_contract_meta = IERC721Metadata(address(nftContract));
-            data.name = nft_contract_meta.name();
-            data.symbol = nft_contract_meta.symbol();
-            data.tokenURI = nft_contract_meta.tokenURI(tokenId);
-        }
-        data.createdAt = createdAt;
-        data.nftOwner = nftOwner;
-        data.auctionFactory = auctionFactory;
-        data.qualifiesForRewards = qualifiesForRewards;
-        data.paused = paused;
-        return data;
-    }
-
     constructor(
         address _nftContractAddress,
         uint _tokenId,
@@ -428,5 +393,44 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
 
     function setAuctionFactory(address _auctionFactoryAddress) onlyRole(MAINTENANCE_ROLE) external {
         auctionFactory = AuctionFactory(_auctionFactoryAddress);
+    }
+
+    function getPlatformFeeInBasisPoints() view public returns(uint){
+        return platformFeeInBasisPoints;
+    }
+
+    function getAllData(address me) public view returns(AllData memory) {
+        AllData memory data;
+
+        data.platformFeeInBasisPoints = getPlatformFeeInBasisPoints();
+        data.listerFeeInBasisPoints = listerFeeInBasisPoints;
+        data.weth = weth;
+        data.minimumBidIncrement = minimumBidIncrement;
+        data.auctionTimeIncrementOnBid = auctionTimeIncrementOnBid;
+        data.nftContract = nftContract;
+        data.tokenId = tokenId;
+        data._weHavePossessionOfNft = _weHavePossessionOfNft;
+        data.expiration = expiration;
+        data.winningAddress = winningAddress;
+        data.highestBid = highestBid;
+        data._platformFeesAccumulated = _platformFeesAccumulated;
+        data._listerFeesAccumulated = _listerFeesAccumulated;
+        data.maxBid = maxBid;
+        data.secondsLeftInAuction = secondsLeftInAuction();
+        data.currentReward = currentReward();
+        data.rewards = auctionFactory.rewards(me);
+        data.wethBalance = weth.balanceOf(me);
+        if(nftContract.supportsInterface(type(IERC721Metadata).interfaceId) == true){
+            IERC721Metadata nft_contract_meta = IERC721Metadata(address(nftContract));
+            data.name = nft_contract_meta.name();
+            data.symbol = nft_contract_meta.symbol();
+            data.tokenURI = nft_contract_meta.tokenURI(tokenId);
+        }
+        data.createdAt = createdAt;
+        data.nftOwner = nftOwner;
+        data.auctionFactory = auctionFactory;
+        data.qualifiesForRewards = qualifiesForRewards;
+        data.paused = paused;
+        return data;
     }
 }

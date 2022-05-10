@@ -19,6 +19,8 @@ const useAuctionOptions = (
   const zeroAddress = "0x0000000000000000000000000000000000000000";
 
   const [auctionOptions, setAuctionOptions] = useState({
+    platformFeeInBasisPoints: ethers.BigNumber.from(0),
+    listerFeeInBasisPoints: ethers.BigNumber.from(0),
     winningAddress: zeroAddress,
     highestBid: ethers.BigNumber.from(0),
     maxBid: ethers.BigNumber.from(0),

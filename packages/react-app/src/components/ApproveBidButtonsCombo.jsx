@@ -150,8 +150,8 @@ const ApproveBidButtonsCombo = props => {
   const [showWinningModal, setShowWinningModal] = useState(false);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
   const [transactionHash, setTransactionHash] = useState(null);
-  const [showCheckoutModal, setshowCheckoutModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
-  const [showNotificationsModal, setshowNotificationsModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false); // hardwired to style it. please wire with logic @sandeep
   const [showConfetti, setShowConfetti] = useState(undefined);
 
   if (address === ethers.constants.AddressZero) {
@@ -185,7 +185,7 @@ const ApproveBidButtonsCombo = props => {
             disabled={disableBid}
             className="btn-primary bid-btn"
             size={"large"}
-            onClick={bidButtonHandler}
+            onClick={evt => setShowCheckoutModal(true)}
           >
             Place Bid
           </Button>
@@ -201,15 +201,16 @@ const ApproveBidButtonsCombo = props => {
           />
           <CheckoutModal
             showCheckoutModal={showCheckoutModal}
-            setshowCheckoutModal={setshowCheckoutModal}
+            setshowCheckoutModal={setShowCheckoutModal}
             readContracts={readContracts}
             localProvider={localProvider}
             price={price}
             address={address}
+            bidButtonHandler={bidButtonHandler}
           />
           <NotificationsModal
             showNotificationsModal={showNotificationsModal}
-            setshowNotificationsModal={setshowNotificationsModal}
+            setshowNotificationsModal={setShowNotificationsModal}
             readContracts={readContracts}
             localProvider={localProvider}
             price={price}
