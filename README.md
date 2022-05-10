@@ -77,3 +77,9 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - this updates `react-app/src/contracts/hardhat_cotnracts.json`
 - then commit & push the front end app
 - now wait for cloudfront to finish building front end
+
+## how to run tests?
+- `yarn test`
+- to see events & calls being made `yarn test --trace`
+- to make it autorun on change `chokidar "**/*.js, **/*.sol" -c "yarn test"`
+- 
