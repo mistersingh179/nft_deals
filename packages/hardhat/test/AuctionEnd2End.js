@@ -12,7 +12,6 @@ describe("AuctionEnd2End and more", () => {
   const startBidAmount = 1000;
   const auctionTimeIncrementOnBid = 24 * 60 * 60;
   const minimumBidIncrement = 1000;
-  const listerFeeInBasisPoints = 1000;
   const approvalAmount = "100000000000000000000000";
 
   let weth;
@@ -106,7 +105,6 @@ describe("AuctionEnd2End and more", () => {
         startBidAmount,
         auctionTimeIncrementOnBid,
         minimumBidIncrement,
-        listerFeeInBasisPoints,
       );
 
     const auctions = await auctionFactory.auctions();
@@ -234,10 +232,9 @@ describe("AuctionEnd2End and more", () => {
     const hoursLeft = await auction.hoursLeftInAuction();
     console.log(`we have hoursLeft: ${hoursLeft}`);
     expect(hoursLeft).to.be.eq(23);
-    const platformFeeInBasisPoints =
-      await auction.getPlatformFeeInBasisPoints();
-    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
-    expect(platformFeeInBasisPoints).to.be.equal(200);
+    const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
+    console.log(`auction will charge fee: ${dynamicProtocolFee}`);
+    expect(dynamicProtocolFee).to.be.equal(200);
   });
 
   it("charges correct fee when moved up 5h100s", async () => {
@@ -248,10 +245,9 @@ describe("AuctionEnd2End and more", () => {
     const hoursLeft = await auction.hoursLeftInAuction();
     console.log(`we have hoursLeft: ${hoursLeft}`);
     expect(hoursLeft).to.be.eq(18);
-    const platformFeeInBasisPoints =
-      await auction.getPlatformFeeInBasisPoints();
-    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
-    expect(platformFeeInBasisPoints).to.be.equal(1200);
+    const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
+    console.log(`auction will charge fee: ${dynamicProtocolFee}`);
+    expect(dynamicProtocolFee).to.be.equal(1200);
   });
 
   it("charges correct fee when moved up 10h100s", async () => {
@@ -262,10 +258,9 @@ describe("AuctionEnd2End and more", () => {
     const hoursLeft = await auction.hoursLeftInAuction();
     console.log(`we have hoursLeft: ${hoursLeft}`);
     expect(hoursLeft).to.be.eq(13);
-    const platformFeeInBasisPoints =
-      await auction.getPlatformFeeInBasisPoints();
-    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
-    expect(platformFeeInBasisPoints).to.be.equal(2200);
+    const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
+    console.log(`auction will charge fee: ${dynamicProtocolFee}`);
+    expect(dynamicProtocolFee).to.be.equal(2200);
   });
 
   it("charges correct fee when moved up 23h100s", async () => {
@@ -276,10 +271,9 @@ describe("AuctionEnd2End and more", () => {
     const hoursLeft = await auction.hoursLeftInAuction();
     console.log(`we have hoursLeft: ${hoursLeft}`);
     expect(hoursLeft).to.be.eq(0);
-    const platformFeeInBasisPoints =
-      await auction.getPlatformFeeInBasisPoints();
-    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
-    expect(platformFeeInBasisPoints).to.be.equal(5000);
+    const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
+    console.log(`auction will charge fee: ${dynamicProtocolFee}`);
+    expect(dynamicProtocolFee).to.be.equal(5000);
   });
 
   it("bidding & loosing later causes more net loss of fees", async () => {
@@ -301,10 +295,9 @@ describe("AuctionEnd2End and more", () => {
 
     const chromeLoss = chromeBalanceFirst.sub(chromeBalanceSecond);
     console.log(`bidding & loosing cost chrome: ${chromeLoss}`);
-    console.log("expected loss: ", totalNextBid.toNumber() * 0.14);
+    console.log("expected loss: ", totalNextBid.toNumber() * 0.04);
     const expectedLoss = totalNextBid
-      .mul(BigNumber.from(listerFeeInBasisPoints).add(BigNumber.from(400)))
-      .div(BigNumber.from(100))
+      .mul(BigNumber.from(4))
       .div(BigNumber.from(100));
     expect(chromeLoss.toNumber()).to.be.eq(expectedLoss);
   });
@@ -372,7 +365,6 @@ describe("AuctionEnd2End and more", () => {
         startBidAmount,
         auctionTimeIncrementOnBid,
         minimumBidIncrement,
-        listerFeeInBasisPoints,
       );
 
     const auctions = await auctionFactory.auctions();

@@ -35,7 +35,6 @@ export default function AuctionFactory({
     startingBid: '0',
     auctionTimeIncrementOnBid: (24*60*60)+"",
     minimumBidIncrement: '300000000000000',
-    listerFeeInBasisPoints: '100'
   });
   const [auctionFactoryAddress, setAuctionFactoryAddress] = useState('');
   const blockNumber = useBlockNumber(localProvider);
@@ -48,7 +47,6 @@ export default function AuctionFactory({
         auctionOptions.startingBid,
         auctionOptions.auctionTimeIncrementOnBid,
         auctionOptions.minimumBidIncrement,
-        auctionOptions.listerFeeInBasisPoints,
       ), update => {
         console.log('*** create auction: ', update);
       }
@@ -156,18 +154,6 @@ export default function AuctionFactory({
         <Divider />
 
         <Space direction={'vertical'} style={{marginTop: 8}}>
-          <Row gutter={16}>
-            <Col span={6}>
-              Lister Fee
-            </Col>
-            <Col span={18}>
-              <Input
-                value={auctionOptions.listerFeeInBasisPoints}
-                placeholder="Enter lister fee in basis points"
-                onChange={e => updateAuctionOptions('listerFeeInBasisPoints', e.target.value)}
-              />
-            </Col>
-          </Row>
           <Row gutter={16}>
             <Col span={6}>
               Starting Bid

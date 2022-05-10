@@ -4,7 +4,6 @@ const { ethers } = require("hardhat");
 const startBidAmount = 1000;
 const auctionTimeIncrementOnBid = 24 * 60 * 60;
 const minimumBidIncrement = 1000;
-const listerFeeInBasisPoints = 1000;
 const approvalAmount = "100000000000000000000000";
 
 describe("Auction", () => {
@@ -74,7 +73,6 @@ describe("Auction", () => {
         startBidAmount,
         auctionTimeIncrementOnBid,
         minimumBidIncrement,
-        listerFeeInBasisPoints,
       );
 
     const auctions = await auctionFactory.auctions();
@@ -204,7 +202,6 @@ describe("Auction", () => {
         startBidAmount,
         auctionTimeIncrementOnBid,
         minimumBidIncrement,
-        listerFeeInBasisPoints,
       );
     const auctions = await auctionFactory.auctions();
     console.log("here all auctions: ", auctions);

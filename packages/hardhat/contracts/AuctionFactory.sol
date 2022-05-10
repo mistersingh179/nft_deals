@@ -55,8 +55,7 @@ contract AuctionFactory is Ownable {
         address nftContract,
         uint startBidAmount,
         uint _auctionTimeIncrementOnBid,
-        uint _minimumBidIncrement,
-        uint _listerFeeInBasisPoints
+        uint _minimumBidIncrement
     ) external{
         Auction auction = new Auction(
             nftContract, // _nftContractAddress
@@ -65,7 +64,6 @@ contract AuctionFactory is Ownable {
             _auctionTimeIncrementOnBid, // 1 minute // _auctionTimeIncrementOnBid
             _minimumBidIncrement, // 0.1 eth // _minimumBidIncrement
             msg.sender, // chrome // nftOwner
-            _listerFeeInBasisPoints, // 100 basis points // 1%
             wethAddress, // address given to us when constructed per chain.
             adminOneAddress,
             adminTwoAddress

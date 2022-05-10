@@ -48,7 +48,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     bytes32 public constant CASHIER_ROLE = keccak256("CASHIER_ROLE");
     bytes32 public constant MAINTENANCE_ROLE = keccak256("MAINTENANCE_ROLE");
 
-    uint public immutable listerFeeInBasisPoints;
+    uint public listerTakeInPercentage;
     IERC20 public immutable weth;
     uint public immutable minimumBidIncrement;
     uint public immutable auctionTimeIncrementOnBid;
@@ -79,8 +79,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     event AuctionExtended(uint from, uint to); // 0x6e912a3a9105bdd2af817ba5adc14e6c127c1035b5b648faa29ca0d58ab8ff4e
 
     struct AllData {
-        uint platformFeeInBasisPoints;
-        uint listerFeeInBasisPoints;
+        uint listerTakeInPercentage;
+        uint dynamicProtocolFeeInBasisPoints;
         IERC20 weth;
         uint minimumBidIncrement;
         uint auctionTimeIncrementOnBid;
@@ -115,7 +115,6 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         uint _auctionTimeIncrementOnBid,
         uint _minimumBidIncrement,
         address _nftOwner,
-        uint _listerFeeInBasisPoints,
         address _wethAddress,
         address _adminOneAddress,
         address _adminTwoAddress){
@@ -125,7 +124,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
 
             require(nftContract.ownerOf(tokenId) == nftOwner, "you are not the owner of this nft");
 
-            listerFeeInBasisPoints = _listerFeeInBasisPoints;
+            listerTakeInPercentage = 50;
             highestBid = startBidAmount;
             feePaidByHighestBid = 0;
             maxBid = highestBid; // need to get rid of this
@@ -222,7 +221,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         _;
     }
 
-    function calculateFee(uint amount, uint bp) pure public returns(uint){
+    function calculateFeeFromBasisPoints(uint amount, uint bp) pure public returns(uint){
         return (amount * bp) / 10000;
     }
 
@@ -275,8 +274,10 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         _sendMoney(winningAddress, amountToRefund);
         giveReward();
 
-        platformFee = calculateFee(totalNextBid, getPlatformFeeInBasisPoints());
-        listerFee = calculateFee(totalNextBid, listerFeeInBasisPoints);
+        uint dynamicProtocolFeeInBasisPoints = getDynamicProtolFeeInBasisPoints();
+        uint protocolFee = calculateFeeFromBasisPoints(totalNextBid, dynamicProtocolFeeInBasisPoints);
+        listerFee = (protocolFee * listerTakeInPercentage) / 100;
+        platformFee = protocolFee - listerFee;
 
         _platformFeesAccumulated += platformFee;
         _listerFeesAccumulated += listerFee;
@@ -387,6 +388,10 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         selfdestruct(payable(msg.sender));
     }
 
+    function setListerTakeInPercentage(uint val) onlyRole(MAINTENANCE_ROLE) external {
+        listerTakeInPercentage = val;
+    }
+
     function setPaused(bool val) onlyRole(MAINTENANCE_ROLE) external {
         paused = val;
     }
@@ -395,8 +400,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         auctionFactory = AuctionFactory(_auctionFactoryAddress);
     }
 
-    function getPlatformFeeInBasisPoints() view public returns(uint){
-        console.log("in getPlatformFeeInBasisPoints");
+    function getDynamicProtolFeeInBasisPoints() view public returns(uint){
+        console.log("in getDynamicProtolFeeInBasisPoints");
         uint hoursLeft = hoursLeftInAuction();
         console.log(hoursLeft);
         uint platformFeeInBasisPoints = ((uint(2400) - (hoursLeft*uint(100))) / uint(48)) * uint(100);
@@ -407,8 +412,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     function getAllData(address me) public view returns(AllData memory) {
         AllData memory data;
 
-        data.platformFeeInBasisPoints = getPlatformFeeInBasisPoints();
-        data.listerFeeInBasisPoints = listerFeeInBasisPoints;
+        data.dynamicProtocolFeeInBasisPoints = getDynamicProtolFeeInBasisPoints();
+        data.listerTakeInPercentage = listerTakeInPercentage;
         data.weth = weth;
         data.minimumBidIncrement = minimumBidIncrement;
         data.auctionTimeIncrementOnBid = auctionTimeIncrementOnBid;
