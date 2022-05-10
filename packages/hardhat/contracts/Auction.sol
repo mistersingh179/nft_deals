@@ -51,7 +51,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
 
     uint public listerTakeInPercentage;
     IERC20 public immutable weth;
-    uint public immutable minimumBidIncrement;
+    uint public minimumBidIncrement;
     uint public immutable auctionTimeIncrementOnBid;
     uint public immutable createdAt;
 
@@ -213,7 +213,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
     }
 
     modifier youAreTheNftOwner() {
-        require(msg.sender == nftOwner, "you are not the lister");
+        require(msg.sender == nftOwner, "you are not the nft owner");
         _;
     }
 
@@ -399,6 +399,10 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
 
     function setAuctionFactory(address _auctionFactoryAddress) onlyRole(MAINTENANCE_ROLE) external {
         auctionFactory = AuctionFactory(_auctionFactoryAddress);
+    }
+
+    function setMinimumBidIncrement(uint _minimumBidIncrement) onlyRole(MAINTENANCE_ROLE) public {
+        minimumBidIncrement = _minimumBidIncrement;
     }
 
     function getDynamicProtolFeeInBasisPoints() view public returns(uint){
