@@ -1,5 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+const { BigNumber } = require("ethers");
 
 const {
   utils: { formatEther },
@@ -7,7 +8,7 @@ const {
   constants,
 } = ethers;
 
-describe.only("AuctionEnd2End and more", () => {
+describe("AuctionEnd2End and more", () => {
   const startBidAmount = 1000;
   const auctionTimeIncrementOnBid = 24 * 60 * 60;
   const minimumBidIncrement = 1000;
@@ -224,6 +225,88 @@ describe.only("AuctionEnd2End and more", () => {
 
     expect(newExpiration).to.be.gt(oldExpiration);
     expect(newSecsLeft).to.equal(auctionTimeIncrementOnBid);
+  });
+
+  it("charges correct fee when moved up 100s", async () => {
+    await auction.connect(firefox).bid();
+    provider.send("evm_increaseTime", [100]);
+    provider.send("evm_mine");
+    const hoursLeft = await auction.hoursLeftInAuction();
+    console.log(`we have hoursLeft: ${hoursLeft}`);
+    expect(hoursLeft).to.be.eq(23);
+    const platformFeeInBasisPoints =
+      await auction.getPlatformFeeInBasisPoints();
+    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
+    expect(platformFeeInBasisPoints).to.be.equal(200);
+  });
+
+  it("charges correct fee when moved up 5h100s", async () => {
+    await auction.connect(firefox).bid();
+    provider.send("evm_increaseTime", [100]); // moved up 100 seconds
+    provider.send("evm_increaseTime", [5 * 60 * 60]); // moved up 5 hours
+    provider.send("evm_mine");
+    const hoursLeft = await auction.hoursLeftInAuction();
+    console.log(`we have hoursLeft: ${hoursLeft}`);
+    expect(hoursLeft).to.be.eq(18);
+    const platformFeeInBasisPoints =
+      await auction.getPlatformFeeInBasisPoints();
+    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
+    expect(platformFeeInBasisPoints).to.be.equal(1200);
+  });
+
+  it("charges correct fee when moved up 10h100s", async () => {
+    await auction.connect(firefox).bid();
+    provider.send("evm_increaseTime", [100]); // moved up 100 seconds
+    provider.send("evm_increaseTime", [10 * 60 * 60]); // moved up 10 hours
+    provider.send("evm_mine");
+    const hoursLeft = await auction.hoursLeftInAuction();
+    console.log(`we have hoursLeft: ${hoursLeft}`);
+    expect(hoursLeft).to.be.eq(13);
+    const platformFeeInBasisPoints =
+      await auction.getPlatformFeeInBasisPoints();
+    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
+    expect(platformFeeInBasisPoints).to.be.equal(2200);
+  });
+
+  it("charges correct fee when moved up 23h100s", async () => {
+    await auction.connect(firefox).bid();
+    provider.send("evm_increaseTime", [100]); // moved up 100 seconds
+    provider.send("evm_increaseTime", [23 * 60 * 60]); // moved up 10 hours
+    provider.send("evm_mine");
+    const hoursLeft = await auction.hoursLeftInAuction();
+    console.log(`we have hoursLeft: ${hoursLeft}`);
+    expect(hoursLeft).to.be.eq(0);
+    const platformFeeInBasisPoints =
+      await auction.getPlatformFeeInBasisPoints();
+    console.log(`auction will charge fee: ${platformFeeInBasisPoints}`);
+    expect(platformFeeInBasisPoints).to.be.equal(5000);
+  });
+
+  it("bidding & loosing later causes more net loss of fees", async () => {
+    await auction.connect(firefox).bid();
+    provider.send("evm_increaseTime", [100]); // moved up 100 seconds
+    provider.send("evm_increaseTime", [1 * 60 * 60]); // moved up 1 hours
+    provider.send("evm_mine");
+
+    const chromeBalanceFirst = await weth.balanceOf(chrome.address);
+    console.log(`chrome balance before bidding: ${chromeBalanceFirst}`);
+    const totalNextBid = (await auction.highestBid()).add(minimumBidIncrement);
+    console.log(`totalNextBid is: ${totalNextBid.toNumber()}`);
+
+    await auction.connect(chrome).bid();
+    await auction.connect(firefox).bid();
+
+    const chromeBalanceSecond = await weth.balanceOf(chrome.address);
+    console.log(`chrome balance after beingout bid is: ${chromeBalanceSecond}`);
+
+    const chromeLoss = chromeBalanceFirst.sub(chromeBalanceSecond);
+    console.log(`bidding & loosing cost chrome: ${chromeLoss}`);
+    console.log("expected loss: ", totalNextBid.toNumber() * 0.14);
+    const expectedLoss = totalNextBid
+      .mul(BigNumber.from(listerFeeInBasisPoints).add(BigNumber.from(400)))
+      .div(BigNumber.from(100))
+      .div(BigNumber.from(100));
+    expect(chromeLoss.toNumber()).to.be.eq(expectedLoss);
   });
 
   it("no more bids after auction has ended", async () => {

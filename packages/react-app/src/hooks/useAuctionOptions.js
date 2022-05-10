@@ -27,6 +27,7 @@ const useAuctionOptions = (
     expiration: ethers.BigNumber.from(0),
     createdAt: ethers.BigNumber.from(0),
     secondsLeftInAuction: ethers.BigNumber.from(0),
+    hoursLeftInAuction: ethers.BigNumber.from(0),
     minimumBidIncrement: ethers.BigNumber.from(0),
     auctionTimeIncrementOnBid: ethers.BigNumber.from(0),
     _weHavePossessionOfNft: false,

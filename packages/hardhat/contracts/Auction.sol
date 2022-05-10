@@ -48,7 +48,6 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     bytes32 public constant CASHIER_ROLE = keccak256("CASHIER_ROLE");
     bytes32 public constant MAINTENANCE_ROLE = keccak256("MAINTENANCE_ROLE");
 
-    uint public immutable platformFeeInBasisPoints;
     uint public immutable listerFeeInBasisPoints;
     IERC20 public immutable weth;
     uint public immutable minimumBidIncrement;
@@ -64,6 +63,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     uint public expiration;
     address public winningAddress;
     uint public highestBid;
+    uint public feePaidByHighestBid;
     uint public _platformFeesAccumulated;
     uint public _listerFeesAccumulated;
     uint public maxBid;
@@ -90,6 +90,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         uint expiration;
         address winningAddress;
         uint highestBid;
+        uint feePaidByHighestBid;
         uint _platformFeesAccumulated;
         uint _listerFeesAccumulated;
         uint maxBid;
@@ -125,8 +126,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
             require(nftContract.ownerOf(tokenId) == nftOwner, "you are not the owner of this nft");
 
             listerFeeInBasisPoints = _listerFeeInBasisPoints;
-            platformFeeInBasisPoints = _listerFeeInBasisPoints > 100 ? _listerFeeInBasisPoints : 100;
             highestBid = startBidAmount;
+            feePaidByHighestBid = 0;
             maxBid = highestBid; // need to get rid of this
             auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;
             minimumBidIncrement = _minimumBidIncrement;
@@ -264,16 +265,26 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
 
         emit Bid(msg.sender, winningAddress, totalNextBid, secondsLeftInAuction());
 
-        _sendPreviousWinnerTheirBidBack(winningAddress, highestBid);
+        console.log("refunding previous bidder: ");
+        console.log(highestBid);
+        console.log(feePaidByHighestBid);
+
+        uint amountToRefund = highestBid-feePaidByHighestBid;
+        console.log(amountToRefund);
+
+        _sendMoney(winningAddress, amountToRefund);
         giveReward();
 
-        platformFee = calculateFee(totalNextBid, platformFeeInBasisPoints);
+        platformFee = calculateFee(totalNextBid, getPlatformFeeInBasisPoints());
         listerFee = calculateFee(totalNextBid, listerFeeInBasisPoints);
+
         _platformFeesAccumulated += platformFee;
         _listerFeesAccumulated += listerFee;
 
         highestBid = totalNextBid; // new highest bid
+        feePaidByHighestBid = platformFee + listerFee; // fee paid by new highest bid
         winningAddress = msg.sender;
+
         console.log('increasing expiration timestamp');
         console.log(block.timestamp);
         console.log(auctionTimeIncrementOnBid);
@@ -295,6 +306,12 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         } else {
             return expiration - block.timestamp;
         }
+    }
+
+    function hoursLeftInAuction() public view returns(uint) {
+        uint secsLeft = secondsLeftInAuction();
+        uint hoursLeft = secsLeft / 1 hours;
+        return hoursLeft;
     }
 
     function doEmptyTransaction() external { }
@@ -325,30 +342,9 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         thereIsAWinner youAreTheNftOwner public {
             require(highestBid != 0, 'the highest bid is 0!');
             uint bidAmount = highestBid;
-            uint platformFee = calculateFee(highestBid, platformFeeInBasisPoints);
-            uint listerFee = calculateFee(highestBid, listerFeeInBasisPoints);
-            bidAmount -= platformFee;
-            bidAmount -= listerFee;
+            bidAmount -= feePaidByHighestBid;
             highestBid = 0;
             _sendMoney(msg.sender, bidAmount);
-    }
-
-    function _sendPreviousWinnerTheirBidBack(address _previousWinnerAddress, uint bidAmount) private {
-        if(_previousWinnerAddress == address(0)){
-            console.log('wont sent previous bid back as previous winner is 0');
-        }else{
-            console.log('sending previous winner money back');
-            console.log(bidAmount);
-            uint platformFee = calculateFee(bidAmount, platformFeeInBasisPoints);
-            console.log(platformFee);
-            uint listerFee = calculateFee(bidAmount, listerFeeInBasisPoints);
-            console.log(listerFee);
-            bidAmount -= platformFee;
-            bidAmount -= listerFee;
-            console.log('amount sending back');
-            console.log(bidAmount);
-            _sendMoney(_previousWinnerAddress, bidAmount);
-        }
     }
 
     function _transfer() private {
@@ -358,14 +354,18 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     }
 
     function _sendMoney(address recipient, uint amount) private {
-        console.log('in sendmoney');
-        console.log(recipient);
-        console.log(amount);
-        bool result = weth.transfer(recipient, amount);
-        if(result == true){
-            emit MoneyOut(recipient, amount);
+        if(recipient == address(0)){
+            console.log('wont sent money as recipient is 0');
         }else{
-            emit FailedToSendMoney(recipient, amount);
+            console.log('in sendmoney');
+            console.log(recipient);
+            console.log(amount);
+            bool result = weth.transfer(recipient, amount);
+            if(result == true){
+                emit MoneyOut(recipient, amount);
+            }else{
+                emit FailedToSendMoney(recipient, amount);
+            }
         }
     }
 
@@ -396,6 +396,11 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
     }
 
     function getPlatformFeeInBasisPoints() view public returns(uint){
+        console.log("in getPlatformFeeInBasisPoints");
+        uint hoursLeft = hoursLeftInAuction();
+        console.log(hoursLeft);
+        uint platformFeeInBasisPoints = ((uint(2400) - (hoursLeft*uint(100))) / uint(48)) * uint(100);
+        console.log(platformFeeInBasisPoints);
         return platformFeeInBasisPoints;
     }
 
@@ -413,6 +418,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         data.expiration = expiration;
         data.winningAddress = winningAddress;
         data.highestBid = highestBid;
+        data.feePaidByHighestBid = feePaidByHighestBid;
         data._platformFeesAccumulated = _platformFeesAccumulated;
         data._listerFeesAccumulated = _listerFeesAccumulated;
         data.maxBid = maxBid;

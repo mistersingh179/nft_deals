@@ -3,9 +3,10 @@ import { ReactComponent as WEthLogo } from "../img/wrapped_ethereum_icon.svg";
 import { useContext, useState } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 import nftNameFixer from "../helpers/nftNameFixer";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from 'ethers'
 import { useBalance } from "eth-hooks";
 import { displayWeiAsEther } from "../helpers";
+import moment from 'moment'
 
 const CheckoutModal = props => {
   const { showCheckoutModal, setshowCheckoutModal } = props;
@@ -56,6 +57,7 @@ const CheckoutModal = props => {
     const lf = auctionOptions.listerFeeInBasisPoints.toNumber();
     const tf = ((pf + lf) / 100).toFixed(2);
     const result = (100 - tf).toFixed(2);
+    const durationToExpire = moment.duration(auctionOptions.secondsLeftInAuction, "seconds");
     return (
       <>
         <div>{result}%</div>
@@ -64,7 +66,7 @@ const CheckoutModal = props => {
             placement="right"
             title="The rebate rate drops approximately 4% per hour remaining in the auction to encourage early bidding."
           >
-            {/*-{tf}% in 34m*/}
+            -{tf}% in {durationToExpire.minutes()}m
           </Tooltip>
         </div>
       </>

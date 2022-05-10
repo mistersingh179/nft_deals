@@ -3510,7 +3510,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+          "address": "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9",
           "abi": [
             {
               "inputs": [
@@ -3925,7 +3925,7 @@
           ]
         },
         "Auction": {
-          "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+          "address": "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
           "abi": [
             {
               "inputs": [
@@ -4420,6 +4420,19 @@
               "type": "function"
             },
             {
+              "inputs": [],
+              "name": "feePaidByHighestBid",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [
                 {
                   "internalType": "address",
@@ -4484,6 +4497,11 @@
                     {
                       "internalType": "uint256",
                       "name": "highestBid",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "feePaidByHighestBid",
                       "type": "uint256"
                     },
                     {
@@ -4659,6 +4677,19 @@
             },
             {
               "inputs": [],
+              "name": "hoursLeftInAuction",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
               "name": "listerFeeInBasisPoints",
               "outputs": [
                 {
@@ -4777,19 +4808,6 @@
                   "internalType": "bool",
                   "name": "",
                   "type": "bool"
-                }
-              ],
-              "stateMutability": "view",
-              "type": "function"
-            },
-            {
-              "inputs": [],
-              "name": "platformFeeInBasisPoints",
-              "outputs": [
-                {
-                  "internalType": "uint256",
-                  "name": "",
-                  "type": "uint256"
                 }
               ],
               "stateMutability": "view",
