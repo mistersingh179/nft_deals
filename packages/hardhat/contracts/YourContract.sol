@@ -11,10 +11,12 @@ pragma solidity ^0.8.13;
  */
 
 import "hardhat/console.sol";
+import "@openzeppelin/contracts/utils/Multicall.sol";
+
 // import "@openzeppelin/contracts/access/Ownable.sol"; 
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
 
-contract YourContract {
+contract YourContract is Multicall {
 
   event SetPurpose(address sender, string purpose);
 
@@ -40,6 +42,12 @@ contract YourContract {
 
   function setPurpose(string memory newPurpose) public {
       purpose = newPurpose;
+      console.log(msg.sender,"set purpose to",purpose);
+      emit SetPurpose(msg.sender, purpose);
+  }
+
+    function setName(string memory newName) public {
+      name = newName;
       console.log(msg.sender,"set purpose to",purpose);
       emit SetPurpose(msg.sender, purpose);
   }

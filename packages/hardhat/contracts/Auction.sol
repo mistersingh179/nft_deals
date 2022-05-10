@@ -40,9 +40,10 @@ import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/utils/Multicall.sol";
 import "./AuctionFactory.sol";
 
-contract Auction is IERC721Receiver, Ownable, AccessControl {
+contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
     using Strings for uint;
 
     bytes32 public constant CASHIER_ROLE = keccak256("CASHIER_ROLE");

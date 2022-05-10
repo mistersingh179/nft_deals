@@ -13,8 +13,10 @@ import "./Auction.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Multicall.sol";
 
-contract AuctionFactory is Ownable {
+
+contract AuctionFactory is Ownable, Multicall {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private myAuctionsSet;
