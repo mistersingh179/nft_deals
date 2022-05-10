@@ -46,7 +46,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   try {
     if (chainId !== localChainId) {
       console.log("will verify");
-      await sleep(5000);
+      // await sleep(10000);
       await run("verify:verify", {
         address: theBestNftContract.address,
         contract: "contracts/BestNft.sol:BestNft",
