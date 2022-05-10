@@ -14,7 +14,7 @@ const DEBUG = true;
 export default function Transactor(providerOrSigner, gasPrice, etherscan) {
   if (typeof providerOrSigner !== "undefined") {
     // eslint-disable-next-line consistent-return
-    return async (tx, callback) => {
+    return async (tx, callback, setTxHash) => {
       let signer;
       let network;
       let provider;
@@ -73,6 +73,10 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
         }
         if (DEBUG) console.log("RESULT:", result);
         // console.log("Notify", notify);
+
+        if(setTxHash){
+          setTxHash(result.hash);
+        }
 
         if (callback) {
           callbacks[result.hash] = callback;

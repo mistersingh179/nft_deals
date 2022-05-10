@@ -122,20 +122,19 @@ const ApproveBidButtonsCombo = props => {
         } catch (e) {
           console.error("failed to get estimate");
         }
-        // await sleep(5000);
-        const result = await tx(auctionWriter.bid(options), update => {
-          console.log("*** bid result: ", update);
-          console.log("*** bid hash: ", update.hash);
-          if (update.status == 1 || update.status == "confirmed") {
-            console.log("***the bid was successful");
-            setShowWinningModal(true);
-            setShowConfetti(new Date().getTime());
-          }
-        });
-        console.log("*** bid result: ", result);
-        if (result.hash) {
-          setTransactionHash(result.hash);
-        }
+        await tx(
+          auctionWriter.bid(options),
+          update => {
+            if (update.status == 1 || update.status == "confirmed") {
+              console.log("***the bid was successful");
+              setDisableBid(false);
+              setShowTransactionModal(false);
+              setShowWinningModal(true);
+              setShowConfetti(new Date().getTime());
+            }
+          },
+          setTransactionHash,
+        );
       } catch (e) {
         console.error("failed placing bid: ", e);
       } finally {
