@@ -5,7 +5,7 @@
       "chainId": "4",
       "contracts": {
         "Auction": {
-          "address": "0xB0e52aaDE6F9B71507202F792d0b7D18894c8c14",
+          "address": "0xA24965464319d116d67e48F0718F1661eE94bB42",
           "abi": [
             {
               "inputs": [
@@ -803,6 +803,25 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "bytes[]",
+                  "name": "data",
+                  "type": "bytes[]"
+                }
+              ],
+              "name": "multicall",
+              "outputs": [
+                {
+                  "internalType": "bytes[]",
+                  "name": "results",
+                  "type": "bytes[]"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "nftContract",
               "outputs": [
@@ -1097,7 +1116,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0x89eB568f172aD3D6d5D6FE0e4d6CBe12722D0CF7",
+          "address": "0x6b8597c63Ca4E01f328701AD0ac4d0750ee4Df89",
           "abi": [
             {
               "inputs": [
@@ -1380,6 +1399,25 @@
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "bytes[]",
+                  "name": "data",
+                  "type": "bytes[]"
+                }
+              ],
+              "name": "multicall",
+              "outputs": [
+                {
+                  "internalType": "bytes[]",
+                  "name": "results",
+                  "type": "bytes[]"
+                }
+              ],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
@@ -2268,7 +2306,7 @@
           ]
         },
         "YourContract": {
-          "address": "0x9eA830a6d4e446d2Af601Ae6508c329338a59dC2",
+          "address": "0x17c0a413D1668693ba6764272c4e5CFb688B91c9",
           "abi": [
             {
               "inputs": [],
@@ -2329,6 +2367,25 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "bytes[]",
+                  "name": "data",
+                  "type": "bytes[]"
+                }
+              ],
+              "name": "multicall",
+              "outputs": [
+                {
+                  "internalType": "bytes[]",
+                  "name": "results",
+                  "type": "bytes[]"
+                }
+              ],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "name",
               "outputs": [
@@ -2352,6 +2409,19 @@
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "string",
+                  "name": "newName",
+                  "type": "string"
+                }
+              ],
+              "name": "setName",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
