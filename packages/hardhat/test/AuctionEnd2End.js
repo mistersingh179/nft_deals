@@ -234,7 +234,7 @@ describe("AuctionEnd2End and more", () => {
     expect(hoursLeft).to.be.eq(23);
     const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
     console.log(`auction will charge fee: ${dynamicProtocolFee}`);
-    expect(dynamicProtocolFee).to.be.equal(200);
+    expect(dynamicProtocolFee).to.be.equal(400);
   });
 
   it("charges correct fee when moved up 5h100s", async () => {
@@ -247,7 +247,7 @@ describe("AuctionEnd2End and more", () => {
     expect(hoursLeft).to.be.eq(18);
     const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
     console.log(`auction will charge fee: ${dynamicProtocolFee}`);
-    expect(dynamicProtocolFee).to.be.equal(1200);
+    expect(dynamicProtocolFee).to.be.equal(2500);
   });
 
   it("charges correct fee when moved up 10h100s", async () => {
@@ -260,7 +260,7 @@ describe("AuctionEnd2End and more", () => {
     expect(hoursLeft).to.be.eq(13);
     const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
     console.log(`auction will charge fee: ${dynamicProtocolFee}`);
-    expect(dynamicProtocolFee).to.be.equal(2200);
+    expect(dynamicProtocolFee).to.be.equal(4500);
   });
 
   it("charges correct fee when moved up 23h100s", async () => {
@@ -273,7 +273,7 @@ describe("AuctionEnd2End and more", () => {
     expect(hoursLeft).to.be.eq(0);
     const dynamicProtocolFee = await auction.getDynamicProtolFeeInBasisPoints();
     console.log(`auction will charge fee: ${dynamicProtocolFee}`);
-    expect(dynamicProtocolFee).to.be.equal(5000);
+    expect(dynamicProtocolFee).to.be.equal(10000);
   });
 
   it("bidding & loosing later causes more net loss of fees", async () => {
@@ -295,10 +295,10 @@ describe("AuctionEnd2End and more", () => {
 
     const chromeLoss = chromeBalanceFirst.sub(chromeBalanceSecond);
     console.log(`bidding & loosing cost chrome: ${chromeLoss}`);
-    console.log("expected loss: ", totalNextBid.toNumber() * 0.04);
     const expectedLoss = totalNextBid
-      .mul(BigNumber.from(4))
+      .mul(BigNumber.from(8))
       .div(BigNumber.from(100));
+    console.log(`expected loss: ${expectedLoss}`);
     expect(chromeLoss.toNumber()).to.be.eq(expectedLoss);
   });
 

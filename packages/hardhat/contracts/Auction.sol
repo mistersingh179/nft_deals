@@ -404,7 +404,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl {
         console.log("in getDynamicProtolFeeInBasisPoints");
         uint hoursLeft = hoursLeftInAuction();
         console.log(hoursLeft);
-        uint platformFeeInBasisPoints = ((uint(2400) - (hoursLeft*uint(100))) / uint(48)) * uint(100);
+        uint platformFeeInBasisPoints = ((uint(2400) - (hoursLeft*uint(100))) / uint(24)) * uint(100);
         console.log(platformFeeInBasisPoints);
         return platformFeeInBasisPoints;
     }
