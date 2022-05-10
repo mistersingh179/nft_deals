@@ -36,7 +36,7 @@ const TheHeader = props => {
         <nav className="nav-menu d-none d-lg-block">
           <ul>
             <li>
-              <Link to="/auctions">Browse Auctions</Link>
+              <Link to="/auctions">View Auctions</Link>
             </li>
             <li>
               <a href="javascript:void(0)" onClick={claimButtonHandler}>
@@ -62,8 +62,8 @@ const TheHeader = props => {
               />
             </li>
             <li>
-              <a href="https://coral-credit-8f4.notion.site/NFT-Deals-0bdff8f05a5747d987cee55e1134129d">
-                Docs
+              <a target="_blank" href="https://nftdeals.xyz/#faq">
+                FAQ
               </a>
             </li>
           </ul>

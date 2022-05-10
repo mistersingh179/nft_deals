@@ -14,7 +14,7 @@ const Footer = props => {
               </a>
               <p>
                 Made with ❤️
-                <p>in Texas and New York</p>
+                <p>around the world</p>
                 <p>
                   <strong>Email:</strong> info_at_nftdeals.xyz
                 </p>
@@ -26,40 +26,32 @@ const Footer = props => {
               <ul>
                 <li>
                   <i className="bx bx-chevron-right" />{" "}
-                  <a href="#">Bid to Win</a>
+                  <a target="_blank" href="https://nftdeals.xyz/#team">About Us</a>
                 </li>
                 <li>
                   <i className="bx bx-chevron-right" />{" "}
-                  <a href="#team">About Us</a>
+                  <a target="_blank" href="https://docs.google.com/forms/d/e/1FAIpQLSfLyFKX1O4iox3dBWdIzyyaDItQg1-XI_cn9aNM1auCSdh6pA/viewform?usp=fb_send_twt">Sell Your NFT</a>
                 </li>
                 <li>
                   <i className="bx bx-chevron-right" />{" "}
-                  <a href="#">Claim Your NFT</a>
-                </li>
-                <li>
-                  <i className="bx bx-chevron-right" />{" "}
-                  <a href="#">Sell Your NFT</a>
-                </li>
+                  <a target="_blank" href="https://nftdeals.xyz/#faq">FAQ</a>
+                </li>                
               </ul>
             </div>
 
             <div className="col-lg-3 col-md-6 footer-links">
-              <h4>Our Services</h4>
+              <h4>Learn More</h4>
               <ul>
                 <li>
-                  <i className="bx bx-chevron-right" />{" "}
-                  <a href="#">Documentation</a>
-                </li>
-                <li>
-                  <i className="bx bx-chevron-right" /> <a href="#">Jobs</a>
+                  <i className="bx bx-chevron-right" /> <a target="_blank" href="https://nftdeals.freshteam.com/jobs/WFJ15FqYULJc/web3-full-stack-software-engineer-remote?ft_source=Internal_6000545760&ft_medium=Referral_6000490677&u=6000405755">Jobs</a>
                 </li>
                 <li>
                   <i className="bx bx-chevron-right" />{" "}
-                  <a href="#">Terms of Service</a>
+                  <a target="_blank" href="https://nftdeals.xyz/tos.html">Terms of Service</a>
                 </li>
                 <li>
                   <i className="bx bx-chevron-right" />{" "}
-                  <a href="#">Privacy Policy</a>
+                  <a target="_blank" href="https://nftdeals.xyz/privacy.html">Privacy Policy</a>
                 </li>
               </ul>
             </div>
@@ -72,14 +64,14 @@ const Footer = props => {
                 the firehose.
               </p>
               <div className="social-links mt-3">
-                <a href="https://twitter.com/NFT_Deals_xyz" className="twitter">
+                <a target="_blank" href="https://twitter.com/NFT_Deals_xyz" className="twitter">
                   <i className="bx bxl-twitter" />
                 </a>
-                <a href="https://discord.gg/uKQgkteu72" className="discord">
+                <a target="_blank" href="https://discord.gg/uKQgkteu72" className="discord">
                   <i className="bx bxl-discord" />
                 </a>
                 <a
-                  href="https://medium.com/@rodrigofuentes7/"
+                  target="_blank" href="https://medium.com/nftdeals"
                   className="medium"
                 >
                   <i className="bx bxl-medium" />
