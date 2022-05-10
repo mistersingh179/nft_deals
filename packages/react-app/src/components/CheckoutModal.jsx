@@ -66,7 +66,7 @@ const CheckoutModal = props => {
         <div className="rebateDecrease">
           <Tooltip
             placement="right"
-            title="The rebate rate drops approximately 4% per hour remaining in the auction to encourage early bidding."
+            title="The rebate rate drops every hour remaining in the auction to encourage early bidding."
           >
             -{tf}% in {durationToExpire.minutes()}m
           </Tooltip>

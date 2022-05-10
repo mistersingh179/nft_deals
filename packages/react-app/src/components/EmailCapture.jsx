@@ -39,7 +39,7 @@ const EmailCapture = props => {
     } catch (e) {
       console.log("*** unable to save email address: ", e);
     } finally {
-      setMessage(`Our bot will notify ${email} in case you are outbid.`);
+      setMessage(`Our bot will notify ${email} if you're outbid.`);
     }
   };
   console.log("*** message: ", message);
@@ -49,7 +49,7 @@ const EmailCapture = props => {
 
   return (
     <>
-      <p>Our notification bot can email in case you are outbid.</p>
+      <p>Input your email to receive outbid notifications:</p>
       <Input.Group compact>
         <Input
           style={{ width: "calc(100% - 100px)" }}

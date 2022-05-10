@@ -86,7 +86,7 @@ const NftInteractionRow = props => {
           <div className="col-md-6 bid-box">
             <h3>
               Next Bid{" "}
-              <Tooltip title="Bid increments are fixed at +0.0003 ETH above the current bid.">
+              <Tooltip title="You cannot choose a bid amount. The next possible bid is a fixed amount above the current bid.">
                 <i className="bi bi-info-circle bid-info"></i>
               </Tooltip>
             </h3>

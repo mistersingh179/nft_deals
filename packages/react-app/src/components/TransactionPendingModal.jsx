@@ -29,8 +29,8 @@ const TransactionPendingModal = props => {
             </div>
             <h5>You're closer to winning this NFT! </h5>
             <p>
-              Your bid should be confirmed on the blockchain soon. You may
-              navigate away from this modal.
+              Please review and approve this transaction in your wallet.
+              Then your bid should be confirmed on the blockchain soon. 
             </p>
             <Button
               className="etherscan-link"

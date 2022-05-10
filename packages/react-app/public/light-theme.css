@@ -23910,3 +23910,8 @@ div.ant-typography-edit-content.ant-typography-rtl {
   color: #211a1d;
   background-color: #fff;
 }
+
+.ant-alert-success{
+  background-color: #ebdbfe;
+  border: 1px solid #6320ee;
+}

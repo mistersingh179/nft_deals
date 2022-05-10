@@ -137,6 +137,10 @@ const BidWinningModal = props => {
               profit.
             </p>
             <h6>That's a {roi()}x ROI! 🤑</h6>
+          </Col>
+        </Row>
+        <Row justify="center" style={{ marginBottom: 24 }}>
+          <Col span={18} align="middle">
             <EmailCapture address={address} />
           </Col>
         </Row>
