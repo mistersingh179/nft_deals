@@ -1492,8 +1492,10 @@ mark {
   line-height: 22px;
 }
 .ant-alert-success {
-  background-color: #f6ffed;
-  border: 1px solid #b7eb8f;
+  background-color: #ebdbfe;
+  border: 1px solid #6320ee;
+  /* background-color: #f6ffed;
+  border: 1px solid #b7eb8f; */
 }
 .ant-alert-success .ant-alert-icon {
   color: #52c41a;
@@ -23909,11 +23911,6 @@ div.ant-typography-edit-content.ant-typography-rtl {
 .connect-wallet-btn:hover{
   color: #211a1d;
   background-color: #fff;
-}
-
-.ant-alert-success{
-  background-color: #ebdbfe;
-  border: 1px solid #6320ee;
 }
 
 .accent-icon{
