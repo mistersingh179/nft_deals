@@ -160,7 +160,7 @@ const NftInteractionRow = props => {
           nftContractAddress={auctionOptions.nftContract}
           tokenId={auctionOptions.tokenId}
           localProvider={localProvider}
-          className="img-fluid"
+          className="img-fluid nft-image"
         />
       </div>
     </div>
