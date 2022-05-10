@@ -34,7 +34,9 @@ const NftInteractionRow = props => {
       >
         <h1>
           {auctionOptions.name && nftNameFixer(auctionOptions.name)}{" "}
-          #{auctionOptions.tokenId.toString()}
+          #{auctionOptions.tokenId.toString()} <Tooltip title="Click here to verify this NFT's contract address.">
+                  <a target="_blank" href="#"><i className="bi bi-patch-check-fill btn-icon accent-icon" /></a>
+                </Tooltip>
         </h1>
         <h2>
           Collection Floor Price: Ξ {auctionOptions.stats.floor_price}
