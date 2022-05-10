@@ -1,4 +1,4 @@
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity ^0.8.13;
 // SPDX-License-Identifier: UNLICENSED
 
 /*
@@ -18,7 +18,7 @@ contract YourContract {
 
   event SetPurpose(address sender, string purpose);
 
-  string public purpose = "Building Unstoppable Apps!!!!!!!!";
+  string public purpose = "Building Unstoppable Apps";
   string public name = 'foo bar';
 
   struct Foo{
