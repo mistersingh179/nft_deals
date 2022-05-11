@@ -5,7 +5,7 @@
       "chainId": "4",
       "contracts": {
         "Auction": {
-          "address": "0xD19561736812d5aa9de58b4b99bD4B96f9Be11Cb",
+          "address": "0xD2a0D11a70d1C44ABF7d8F881d0B99a9e4eD97E1",
           "abi": [
             {
               "inputs": [
@@ -1558,7 +1558,7 @@
           ]
         },
         "BestNft": {
-          "address": "0x05F49690fc8C6fBfE99695e81a63d5AFbf54122E",
+          "address": "0x4EBf474060F517e8FECB4c7076a4485e8e0588a7",
           "abi": [
             {
               "inputs": [],
