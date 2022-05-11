@@ -5,7 +5,7 @@
       "chainId": "4",
       "contracts": {
         "Auction": {
-          "address": "0x6f33951523Cf87D09Fa5430B3CcE7cd090f84D64",
+          "address": "0xD19561736812d5aa9de58b4b99bD4B96f9Be11Cb",
           "abi": [
             {
               "inputs": [
@@ -1012,6 +1012,19 @@
             {
               "inputs": [
                 {
+                  "internalType": "uint256",
+                  "name": "_minimumBidIncrement",
+                  "type": "uint256"
+                }
+              ],
+              "name": "setMinimumBidIncrement",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
                   "internalType": "bool",
                   "name": "val",
                   "type": "bool"
@@ -1116,7 +1129,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0xA76bfE9f701D6CA02161346eda3E0925013067dD",
+          "address": "0x8047C79d93D4C090B243641753d9425594c8171E",
           "abi": [
             {
               "inputs": [
@@ -2452,7 +2465,7 @@
       "chainId": "31337",
       "contracts": {
         "Auction": {
-          "address": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+          "address": "0x809d550fca64d94Bd9F66E60752A544199cfAC3D",
           "abi": [
             {
               "inputs": [
@@ -3576,7 +3589,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+          "address": "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570",
           "abi": [
             {
               "inputs": [
@@ -4005,7 +4018,7 @@
           ]
         },
         "BestNft": {
-          "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+          "address": "0x8f86403A4DE0BB5791fa46B8e795C547942fE4Cf",
           "abi": [
             {
               "inputs": [],
