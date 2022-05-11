@@ -110,7 +110,7 @@ const MainContentSection = props => {
               Watch this 2-min. video to learn how to bid and win on NFT Deals auctions.
             </p>
             <div className="embed-container">
-              <YouTubeEmbed embedId={"i2byTuH1nvo"} />
+              <YouTubeEmbed embedId={"pyQ0SU-0JJc"} />
             </div>
           </div>
         </div>
