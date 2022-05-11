@@ -109,7 +109,7 @@ function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [
-    ...new Set([initialNetwork.name, "mainnet", "rinkeby"]),
+    ...new Set([initialNetwork.name, "mainnet", "rinkeby", "localhost"]),
   ];
 
   const [injectedProvider, setInjectedProvider] = useState();
