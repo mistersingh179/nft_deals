@@ -10,16 +10,16 @@ import { useParams } from "react-router-dom";
 import { useContractReader } from "eth-hooks";
 import CurrentWinner from "../components/CurrentWinner";
 import useBlockExplorerLink from "../hooks/useBlockExplorerLink";
-import NftImage from './NftImage'
-import { displayWeiAsEther } from '../helpers'
-import nftNameFixer from '../helpers/nftNameFixer'
+import NftImage from "./NftImage";
+import { displayWeiAsEther } from "../helpers";
+import nftNameFixer from "../helpers/nftNameFixer";
 
 const NftInteractionRow = props => {
   const { price } = props;
   const { readContracts, localProvider } = props;
   const { address, writeContracts, tx } = props;
   const { mainnetProvider, blockExplorer } = props;
-    const {web3Modal, loadWeb3Modal, logoutOfWeb3Modal} = props
+  const { web3Modal, loadWeb3Modal, logoutOfWeb3Modal } = props;
 
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useContext(AuctionOptionsContext);
@@ -33,10 +33,18 @@ const NftInteractionRow = props => {
         data-aos-delay="200"
       >
         <h1>
-          {auctionOptions.name && nftNameFixer(auctionOptions.name)}{" "}
-          #{auctionOptions.tokenId.toString()} <Tooltip title="Click here to verify this NFT's contract address.">
-                  <a target="_blank" href="#"><i className="bi bi-patch-check-fill btn-icon accent-icon" /></a>
-                </Tooltip>
+          {auctionOptions.name && nftNameFixer(auctionOptions.name)} #
+          {auctionOptions.tokenId.toString()}{" "}
+          <Tooltip title="Click here to verify this NFT's contract address.">
+            <a
+              target="_blank"
+              href={`${blockExplorer || "https://etherscan.io/"}address/${
+                auctionOptions.nftContract
+              }`}
+            >
+              <i className="bi bi-patch-check-fill btn-icon accent-icon" />
+            </a>
+          </Tooltip>
         </h1>
         <h2>
           Collection Floor Price: Ξ {auctionOptions.stats.floor_price}
@@ -94,7 +102,9 @@ const NftInteractionRow = props => {
             </h3>
             <h1>
               <WEthLogo className="weth-bid-icon" />
-              {displayWeiAsEther(auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement))}{" "}
+              {displayWeiAsEther(
+                auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement),
+              )}{" "}
             </h1>
           </div>
           <div className="col-md-6 bid-box">
