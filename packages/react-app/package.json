@@ -43,6 +43,7 @@
     "fortmatic": "^2.2.1",
     "graphiql": "^1.8.10",
     "graphql": "^15.3.0",
+    "graphql-ws": "^5.8.2",
     "ipfs-http-client": "^55.0.0",
     "isomorphic-fetch": "^3.0.0",
     "logrocket": "^2.2.1",
