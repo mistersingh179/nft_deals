@@ -9,55 +9,32 @@ pragma solidity ^0.8.13;
   This software is Experimental, use at your own risk!
  */
 
+import "hardhat/console.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "hardhat/console.sol";
-
-// someones deploy us [contract] with nft contract address
-// lister approves us [contract] to take nft or take all of their nfts
-// lister starts the auction. here we [contract] take possession of the nft.
-
-// buyers can place bid, this pushes expiration time out
-// as time passes, auction will eventually end when time is greater than expiration time
-// smaller bids are rejected
-// a higher bid becomes the winning bid and previous winning bid is claimable as refund
-// higher bid is calculated as previousBid + minimum increase + platformFee
-// there is only 1 winning bidder at any time
-// when auction ends, if there is winner, they can claim their nft
-// when auction ends, if there is no winner, they lister can claim their nft
-// when auction ends, owner can claim the highest bidding amount
-// when auction ends, lister can claim their portion of fees, how much, unknown?
-// anytime, the owner can claim platform fees
-
-// Assumptions:
-// 1.Auction Builder is the same as NFT Lister
-
-
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/Multicall.sol";
 import "./AuctionFactory.sol";
 
-contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
+contract Auction is IERC721Receiver, AccessControl, Multicall {
     using Strings for uint;
 
-    bytes32 public constant CASHIER_ROLE = keccak256("CASHIER_ROLE");
-    bytes32 public constant MAINTENANCE_ROLE = keccak256("MAINTENANCE_ROLE");
+    bytes32 public constant TREASURY_ROLE = keccak256("TREASURY_ROLE");
+    bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
 
     uint public listerTakeInPercentage;
     IERC20 public immutable weth;
-    uint public minimumBidIncrement;
-    uint public immutable auctionTimeIncrementOnBid;
     uint public immutable createdAt;
 
-    address public immutable nftOwner;
-    IERC721 public immutable nftContract;
-    uint public immutable tokenId;
+    address public nftOwner;
+    IERC721 public nftContract;
+    uint public tokenId;
+    uint public minimumBidIncrement;
+    uint public auctionTimeIncrementOnBid;
 
     AuctionFactory public auctionFactory;
     bool public _weHavePossessionOfNft;
@@ -72,12 +49,12 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
     bool public paused;
 
 
-    event Bid(address from, address previousWinnersAddress, uint amount, uint secondsLeftInAuction); // 0xd21fbaad97462831ad0c216f300fefb33a10b03bb18bb70ed668562e88d15d53
-    event MoneyOut(address to, uint amount); // 0xaa5104f3b880c559a2c9963136d875c3b268db1fcf707c4c9d4de8fc66c4dd31
+    event Bid(address from, address previousWinnersAddress, uint amount, uint secondsLeftInAuction);
+    event MoneyOut(address to, uint amount);
     event FailedToSendMoney(address to, uint amount);
     event NftOut(address to, uint tokenId);
-    event NftIn(address from, uint tokenId); // 0x270b0537fbe35e949092b004eb85c1e939d99ddda2f82538811664a576ca6c6f
-    event AuctionExtended(uint from, uint to); // 0x6e912a3a9105bdd2af817ba5adc14e6c127c1035b5b648faa29ca0d58ab8ff4e
+    event NftIn(address from, uint tokenId);
+    event AuctionExtended(uint from, uint to);
 
     struct AllData {
         uint listerTakeInPercentage;
@@ -118,7 +95,8 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
         address _nftOwner,
         address _wethAddress,
         address _adminOneAddress,
-        address _adminTwoAddress){
+        address _adminTwoAddress,
+        address _auctionFactoryAddress){
             nftContract = IERC721(_nftContractAddress);
             tokenId = _tokenId;
             nftOwner = _nftOwner;
@@ -128,22 +106,41 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
             listerTakeInPercentage = 50;
             highestBid = startBidAmount;
             feePaidByHighestBid = 0;
-            maxBid = highestBid; // need to get rid of this
+            maxBid = highestBid;
             auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;
             minimumBidIncrement = _minimumBidIncrement;
             createdAt = block.timestamp;
 
             weth = IERC20(_wethAddress);
-            auctionFactory = AuctionFactory(msg.sender);
+            auctionFactory = AuctionFactory(_auctionFactoryAddress);
 
             _setupRole(DEFAULT_ADMIN_ROLE, _adminOneAddress);
             _setupRole(DEFAULT_ADMIN_ROLE, _adminTwoAddress);
 
-            _setupRole(CASHIER_ROLE, _adminOneAddress);
-            _setupRole(CASHIER_ROLE, _adminTwoAddress);
+            _setupRole(TREASURY_ROLE, _adminOneAddress);
+            _setupRole(TREASURY_ROLE, _adminTwoAddress);
 
-            _setupRole(MAINTENANCE_ROLE, _adminOneAddress);
-            _setupRole(MAINTENANCE_ROLE, _adminTwoAddress);
+            _setupRole(MODERATOR_ROLE, _adminOneAddress);
+            _setupRole(MODERATOR_ROLE, _adminTwoAddress);
+    }
+
+    function updateAuction(uint _minimumBidIncrement,
+        uint _auctionTimeIncrementOnBid,
+        address _nftContractAddress,
+        uint _tokenId,
+        address _nftOwner,
+        uint startBidAmount
+    ) auctionHasNotStarted youAreTheNftOwner public {
+        nftContract = IERC721(_nftContractAddress);
+        tokenId = _tokenId;
+        nftOwner = _nftOwner;
+
+        require(nftContract.ownerOf(tokenId) == nftOwner, "you are not the owner of this nft");
+
+        auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;
+        minimumBidIncrement = _minimumBidIncrement;
+        highestBid = startBidAmount;
+        maxBid = highestBid;
     }
 
     function startAuction() youAreTheNftOwner auctionHasNotStarted external{
@@ -248,7 +245,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
         }
     }
 
-    function setQualifiesForRewards(bool _qualifies) public onlyRole(MAINTENANCE_ROLE) {
+    function setQualifiesForRewards(bool _qualifies) public onlyRole(MODERATOR_ROLE) {
         qualifiesForRewards = _qualifies;
     }
 
@@ -260,7 +257,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
         console.log(totalNextBid);
 
         require(weth.allowance(msg.sender, address(this)) >= totalNextBid, 'WETH approval not found');
-        require(weth.balanceOf(msg.sender) >= totalNextBid, 'WETH insufficient  funds');
+        require(weth.balanceOf(msg.sender) >= totalNextBid, 'WETH insufficient funds');
         require(weth.transferFrom(msg.sender, address(this), totalNextBid), 'WETH transfer failed!');
 
         emit Bid(msg.sender, winningAddress, totalNextBid, secondsLeftInAuction());
@@ -328,7 +325,7 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
             _transfer();
     }
 
-    function claimPlatformFees() onlyRole(CASHIER_ROLE) external {
+    function claimPlatformFees() onlyRole(TREASURY_ROLE) external {
         uint amountToSend = _platformFeesAccumulated;
         _platformFeesAccumulated = 0;
         _sendMoney(msg.sender, amountToSend);
@@ -389,19 +386,19 @@ contract Auction is IERC721Receiver, Ownable, AccessControl, Multicall {
         selfdestruct(payable(msg.sender));
     }
 
-    function setListerTakeInPercentage(uint val) onlyRole(MAINTENANCE_ROLE) external {
+    function setListerTakeInPercentage(uint val) onlyRole(MODERATOR_ROLE) external {
         listerTakeInPercentage = val;
     }
 
-    function setPaused(bool val) onlyRole(MAINTENANCE_ROLE) external {
+    function setPaused(bool val) onlyRole(MODERATOR_ROLE) external {
         paused = val;
     }
 
-    function setAuctionFactory(address _auctionFactoryAddress) onlyRole(MAINTENANCE_ROLE) external {
+    function setAuctionFactory(address _auctionFactoryAddress) onlyRole(MODERATOR_ROLE) external {
         auctionFactory = AuctionFactory(_auctionFactoryAddress);
     }
 
-    function setMinimumBidIncrement(uint _minimumBidIncrement) onlyRole(MAINTENANCE_ROLE) public {
+    function setMinimumBidIncrement(uint _minimumBidIncrement) onlyRole(MODERATOR_ROLE) public {
         minimumBidIncrement = _minimumBidIncrement;
     }
 

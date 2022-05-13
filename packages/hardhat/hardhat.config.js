@@ -54,7 +54,7 @@ module.exports = {
    */
   gasReporter: {
     token: "ETH",
-    gasPrice: "200",
+    gasPrice: "70",
     gasPriceApi:
       "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK",
     currency: "USD",
@@ -74,9 +74,15 @@ module.exports = {
         // auto: false,
         // interval: 1000,
       },
+      accounts: {
+        mnemonic: mnemonic(),
+      },
     },
     localhost: {
       url: "http://localhost:8545",
+      accounts: {
+        mnemonic: mnemonic(),
+      },
       /*
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)

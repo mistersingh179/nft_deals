@@ -57,8 +57,8 @@ describe("AuctionFactory", () => {
 
   it("should succeed in setting reward with owner signer", async () => {
     expect(await auctionFactory.rewards(firefox.address)).to.equal(0);
-    await auctionFactory.connect(owner).setRewardBalance(firefox.address, 100);
-    expect(await auctionFactory.rewards(firefox.address)).to.equal(100);
+    await auctionFactory.connect(adminOne).setRewardBalance(firefox.address, 9);
+    expect(await auctionFactory.rewards(firefox.address)).to.equal(9);
   });
 
   it("should revert when setting reward without owner signer", async () => {
@@ -227,7 +227,7 @@ describe("AuctionFactory", () => {
         "this new auction has address of: ",
         newAuctionFactory.address,
       );
-      await newAuctionFactory.connect(owner).addAuction([latestAuction]);
+      await newAuctionFactory.connect(adminTwo).addAuction([latestAuction]);
       expect(await newAuctionFactory.auctionsLength()).to.equal(1);
     });
 

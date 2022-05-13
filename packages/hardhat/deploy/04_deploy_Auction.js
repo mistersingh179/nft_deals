@@ -35,6 +35,11 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const tokenId = (await bestNft.tokenOfOwnerByIndex(deployer, 0)).toNumber();
   console.log("deployer has token id: ", tokenId);
 
+  const theAuctionFactoryContract = await ethers.getContract(
+    "AuctionFactory",
+    deployer,
+  );
+
   await deploy("Auction", {
     // Learn more about args here:
     // https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
@@ -42,13 +47,14 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     args: [
       bestNft.address, // _nftContractAddress
       tokenId, // tokenId
-      "10000000000000000000", // 10 eth // startBidAmount
-      60, // 1 minute // _auctionTimeIncrementOnBid
-      "100000000000000000", // 0.1 eth // _minimumBidIncrement
+      0, // 10 eth // startBidAmount
+      86400, // 1 minute // _auctionTimeIncrementOnBid
+      "300000000000000", // 0.0003 // _minimumBidIncrement
       deployer, // chrome // _nftOwner
       wethAddress[chainId], // _wethAddress
       adminOneAddress[chainId],
       adminTwoAddress[chainId],
+      theAuctionFactoryContract.address,
     ],
     log: true,
     waitConfirmations: 5,
@@ -67,13 +73,14 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
         constructorArguments: [
           bestNft.address, // _nftContractAddress
           tokenId, // tokenId
-          "10000000000000000000", // 10 eth // startBidAmount
-          60, // 1 minute // _auctionTimeIncrementOnBid
-          "100000000000000000", // 0.1 eth // _minimumBidIncrement
+          0, // 10 eth // startBidAmount
+          86400, // 1 minute // _auctionTimeIncrementOnBid
+          "300000000000000", // 0.1 eth // _minimumBidIncrement
           deployer, // chrome // _nftOwner
           wethAddress[chainId], // _wethAddress
           adminOneAddress[chainId],
           adminTwoAddress[chainId],
+          theAuctionFactoryContract.address,
         ],
       });
     }

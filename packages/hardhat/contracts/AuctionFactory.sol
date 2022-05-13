@@ -9,14 +9,13 @@ pragma solidity ^0.8.13;
   This software is Experimental, use at your own risk!
  */
 
-import "./Auction.sol";
-import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Multicall.sol";
+import "./Auction.sol";
 
-
-contract AuctionFactory is Ownable, Multicall {
+contract AuctionFactory is AccessControl, Multicall {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private myAuctionsSet;
@@ -50,6 +49,9 @@ contract AuctionFactory is Ownable, Multicall {
         wethAddress = _addr;
         adminOneAddress = _adminOneAddress;
         adminTwoAddress = _adminTwoAddress;
+
+        _setupRole(DEFAULT_ADMIN_ROLE, _adminOneAddress);
+        _setupRole(DEFAULT_ADMIN_ROLE, _adminTwoAddress);
     }
 
     function createAuction(
@@ -68,7 +70,8 @@ contract AuctionFactory is Ownable, Multicall {
             msg.sender, // chrome // nftOwner
             wethAddress, // address given to us when constructed per chain.
             adminOneAddress,
-            adminTwoAddress
+            adminTwoAddress,
+            address(this)
         );
         _saveNewAuction(msg.sender, address(auction));
     }
@@ -78,7 +81,7 @@ contract AuctionFactory is Ownable, Multicall {
         emit AuctionGenerated(nftOwner, address(auctionAddress));
     }
 
-    function setRewardBalance(address bidderAddress, uint amount) public onlyOwner {
+    function setRewardBalance(address bidderAddress, uint amount) public onlyRole(DEFAULT_ADMIN_ROLE) {
         rewards[bidderAddress] = amount;
         bidderAddressesWithRewards.add(bidderAddress);
         emit RewardSet(bidderAddress, amount);
@@ -88,11 +91,11 @@ contract AuctionFactory is Ownable, Multicall {
         return  myAuctionsSet.at(index);
     }
 
-    function removeAuction(address _auction) public onlyOwner returns(bool) {
+    function removeAuction(address _auction) public onlyRole(DEFAULT_ADMIN_ROLE) returns(bool) {
         return myAuctionsSet.remove(_auction);
     }
 
-    function addAuction(address[] memory _auctions) public onlyOwner {
+    function addAuction(address[] memory _auctions) public onlyRole(DEFAULT_ADMIN_ROLE) {
         console.log('i am in addAuction');
         for(uint i=0;i<_auctions.length;i++){
             console.log('adding auction');
@@ -126,7 +129,7 @@ contract AuctionFactory is Ownable, Multicall {
         return bidderAddressesWithRewards.values();
     }
 
-    function selfDestruct() onlyOwner external {
+    function selfDestruct() onlyRole(DEFAULT_ADMIN_ROLE) external {
         selfdestruct(payable(msg.sender));
     }
 }

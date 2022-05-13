@@ -119,15 +119,21 @@ export default function Transactor(providerOrSigner, gasPrice, etherscan) {
       } catch (e) {
         if (DEBUG) console.log(e);
         // Accounts for Metamask and default signer on all networks
-        let message =
-          e.data && e.data.message
-            ? e.data.message
-            : e.error && JSON.parse(JSON.stringify(e.error)).body
-            ? JSON.parse(JSON.parse(JSON.stringify(e.error)).body).error.message
-            : e.data
-            ? e.data
-            : JSON.stringify(e);
-        if (!e.error && e.message) {
+        let message;
+        if(e.data && e.data.message){
+          message = e.data.message;
+        }else if (e.error && JSON.parse(JSON.stringify(e.error)).body) {
+          message = JSON.parse(JSON.parse(JSON.stringify(e.error)).body).error.message;
+        }else if(e.data){
+          message = e.data;
+        }else {
+          message = JSON.stringify(e);
+        }
+
+        const prefixMessage = "Error: VM Exception while processing transaction: reverted with reason string ";
+        if(message.indexOf(prefixMessage) == 0){
+          message = message.substring(prefixMessage.length);
+        }else if (!e.error && e.message) {
           message = e.message;
         }
 

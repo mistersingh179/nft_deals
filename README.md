@@ -82,4 +82,9 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - `yarn test`
 - to see events & calls being made `yarn test --trace`
 - to make it autorun on change `chokidar "**/*.js, **/*.sol" -c "yarn test"`
-- 
+
+## how to use a auction created during deployment for real auction
+- use admin & tell auctionFactory about it[auction], this will make it show up
+- use its[acution's] nftOwner also the deployer account and update details of auction
+- note: details can be updated only before it has started
+- now start the auction

@@ -162,13 +162,10 @@ export default function AuctionList({
     render: (elem) => <Address address={elem} fontSize={14}></Address>
   },
   {
-  title: 'Nft Image',
-  dataIndex: 'tokenId',
-  key: 'tokenId',
-  render: (elem, record) => <NftImage
-      nftContractAddress={record.nftContract} tokenId={record.tokenId}
-      localProvider={localProvider} width={50} height={50}
-    />
+    title: 'Nft Image',
+    dataIndex: 'tokenId',
+    key: 'tokenId',
+    render: (elem, record) => <div>{record.nftContract} – {record.tokenId.toString()}</div>
   },
   {
     title: 'Balance',
