@@ -213,10 +213,10 @@ export const NETWORK = chainId => {
 };
 
 export const nftNameOpenSeaMappings = {
-  "you": "bff-you"
+  "You": "bff-you"
 }
 
 export const displayNameMappings = {
   "BoredApeYachtClub": "Bored Ape Yacht Club",
-  "you": "You by BFF",
+  "You": "You by BFF",
 }

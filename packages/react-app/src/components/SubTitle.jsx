@@ -38,7 +38,7 @@ const SubTitle = ({ auctionOptions, price }) => {
     </span>
   </h3>
 
-  return auctionOptions.name == "you" ? BffSubTitle : defaultSubTitle;
+  return auctionOptions.name == "You" ? BffSubTitle : defaultSubTitle;
 };
 
 export default SubTitle
