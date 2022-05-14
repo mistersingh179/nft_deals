@@ -13,6 +13,7 @@ import useBlockExplorerLink from "../hooks/useBlockExplorerLink";
 import NftImage from "./NftImage";
 import { displayWeiAsEther } from "../helpers";
 import nftNameFixer from "../helpers/nftNameFixer";
+import SubTitle from './SubTitle'
 
 const NftInteractionRow = props => {
   const { price } = props;
@@ -46,20 +47,8 @@ const NftInteractionRow = props => {
             </a>
           </Tooltip>
         </h1>
-        <h2>
-          {/* Collection Floor Price: Ξ {auctionOptions.stats.floor_price} */}
-          Trait Sniper <a href="https://app.traitsniper.com/bff-you?token=1785&view=1785" target="_blank" className="trait-details">Rarity Rank #237</a> of 10,000
-          <span className="smaller-usdc">
-            <p>Key Traits: Ice Cream Cone (0.33%) and Angel Wings (0.3%)</p>
-            {/* (~
-            {auctionOptions.stats.floor_price &&
-              price &&
-              `$${ethers.utils.commify(
-                (auctionOptions.stats.floor_price * price).toFixed(2),
-              )}`}
-            ) */}
-          </span>
-        </h2>
+        <SubTitle auctionOptions={auctionOptions} price={price} />
+
         <div className="row">
           <div className="col-md-6 bid-box">
             <Space>

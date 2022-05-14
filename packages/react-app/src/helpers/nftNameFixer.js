@@ -1,6 +1,8 @@
+import { displayNameMappings } from "../constants";
+
 const nftNameFixer = name => {
-  if (name && (name === "BoredApeYachtClub")) {
-    return "Bored Ape Yacht Club";
+  if (name && displayNameMappings[name]) {
+    return displayNameMappings[name];
   } else {
     return name;
   }

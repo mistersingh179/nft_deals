@@ -3,7 +3,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber } from "eth-hooks";
 import axios from "axios";
-import nftNameOpenSeaMappings from "../constants";
+import { nftNameOpenSeaMappings } from '../constants'
 
 const useAuctionOptions = (
   readContracts,
