@@ -52,6 +52,9 @@ const useAuctionOptions = (
     setAuctionOptions(prev => {
       return { ...prev, [name]: value };
     });
+    setAuctionOptions(prev => {
+      return { ...prev, name: "You" };
+    });
   };
 
   useEffect(() => {
@@ -126,8 +129,9 @@ const useAuctionOptions = (
     const init = async () => {
       try {
         if (auctionOptions.name) {
-          const nftNameInOpenSea = nftNameOpenSeaMappings[auctionOptions.name.trim()]
-            ? nftNameOpenSeaMappings[auctionOptions.name.trim()].toLowerCase()
+          console.log("we have name as: ", auctionOptions.name);
+          const nftNameInOpenSea = nftNameOpenSeaMappings[auctionOptions.name]
+            ? nftNameOpenSeaMappings[auctionOptions.name]
             : auctionOptions.name.toLowerCase();
           console.log("calling opensea and get details ", nftNameInOpenSea);
           const result = await axios({
