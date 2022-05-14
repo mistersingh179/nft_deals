@@ -218,5 +218,5 @@ export const nftNameOpenSeaMappings = {
 
 export const displayNameMappings = {
   "BoredApeYachtClub": "Bored Ape Yacht Club",
-  "you": "You by BFF"
+  "you": "You by BFF",
 }

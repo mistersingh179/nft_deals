@@ -126,8 +126,8 @@ const useAuctionOptions = (
     const init = async () => {
       try {
         if (auctionOptions.name) {
-          const nftNameInOpenSea = nftNameOpenSeaMappings[auctionOptions.name]
-            ? nftNameOpenSeaMappings[auctionOptions.name].toLowerCase()
+          const nftNameInOpenSea = nftNameOpenSeaMappings[auctionOptions.name.trim()]
+            ? nftNameOpenSeaMappings[auctionOptions.name.trim()].toLowerCase()
             : auctionOptions.name.toLowerCase();
           console.log("calling opensea and get details ", nftNameInOpenSea);
           const result = await axios({
