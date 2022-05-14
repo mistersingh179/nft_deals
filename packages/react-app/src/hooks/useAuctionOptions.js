@@ -52,9 +52,6 @@ const useAuctionOptions = (
     setAuctionOptions(prev => {
       return { ...prev, [name]: value };
     });
-    setAuctionOptions(prev => {
-      return { ...prev, name: "You" };
-    });
   };
 
   useEffect(() => {
