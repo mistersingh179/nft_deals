@@ -211,3 +211,7 @@ export const NETWORK = chainId => {
     }
   }
 };
+
+export const nftNameOpenSeaMappings = {
+  "you": "bff-you"
+}

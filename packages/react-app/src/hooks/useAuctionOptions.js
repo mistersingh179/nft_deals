@@ -3,6 +3,7 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber } from "eth-hooks";
 import axios from "axios";
+import nftNameOpenSeaMappings from "../constants";
 
 const useAuctionOptions = (
   readContracts,
@@ -44,7 +45,7 @@ const useAuctionOptions = (
     name: "",
     tokenURI: "",
     imageUrl: "",
-    stats: {}
+    stats: {},
   });
 
   const updateAuctionOptions = (name, value) => {
@@ -121,28 +122,31 @@ const useAuctionOptions = (
     init();
   }, [auctionOptions.tokenURI]);
 
-  useEffect(()=> {
+  useEffect(() => {
     const init = async () => {
-      try{
-        if(auctionOptions.name){
-          console.log('*** lets call opensea and get details for: ', auctionOptions.name)
+      try {
+        if (auctionOptions.name) {
+          const nftNameInOpenSea = nftNameOpenSeaMappings[auctionOptions.name]
+            ? nftNameOpenSeaMappings[auctionOptions.name].toLowerCase()
+            : auctionOptions.name.toLowerCase();
+          console.log("calling opensea and get details ", nftNameInOpenSea);
           const result = await axios({
-            method: 'get',
-            url: `https://api.opensea.io/api/v1/collection/${auctionOptions.name.toLowerCase()}/stats`,
+            method: "get",
+            url: `https://api.opensea.io/api/v1/collection/${nftNameInOpenSea}/stats`,
             headers: {
-              'Accept': 'application/json'
+              Accept: "application/json",
             },
-          })
-          console.log('*** opensea gave: ', result)
+          });
+          console.log("opensea gave: ", result);
           setAuctionOptions(prevObj => {
-            return {...prevObj, stats: result.data.stats}
-          })
+            return { ...prevObj, stats: result.data.stats };
+          });
         }
-      }catch(e){
-        console.error('unable to get nft options')
+      } catch (e) {
+        console.error("unable to get nft options");
       }
-    }
-    init()
+    };
+    init();
   }, [auctionOptions.name]);
 
   return auctionOptions;
