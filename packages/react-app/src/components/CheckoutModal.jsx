@@ -1,4 +1,4 @@
-import { Col, Modal, Row, Table, Tooltip, Button, Checkbox } from "antd";
+import { Col, Modal, Row, Table, Tooltip, Button, Checkbox, Alert } from "antd";
 import { ReactComponent as WEthLogo } from "../img/wrapped_ethereum_icon.svg";
 import { useContext, useState } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
@@ -22,6 +22,18 @@ const CheckoutModal = props => {
   };
   const handleCancel = evt => {
     setshowCheckoutModal(false);
+  };
+
+  const weHaveEnoughWeth = () => {
+    const weHave = auctionOptions.wethBalance;
+    const weRequire = auctionOptions.maxBid.add(
+      auctionOptions.minimumBidIncrement,
+    );
+    if (weHave.gt(weRequire)) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
   const rewardsInfo = (
@@ -139,6 +151,7 @@ const CheckoutModal = props => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
+        {weHaveEnoughWeth() == false && <ErrorAlertRow />}
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={22} align="center">
             <h1>Confirm Bid</h1>
@@ -167,7 +180,7 @@ const CheckoutModal = props => {
             <Button
               className="btn-primary bid-btn"
               size={"large"}
-              disabled={readTos == false}
+              disabled={readTos == false || weHaveEnoughWeth() == false}
               onClick={handleOk}
             >
               Bid Now
@@ -175,6 +188,32 @@ const CheckoutModal = props => {
           </Col>
         </Row>
       </Modal>
+    </>
+  );
+};
+
+const ErrorAlertRow = props => {
+  return (
+    <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
+      <Col span={22} align="left">
+        <Alert
+          message="Weth Not Found!"
+          type="error"
+          showIcon
+          description=<ErrorDescription />
+        />
+      </Col>
+    </Row>
+  );
+};
+
+const ErrorDescription = props => {
+  return (
+    <>
+      You can not bid as dont have enough Weth. You can get Weth from{" "}
+      <a target={"_blank"} href="https://app.uniswap.org/#/swap?chain=mainnet">
+        uniswap here{" "}
+      </a>
     </>
   );
 };
