@@ -151,7 +151,6 @@ const CheckoutModal = props => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        {weHaveEnoughWeth() == false && <ErrorAlertRow />}
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={22} align="center">
             <h1>Confirm Bid</h1>
@@ -169,7 +168,7 @@ const CheckoutModal = props => {
             />
           </Col>
         </Row>
-        <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
+        <Row justify="center" style={{ marginTop: 24, marginBottom: 12 }}>
           <Col span={22} align="left">
             <Checkbox onChange={evt => setReadTos(evt.target.checked)}>
               By checking this box, I agree to NFT Deals'{" "}
@@ -187,6 +186,7 @@ const CheckoutModal = props => {
             </Button>
           </Col>
         </Row>
+        {weHaveEnoughWeth() == false && <ErrorAlertRow />}        
       </Modal>
     </>
   );
@@ -194,10 +194,10 @@ const CheckoutModal = props => {
 
 const ErrorAlertRow = props => {
   return (
-    <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
+    <Row justify="center" style={{ marginTop: 12, marginBottom: 12 }}>
       <Col span={22} align="left">
         <Alert
-          message="Weth Not Found!"
+          message="You don't have enough WETH to bid."
           type="error"
           showIcon
           description=<ErrorDescription />
@@ -210,9 +210,9 @@ const ErrorAlertRow = props => {
 const ErrorDescription = props => {
   return (
     <>
-      You can not bid as dont have enough Weth. You can get Weth from{" "}
+      Get WETH from{" "}
       <a target={"_blank"} href="https://app.uniswap.org/#/swap?chain=mainnet">
-        uniswap here{" "}
+        Uniswap here{"."}
       </a>
     </>
   );
