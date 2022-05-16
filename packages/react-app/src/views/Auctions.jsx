@@ -6,8 +6,9 @@ import {
   NetworkDisplay,
   TheHeader,
   TopBannerRow,
-  NftInteractionRow, ExploreAuctionsSection,
-} from '../components'
+  NftInteractionRow,
+  ExploreAuctionsSection,
+} from "../components";
 
 const Auctions = props => {
   const {
@@ -17,9 +18,6 @@ const Auctions = props => {
     targetNetwork,
     logoutOfWeb3Modal,
     USE_NETWORK_SELECTOR,
-  } = props;
-
-  const {
     address,
     localProvider,
     mainnetProvider,
@@ -41,6 +39,8 @@ const Auctions = props => {
       readContracts={readContracts}
       localProvider={localProvider}
       address={address}
+      targetNetwork={targetNetwork}
+      mainnetProvider={mainnetProvider}
     >
       <TheHeader
         address={address}
@@ -69,6 +69,8 @@ const Auctions = props => {
         localProvider={localProvider}
         address={address}
         price={price}
+        targetNetwork={targetNetwork}
+        mainnetProvider={mainnetProvider}
       />
 
       <Footer />

@@ -7,6 +7,8 @@ import { useBlockNumber } from "eth-hooks";
 import { displayWeiAsEther, nftNameFixer, parseTokenUri } from "../helpers";
 import Duration from "./Duration";
 import { Link } from "react-router-dom";
+import displayEther from "./DisplayEther";
+import DisplayEther from "./DisplayEther";
 
 const AuctionCardDesc = props => {
   const {
@@ -21,7 +23,9 @@ const AuctionCardDesc = props => {
   return (
     <>
       <p>Collection Floor Price: Ξ {auctionOptions.stats.floor_price}</p>
-      <p>Top Bid: Ξ{displayWeiAsEther(auctionOptions.maxBid)}</p>
+      <p>
+        Top Bid: Ξ{displayWeiAsEther(auctionOptions.maxBid)}
+      </p>
       <p>
         Ends in:{" "}
         <Duration
@@ -35,21 +39,40 @@ const AuctionCardDesc = props => {
 };
 
 const AuctionCol = props => {
-  const { readContracts, localProvider, address, auctionContractAddress } =
-    props;
+  const {
+    readContracts,
+    localProvider,
+    address,
+    auctionContractAddress,
+    targetNetwork,
+    mainnetProvider,
+  } = props;
+
+  console.log('*** targetNetwork: ', targetNetwork, mainnetProvider);
+
   const auctionOptions = useAuctionOptions(
     readContracts,
     auctionContractAddress,
     localProvider,
     address,
+    targetNetwork,
+    mainnetProvider,
   );
 
   return (
     <Col className="gutter-row" span={8}>
-      <Link to={`/auction2/${auctionContractAddress}`} disabled={!auctionOptions._weHavePossessionOfNft}>
+      <Link
+        to={`/auction2/${auctionContractAddress}`}
+        disabled={!auctionOptions._weHavePossessionOfNft}
+      >
         <Card
           hoverable
-          style={{ width: "80%", margin: "0 auto", marginBottom: "1em", marginTop: "1em" }}
+          style={{
+            width: "80%",
+            margin: "0 auto",
+            marginBottom: "1em",
+            marginTop: "1em",
+          }}
           cover={<img src={auctionOptions.imageUrl} className={"img-fluid"} />}
         >
           <Meta
@@ -72,7 +95,13 @@ const AuctionCol = props => {
 };
 
 const ExploreAuctionsSection = props => {
-  const { readContracts, localProvider, address } = props;
+  const {
+    readContracts,
+    localProvider,
+    address,
+    targetNetwork,
+    mainnetProvider,
+  } = props;
   const blockNumber = useBlockNumber(localProvider);
 
   const [auctions, setAuctions] = useState([]);
@@ -106,6 +135,8 @@ const ExploreAuctionsSection = props => {
                 localProvider={localProvider}
                 address={address}
                 auctionContractAddress={auctionContractAddress}
+                targetNetwork={targetNetwork}
+                mainnetProvider={mainnetProvider}
               />
             );
           })}

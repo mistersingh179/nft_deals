@@ -59,7 +59,10 @@ import AccountAndOthers from "./components/AccountAndOthers";
 
 import LogRocket from "logrocket";
 import axios from "axios";
-import {usePing} from './hooks'
+import { usePing } from "./hooks";
+
+import { CurrencyProvider } from "./contexts/CurrencySymbolContext";
+
 /*
     Welcome to 🏗 scaffold-eth !
 
@@ -347,309 +350,19 @@ function App(props) {
   usePing(address);
 
   return (
-    <Switch>
-      <Route exact path="/">
-        <Redirect to={"auctions"} />
-      </Route>
-      <Route exact path="/auction2/:slug">
-        <Auction2
-          NETWORKCHECK={NETWORKCHECK}
-          localChainId={localChainId}
-          selectedChainId={selectedChainId}
-          targetNetwork={targetNetwork}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-          USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-          useBurner={USE_BURNER_WALLET}
-          address={address}
-          localProvider={localProvider}
-          userSigner={userSigner}
-          mainnetProvider={mainnetProvider}
-          price={price}
-          web3Modal={web3Modal}
-          loadWeb3Modal={loadWeb3Modal}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-          blockExplorer={blockExplorer}
-          readContracts={readContracts}
-          writeContracts={writeContracts}
-          networkOptions={networkOptions}
-          selectedNetwork={selectedNetwork}
-          setSelectedNetwork={setSelectedNetwork}
-          USE_BURNER_WALLET={USE_BURNER_WALLET}
-          yourLocalBalance={yourLocalBalance}
-          tx={tx}
-        />
-      </Route>
-      <Route exact path="/auctions/">
-        <Auctions
-          NETWORKCHECK={NETWORKCHECK}
-          localChainId={localChainId}
-          selectedChainId={selectedChainId}
-          targetNetwork={targetNetwork}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-          USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-          useBurner={USE_BURNER_WALLET}
-          address={address}
-          localProvider={localProvider}
-          userSigner={userSigner}
-          mainnetProvider={mainnetProvider}
-          price={price}
-          web3Modal={web3Modal}
-          loadWeb3Modal={loadWeb3Modal}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-          blockExplorer={blockExplorer}
-          readContracts={readContracts}
-          writeContracts={writeContracts}
-          networkOptions={networkOptions}
-          selectedNetwork={selectedNetwork}
-          setSelectedNetwork={setSelectedNetwork}
-          USE_BURNER_WALLET={USE_BURNER_WALLET}
-          yourLocalBalance={yourLocalBalance}
-          tx={tx}
-        />
-      </Route>
-      <Route>
-        <div className="App">
-          <Header />
-          <Switch>
-            <Route exact path="/">
-              <Redirect to={"debug"} />
-            </Route>
-            <Route exact path="/BestNft">
-              <BestNFT
-                address={address}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                yourLocalBalance={yourLocalBalance}
-                price={price}
-                tx={tx}
-                writeContracts={writeContracts}
-                readContracts={readContracts}
-              />
-            </Route>
-            <Route exact path="/WETH">
-              <WETH
-                address={address}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                yourLocalBalance={yourLocalBalance}
-                price={price}
-                tx={tx}
-                writeContracts={writeContracts}
-                readContracts={readContracts}
-              />
-            </Route>
-            <Route exact path="/AuctionFactory">
-              <AuctionFactory
-                address={address}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                yourLocalBalance={yourLocalBalance}
-                price={price}
-                tx={tx}
-                writeContracts={writeContracts}
-                readContracts={readContracts}
-                blockExplorer={blockExplorer}
-              />
-            </Route>
-            <Route exact path="/Auction/:slug">
-              <Auction
-                address={address}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                yourLocalBalance={yourLocalBalance}
-                price={price}
-                tx={tx}
-                writeContracts={writeContracts}
-                readContracts={readContracts}
-                blockExplorer={blockExplorer}
-              />
-            </Route>
-            <Route exact path="/AuctionList">
-              <AuctionList
-                address={address}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                yourLocalBalance={yourLocalBalance}
-                price={price}
-                tx={tx}
-                writeContracts={writeContracts}
-                readContracts={readContracts}
-                blockExplorer={blockExplorer}
-              />
-            </Route>
-            <Route exact path="/debug">
-              <>
-                <TopNavMenu location={location} />
-                <Tabs defaultActiveKey="1" centered>
-                  <TabPane tab="Auction" key="1">
-                    <Input
-                      placeholder={"an auction address"}
-                      onChange={e => handleAuctionAddressChange(e.target.value)}
-                      style={{ width: 400 }}
-                    />
-                    <Contract
-                      customContract={auctionContract}
-                      name="Auction"
-                      price={price}
-                      signer={userSigner}
-                      provider={localProvider}
-                      address={address}
-                      blockExplorer={blockExplorer}
-                      contractConfig={contractConfig}
-                      readContracts={readContracts}
-                    />
-                  </TabPane>
-                  <TabPane tab="Auction Factory" key="2">
-                    <Contract
-                      name="AuctionFactory"
-                      price={price}
-                      signer={userSigner}
-                      provider={localProvider}
-                      address={address}
-                      blockExplorer={blockExplorer}
-                      contractConfig={contractConfig}
-                    />
-                  </TabPane>
-                  <TabPane tab="BestNft" key="3">
-                    <Contract
-                      name="BestNft"
-                      price={price}
-                      signer={userSigner}
-                      provider={localProvider}
-                      address={address}
-                      blockExplorer={blockExplorer}
-                      contractConfig={contractConfig}
-                    />
-                  </TabPane>
-                  <TabPane tab="WETH" key="4">
-                    <Contract
-                      name="WETH"
-                      price={price}
-                      signer={userSigner}
-                      provider={localProvider}
-                      address={address}
-                      blockExplorer={blockExplorer}
-                      contractConfig={contractConfig}
-                      customContract={readContracts && readContracts.WETH}
-                    />
-                  </TabPane>
-                  <TabPane tab="Reward" key="5">
-                    <Contract
-                      name="Reward"
-                      price={price}
-                      signer={userSigner}
-                      provider={localProvider}
-                      address={address}
-                      blockExplorer={blockExplorer}
-                      contractConfig={contractConfig}
-                    />
-                  </TabPane>
-                  <TabPane tab="YourContract" key="6">
-                    <Contract
-                      name="YourContract"
-                      price={price}
-                      signer={userSigner}
-                      provider={localProvider}
-                      address={address}
-                      blockExplorer={blockExplorer}
-                      contractConfig={contractConfig}
-                    />
-                  </TabPane>
-                </Tabs>
-              </>
-            </Route>
-            <Route path="/hints">
-              <Hints
-                address={address}
-                yourLocalBalance={yourLocalBalance}
-                mainnetProvider={mainnetProvider}
-                price={price}
-              />
-            </Route>
-            <Route path="/exampleui">
-              <ExampleUI
-                address={address}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                localProvider={localProvider}
-                yourLocalBalance={yourLocalBalance}
-                price={price}
-                tx={tx}
-                writeContracts={writeContracts}
-                readContracts={readContracts}
-              />
-            </Route>
-            <Route path="/mainnetdai">
-              <Contract
-                name="DAI"
-                customContract={
-                  mainnetContracts &&
-                  mainnetContracts.contracts &&
-                  mainnetContracts.contracts.DAI
-                }
-                signer={userSigner}
-                provider={mainnetProvider}
-                address={address}
-                blockExplorer="https://etherscan.io/"
-                contractConfig={contractConfig}
-                chainId={1}
-              />
-            </Route>
-            <Route path="/subgraph">
-              <Subgraph
-                subgraphUri={props.subgraphUri}
-                tx={tx}
-                writeContracts={writeContracts}
-                mainnetProvider={mainnetProvider}
-              />
-            </Route>
-            <Route path="/foo/:slug">
-              <Foo
-                NETWORKCHECK={NETWORKCHECK}
-                localChainId={localChainId}
-                selectedChainId={selectedChainId}
-                targetNetwork={targetNetwork}
-                logoutOfWeb3Modal={logoutOfWeb3Modal}
-                USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-                useBurner={USE_BURNER_WALLET}
-                address={address}
-                localProvider={localProvider}
-                userSigner={userSigner}
-                mainnetProvider={mainnetProvider}
-                price={price}
-                web3Modal={web3Modal}
-                loadWeb3Modal={loadWeb3Modal}
-                logoutOfWeb3Modal={logoutOfWeb3Modal}
-                blockExplorer={blockExplorer}
-                readContracts={readContracts}
-                writeContracts={writeContracts}
-                networkOptions={networkOptions}
-                selectedNetwork={selectedNetwork}
-                setSelectedNetwork={setSelectedNetwork}
-                USE_BURNER_WALLET={USE_BURNER_WALLET}
-                yourLocalBalance={yourLocalBalance}
-                tx={tx}
-              />
-            </Route>
-          </Switch>
-
-          {/*<ThemeSwitch />*/}
-
-          <NetworkDisplay
+    <CurrencyProvider>
+      <Switch>
+        <Route exact path="/">
+          <Redirect to={"auctions"} />
+        </Route>
+        <Route exact path="/auction2/:slug">
+          <Auction2
             NETWORKCHECK={NETWORKCHECK}
             localChainId={localChainId}
             selectedChainId={selectedChainId}
             targetNetwork={targetNetwork}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
             USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
-          />
-
-          <AccountAndOthers
             useBurner={USE_BURNER_WALLET}
             address={address}
             localProvider={localProvider}
@@ -661,26 +374,320 @@ function App(props) {
             logoutOfWeb3Modal={logoutOfWeb3Modal}
             blockExplorer={blockExplorer}
             readContracts={readContracts}
-            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+            writeContracts={writeContracts}
             networkOptions={networkOptions}
             selectedNetwork={selectedNetwork}
             setSelectedNetwork={setSelectedNetwork}
             USE_BURNER_WALLET={USE_BURNER_WALLET}
             yourLocalBalance={yourLocalBalance}
-            targetNetwork={targetNetwork}
+            tx={tx}
           />
-
-          <FaucetAndInfo
-            price={price}
+        </Route>
+        <Route exact path="/auctions/">
+          <Auctions
+            NETWORKCHECK={NETWORKCHECK}
+            localChainId={localChainId}
+            selectedChainId={selectedChainId}
+            targetNetwork={targetNetwork}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+            useBurner={USE_BURNER_WALLET}
             address={address}
-            gasPrice={gasPrice}
             localProvider={localProvider}
-            targetNetwork={targetNetwork}
+            userSigner={userSigner}
             mainnetProvider={mainnetProvider}
+            price={price}
+            web3Modal={web3Modal}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+            blockExplorer={blockExplorer}
+            readContracts={readContracts}
+            writeContracts={writeContracts}
+            networkOptions={networkOptions}
+            selectedNetwork={selectedNetwork}
+            setSelectedNetwork={setSelectedNetwork}
+            USE_BURNER_WALLET={USE_BURNER_WALLET}
+            yourLocalBalance={yourLocalBalance}
+            tx={tx}
           />
-        </div>
-      </Route>
-    </Switch>
+        </Route>
+        <Route>
+          <div className="App">
+            <Header />
+            <Switch>
+              <Route exact path="/">
+                <Redirect to={"debug"} />
+              </Route>
+              <Route exact path="/BestNft">
+                <BestNFT
+                  address={address}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  localProvider={localProvider}
+                  yourLocalBalance={yourLocalBalance}
+                  price={price}
+                  tx={tx}
+                  writeContracts={writeContracts}
+                  readContracts={readContracts}
+                />
+              </Route>
+              <Route exact path="/WETH">
+                <WETH
+                  address={address}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  localProvider={localProvider}
+                  yourLocalBalance={yourLocalBalance}
+                  price={price}
+                  tx={tx}
+                  writeContracts={writeContracts}
+                  readContracts={readContracts}
+                />
+              </Route>
+              <Route exact path="/AuctionFactory">
+                <AuctionFactory
+                  address={address}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  localProvider={localProvider}
+                  yourLocalBalance={yourLocalBalance}
+                  price={price}
+                  tx={tx}
+                  writeContracts={writeContracts}
+                  readContracts={readContracts}
+                  blockExplorer={blockExplorer}
+                />
+              </Route>
+              <Route exact path="/Auction/:slug">
+                <Auction
+                  address={address}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  localProvider={localProvider}
+                  yourLocalBalance={yourLocalBalance}
+                  price={price}
+                  tx={tx}
+                  writeContracts={writeContracts}
+                  readContracts={readContracts}
+                  blockExplorer={blockExplorer}
+                />
+              </Route>
+              <Route exact path="/AuctionList">
+                <AuctionList
+                  address={address}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  localProvider={localProvider}
+                  yourLocalBalance={yourLocalBalance}
+                  price={price}
+                  tx={tx}
+                  writeContracts={writeContracts}
+                  readContracts={readContracts}
+                  blockExplorer={blockExplorer}
+                />
+              </Route>
+              <Route exact path="/debug">
+                <>
+                  <TopNavMenu location={location} />
+                  <Tabs defaultActiveKey="1" centered>
+                    <TabPane tab="Auction" key="1">
+                      <Input
+                        placeholder={"an auction address"}
+                        onChange={e =>
+                          handleAuctionAddressChange(e.target.value)
+                        }
+                        style={{ width: 400 }}
+                      />
+                      <Contract
+                        customContract={auctionContract}
+                        name="Auction"
+                        price={price}
+                        signer={userSigner}
+                        provider={localProvider}
+                        address={address}
+                        blockExplorer={blockExplorer}
+                        contractConfig={contractConfig}
+                        readContracts={readContracts}
+                      />
+                    </TabPane>
+                    <TabPane tab="Auction Factory" key="2">
+                      <Contract
+                        name="AuctionFactory"
+                        price={price}
+                        signer={userSigner}
+                        provider={localProvider}
+                        address={address}
+                        blockExplorer={blockExplorer}
+                        contractConfig={contractConfig}
+                      />
+                    </TabPane>
+                    <TabPane tab="BestNft" key="3">
+                      <Contract
+                        name="BestNft"
+                        price={price}
+                        signer={userSigner}
+                        provider={localProvider}
+                        address={address}
+                        blockExplorer={blockExplorer}
+                        contractConfig={contractConfig}
+                      />
+                    </TabPane>
+                    <TabPane tab="WETH" key="4">
+                      <Contract
+                        name="WETH"
+                        price={price}
+                        signer={userSigner}
+                        provider={localProvider}
+                        address={address}
+                        blockExplorer={blockExplorer}
+                        contractConfig={contractConfig}
+                        customContract={readContracts && readContracts.WETH}
+                      />
+                    </TabPane>
+                    <TabPane tab="Reward" key="5">
+                      <Contract
+                        name="Reward"
+                        price={price}
+                        signer={userSigner}
+                        provider={localProvider}
+                        address={address}
+                        blockExplorer={blockExplorer}
+                        contractConfig={contractConfig}
+                      />
+                    </TabPane>
+                    <TabPane tab="YourContract" key="6">
+                      <Contract
+                        name="YourContract"
+                        price={price}
+                        signer={userSigner}
+                        provider={localProvider}
+                        address={address}
+                        blockExplorer={blockExplorer}
+                        contractConfig={contractConfig}
+                      />
+                    </TabPane>
+                  </Tabs>
+                </>
+              </Route>
+              <Route path="/hints">
+                <Hints
+                  address={address}
+                  yourLocalBalance={yourLocalBalance}
+                  mainnetProvider={mainnetProvider}
+                  price={price}
+                />
+              </Route>
+              <Route path="/exampleui">
+                <ExampleUI
+                  address={address}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  localProvider={localProvider}
+                  yourLocalBalance={yourLocalBalance}
+                  price={price}
+                  tx={tx}
+                  writeContracts={writeContracts}
+                  readContracts={readContracts}
+                />
+              </Route>
+              <Route path="/mainnetdai">
+                <Contract
+                  name="DAI"
+                  customContract={
+                    mainnetContracts &&
+                    mainnetContracts.contracts &&
+                    mainnetContracts.contracts.DAI
+                  }
+                  signer={userSigner}
+                  provider={mainnetProvider}
+                  address={address}
+                  blockExplorer="https://etherscan.io/"
+                  contractConfig={contractConfig}
+                  chainId={1}
+                />
+              </Route>
+              <Route path="/subgraph">
+                <Subgraph
+                  subgraphUri={props.subgraphUri}
+                  tx={tx}
+                  writeContracts={writeContracts}
+                  mainnetProvider={mainnetProvider}
+                />
+              </Route>
+              <Route path="/foo/:slug">
+                <Foo
+                  NETWORKCHECK={NETWORKCHECK}
+                  localChainId={localChainId}
+                  selectedChainId={selectedChainId}
+                  targetNetwork={targetNetwork}
+                  logoutOfWeb3Modal={logoutOfWeb3Modal}
+                  USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+                  useBurner={USE_BURNER_WALLET}
+                  address={address}
+                  localProvider={localProvider}
+                  userSigner={userSigner}
+                  mainnetProvider={mainnetProvider}
+                  price={price}
+                  web3Modal={web3Modal}
+                  loadWeb3Modal={loadWeb3Modal}
+                  logoutOfWeb3Modal={logoutOfWeb3Modal}
+                  blockExplorer={blockExplorer}
+                  readContracts={readContracts}
+                  writeContracts={writeContracts}
+                  networkOptions={networkOptions}
+                  selectedNetwork={selectedNetwork}
+                  setSelectedNetwork={setSelectedNetwork}
+                  USE_BURNER_WALLET={USE_BURNER_WALLET}
+                  yourLocalBalance={yourLocalBalance}
+                  tx={tx}
+                />
+              </Route>
+            </Switch>
+
+            {/*<ThemeSwitch />*/}
+
+            <NetworkDisplay
+              NETWORKCHECK={NETWORKCHECK}
+              localChainId={localChainId}
+              selectedChainId={selectedChainId}
+              targetNetwork={targetNetwork}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+            />
+
+            <AccountAndOthers
+              useBurner={USE_BURNER_WALLET}
+              address={address}
+              localProvider={localProvider}
+              userSigner={userSigner}
+              mainnetProvider={mainnetProvider}
+              price={price}
+              web3Modal={web3Modal}
+              loadWeb3Modal={loadWeb3Modal}
+              logoutOfWeb3Modal={logoutOfWeb3Modal}
+              blockExplorer={blockExplorer}
+              readContracts={readContracts}
+              USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
+              networkOptions={networkOptions}
+              selectedNetwork={selectedNetwork}
+              setSelectedNetwork={setSelectedNetwork}
+              USE_BURNER_WALLET={USE_BURNER_WALLET}
+              yourLocalBalance={yourLocalBalance}
+              targetNetwork={targetNetwork}
+            />
+
+            <FaucetAndInfo
+              price={price}
+              address={address}
+              gasPrice={gasPrice}
+              localProvider={localProvider}
+              targetNetwork={targetNetwork}
+              mainnetProvider={mainnetProvider}
+            />
+          </div>
+        </Route>
+      </Switch>
+    </CurrencyProvider>
   );
 }
 

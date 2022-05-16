@@ -13,7 +13,8 @@ import useBlockExplorerLink from "../hooks/useBlockExplorerLink";
 import NftImage from "./NftImage";
 import { displayWeiAsEther } from "../helpers";
 import nftNameFixer from "../helpers/nftNameFixer";
-import SubTitle from './SubTitle'
+import SubTitle from "./SubTitle";
+import DisplayEther from "./DisplayEther";
 
 const NftInteractionRow = props => {
   const { price } = props;
@@ -60,8 +61,10 @@ const NftInteractionRow = props => {
               </h3>
             </Space>
             <h1>
-              <WEthLogo className="weth-bid-icon" />
-              {displayWeiAsEther(auctionOptions.maxBid)}
+              <DisplayEther
+                wei={auctionOptions.maxBid}
+                priceInCents={auctionOptions.priceInCents}
+              />
             </h1>
           </div>
           <div className="col-md-6 bid-box">
@@ -92,10 +95,10 @@ const NftInteractionRow = props => {
               </Tooltip>
             </h3>
             <h1>
-              <WEthLogo className="weth-bid-icon" />
-              {displayWeiAsEther(
-                auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement),
-              )}{" "}
+              <DisplayEther
+                wei={auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)}
+                priceInCents={auctionOptions.priceInCents}
+              />
             </h1>
           </div>
           <div className="col-md-6 bid-box">

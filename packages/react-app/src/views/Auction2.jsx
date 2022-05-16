@@ -17,9 +17,6 @@ const Auction2 = props => {
     targetNetwork,
     logoutOfWeb3Modal,
     USE_NETWORK_SELECTOR,
-  } = props;
-
-  const {
     address,
     localProvider,
     mainnetProvider,
@@ -41,6 +38,8 @@ const Auction2 = props => {
       readContracts={readContracts}
       localProvider={localProvider}
       address={address}
+      targetNetwork={targetNetwork}
+      mainnetProvider={mainnetProvider}
     >
       <TheHeader
         address={address}

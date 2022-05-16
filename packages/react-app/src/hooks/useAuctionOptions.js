@@ -4,12 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber } from "eth-hooks";
 import axios from "axios";
 import { nftNameOpenSeaMappings } from '../constants'
+import { useExchangeEthPrice } from 'eth-hooks/dapps/dex'
 
 const useAuctionOptions = (
   readContracts,
   auctionContractAddress,
   localProvider,
   address,
+  targetNetwork,
+  mainnetProvider
 ) => {
   const auctionContract = useAuctionContract(
     readContracts,
@@ -46,6 +49,7 @@ const useAuctionOptions = (
     tokenURI: "",
     imageUrl: "",
     stats: {},
+    priceInCents: ethers.BigNumber.from(0),
   });
 
   const updateAuctionOptions = (name, value) => {
@@ -149,6 +153,14 @@ const useAuctionOptions = (
     };
     init();
   }, [auctionOptions.name]);
+
+
+  const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
+  useEffect(() => {
+    setAuctionOptions(prevObj => {
+      return { ...prevObj, priceInCents: BigNumber.from(price * 100) };
+    });
+  }, [price]);
 
   return auctionOptions;
 };
