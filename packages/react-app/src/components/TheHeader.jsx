@@ -1,11 +1,13 @@
 import { logo } from "../img";
 import ClaimNFTModal from "./ClaimNFTModal";
 import FeedbackModal from "./FeedbackModal";
-import { Space } from "antd";
+import { Space, Tooltip } from "antd";
 import { AccountDrawer, LoginLogoutButton } from "./index";
 import { useTopNavClass } from "../hooks";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { NotificationOutlined, NotificationTwoTone } from "@ant-design/icons";
+import NotificationsModal from './NotificationsModal'
 
 const TheHeader = props => {
   const { localProvider, address, writeContracts, tx, blockExplorer } = props;
@@ -20,12 +22,16 @@ const TheHeader = props => {
 
   const [showClaimNftModal, setShowClaimNftModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showNotificationsModal, setShowNotificationsModal] = useState(false);
 
   const claimButtonHandler = async evt => {
     setShowClaimNftModal(true);
   };
   const feedbackButtonHandler = async evt => {
     setShowFeedbackModal(true);
+  };
+  const notifButtonHandler = async evt => {
+    setShowNotificationsModal(true)
   };
 
   return (
@@ -66,6 +72,21 @@ const TheHeader = props => {
               <a target="_blank" href="https://nftdeals.xyz/#faq">
                 FAQ
               </a>
+            </li>
+            <li>
+              <Tooltip title={"Setup Notifications from out Bot"}>
+                <NotificationOutlined
+                  style={{ fontSize: 22, cursor: "pointer" }}
+                  onClick={notifButtonHandler}
+                />
+              </Tooltip>
+              <NotificationsModal
+                showNotificationsModal={showNotificationsModal}
+                setshowNotificationsModal={setShowNotificationsModal}
+                readContracts={readContracts}
+                localProvider={localProvider}
+                address={address}
+              />
             </li>
           </ul>
         </nav>

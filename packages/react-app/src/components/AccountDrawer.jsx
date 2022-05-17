@@ -43,16 +43,18 @@ const AccountDrawer = props => {
   }
 
   const rewardsEtherscanLink = blockExplorerLink(
-    readContracts && readContracts.Reward && readContracts.Reward.address,
+    readContracts && readContracts.AuctionFactory && readContracts.AuctionFactory.address,
     props.blockExplorer,
   );
 
   return (
     <>
       {address && (
-        <a href={"javascript:void(0)"} onClick={evt => setShowDrawer(true)}>
-          <Blockies seed={address.toLowerCase()} size={8} scale={4} />
-        </a>
+        <Tooltip title={"Your address, balance, rewards, network etc."}>
+          <a href={"javascript:void(0)"} onClick={evt => setShowDrawer(true)}>
+            <Blockies seed={address.toLowerCase()} size={8} scale={4} />
+          </a>
+        </Tooltip>
       )}
 
       <Drawer
