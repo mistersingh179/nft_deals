@@ -89,9 +89,8 @@ const JoinRedCarpetRow = props => {
       </Row>
       <Row style={{ marginBottom: 20 }}>
         <Col span={24}>
-          {/*{auctionOptions.presentInRedCarpet && <AlreadyInMessage />}*/}
-          {/*{!auctionOptions.presentInRedCarpet && <JoinRedCarpetButton />}*/}
-          {true && <JoinRedCarpetButton />}
+          {auctionOptions.presentInRedCarpet && <AlreadyInMessage />}
+          {!auctionOptions.presentInRedCarpet && <JoinRedCarpetButton />}
           <PostRedCarpetSignupModal
             address={address}
             showPostRedCarpetSignupModal={showPostRedCarpetSignupModal}

@@ -31,7 +31,7 @@ const {
 
 console.log("Running UpdateAuction: ", network.name, network.config.chainId);
 
-describe.only("AuctionWithRedCarpetList", () => {
+describe("AuctionWithRedCarpetList", () => {
   const AuctionFromConstructorFixture = async () => {
     const wallets = provider.getWallets();
     const walletOne = wallets[0];

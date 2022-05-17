@@ -11,6 +11,7 @@ yarn verify --network rinkeby
 cd packages/hardhat
 npx hardhat --network rinkeby etherscan-verify
 chokidar "**/*.js, **/*.sol" -c "yarn test"
+yarn deploy --network rinkeby --gasprice 28000000000
 ```
 
 # questions
