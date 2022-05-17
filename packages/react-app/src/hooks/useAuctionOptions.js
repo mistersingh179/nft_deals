@@ -1,6 +1,6 @@
 import { useAuctionContract } from "./index";
 import { BigNumber, ethers } from "ethers";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useBlockNumber } from "eth-hooks";
 import axios from "axios";
 import { nftNameOpenSeaMappings } from "../constants";
@@ -17,13 +17,35 @@ const useAuctionOptions = (
   const blockNumber = useBlockNumber(localProvider);
   const zeroAddress = "0x0000000000000000000000000000000000000000";
 
-  const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
+  const retries = useRef(0);
   useEffect(() => {
-    const priceInCents = parseInt(parseFloat(price).toFixed(2) * 100);
-    setAuctionOptions(prevObj => {
-      return { ...prevObj, priceInCents: BigNumber.from(priceInCents) };
-    });
-  }, [price]);
+    const getData = async () => {
+      try {
+        console.log("*** getting price from etherscan");
+        const result = await axios({
+          method: "get",
+          url: `https://api.etherscan.io/api?module=stats&action=ethprice&apikey=${process.env.REACT_APP_ETHER_SCAN_API_KEY_TOKEN}`,
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        const price = result.data.result.ethusd;
+        const priceInCents = parseInt(parseFloat(price).toFixed(2) * 100);
+        setAuctionOptions(prevObj => {
+          return { ...prevObj, priceInCents: BigNumber.from(priceInCents) };
+        });
+      } catch (e) {
+        if(retries.current <5){
+          console.log("*** etherscan data error. retry count is: ", retries.current);
+          setTimeout(getData, 1000);
+          retries.current = retries.current + 1;
+        }else {
+          console.log("*** etherscan data error. no retries as: ", retries.current);
+        }
+      }
+    };
+    getData();
+  }, []);
 
   const auctionContract = useAuctionContract(
     readContracts,
@@ -61,7 +83,7 @@ const useAuctionOptions = (
     priceInCents: ethers.BigNumber.from(0),
     redCarpetLength: 0,
     redCarpetState: 1,
-    presentInRedCarpet: false
+    presentInRedCarpet: false,
   });
 
   const updateAuctionOptions = (name, value) => {
