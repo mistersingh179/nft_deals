@@ -41,8 +41,12 @@ const JoinRedCarpetRow = props => {
       animateIt();
       return;
     }
-    await tx(auctionContractWriter.joinRedCarpet());
-    setShowPostRedCarpetSignupModal(true);
+    await tx(auctionContractWriter.joinRedCarpet(), update => {
+      if (update.status == 1 || update.status == "confirmed") {
+        console.log("***the joinRedCarpet was successful");
+        setShowPostRedCarpetSignupModal(true);
+      }
+    });
   };
 
   const AlreadyInMessage = props => {
@@ -90,7 +94,7 @@ const JoinRedCarpetRow = props => {
       <Row style={{ marginBottom: 20 }}>
         <Col span={24}>
           {auctionOptions.presentInRedCarpet && <AlreadyInMessage />}
-          {!auctionOptions.presentInRedCarpet && <JoinRedCarpetButton />}
+          {auctionOptions.presentInRedCarpet && <JoinRedCarpetButton />}
           <PostRedCarpetSignupModal
             address={address}
             showPostRedCarpetSignupModal={showPostRedCarpetSignupModal}
