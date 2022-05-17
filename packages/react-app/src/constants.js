@@ -213,7 +213,8 @@ export const NETWORK = chainId => {
 };
 
 export const nftNameOpenSeaMappings = {
-  "You": "bff-you"
+  "You": "bff-you",
+  "Moonbirds": "proof-moonbirds"
 }
 
 export const displayNameMappings = {
