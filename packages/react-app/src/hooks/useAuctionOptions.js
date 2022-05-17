@@ -3,8 +3,8 @@ import { BigNumber, ethers } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { useBlockNumber } from "eth-hooks";
 import axios from "axios";
-import { nftNameOpenSeaMappings } from '../constants'
-import { useExchangeEthPrice } from 'eth-hooks/dapps/dex'
+import { nftNameOpenSeaMappings } from "../constants";
+import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 
 const useAuctionOptions = (
   readContracts,
@@ -12,15 +12,23 @@ const useAuctionOptions = (
   localProvider,
   address,
   targetNetwork,
-  mainnetProvider
+  mainnetProvider,
 ) => {
+  const blockNumber = useBlockNumber(localProvider);
+  const zeroAddress = "0x0000000000000000000000000000000000000000";
+
+  const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
+  useEffect(() => {
+    setAuctionOptions(prevObj => {
+      return { ...prevObj, priceInCents: BigNumber.from(price * 100) };
+    });
+  }, [price]);
+
   const auctionContract = useAuctionContract(
     readContracts,
     auctionContractAddress,
     localProvider,
   );
-  const blockNumber = useBlockNumber(localProvider);
-  const zeroAddress = "0x0000000000000000000000000000000000000000";
 
   const [auctionOptions, setAuctionOptions] = useState({
     dynamicProtocolFeeInBasisPoints: ethers.BigNumber.from(0),
@@ -153,14 +161,6 @@ const useAuctionOptions = (
     };
     init();
   }, [auctionOptions.name]);
-
-
-  const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
-  useEffect(() => {
-    setAuctionOptions(prevObj => {
-      return { ...prevObj, priceInCents: BigNumber.from(price * 100) };
-    });
-  }, [price]);
 
   return auctionOptions;
 };
