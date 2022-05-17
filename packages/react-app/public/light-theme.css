@@ -23919,3 +23919,8 @@ div.ant-typography-edit-content.ant-typography-rtl {
 .nft-image{
   width: 100%;
 }
+.trait-details{
+  vertical-align: inherit;
+  margin-bottom: -3px;  
+  font-size: 90%;
+}

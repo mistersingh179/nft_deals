@@ -37,7 +37,7 @@ const NftInteractionRow = props => {
         <h1>
           {auctionOptions.name && nftNameFixer(auctionOptions.name)} #
           {auctionOptions.tokenId.toString()}{" "}
-          <Tooltip title="Click here to verify this NFT's contract address.">
+          <Tooltip title="Click to verify this NFT's contract address.">
             <a
               target="_blank"
               href={`${blockExplorer || "https://etherscan.io/"}address/${
