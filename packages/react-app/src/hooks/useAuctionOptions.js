@@ -127,7 +127,10 @@ const useAuctionOptions = (
     const init = async () => {
       const tokenURI = auctionOptions.tokenURI;
       var imageUrl;
-      if (tokenURI.indexOf("http") == 0) {
+      if (tokenURI == 'https://live---metadata-5covpqijaa-uc.a.run.app/metadata/7672'){
+        const imageUrl = 'https://live---metadata-5covpqijaa-uc.a.run.app/images/7672';
+        updateAuctionOptions("imageUrl", imageUrl);
+      } else if (tokenURI.indexOf("http") == 0) {
         const imageUrl = await getImageFromUrl(tokenURI);
         updateAuctionOptions("imageUrl", imageUrl);
       } else if (tokenURI.indexOf("ipfs://") == 0) {
