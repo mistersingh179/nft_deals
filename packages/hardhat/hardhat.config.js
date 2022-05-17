@@ -29,7 +29,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 const defaultNetwork = "localhost";
 
-const mainnetGwei = 28;
+const mainnetGwei = 55;
 
 function mnemonic() {
   try {
