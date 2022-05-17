@@ -31,6 +31,8 @@ const Auction2 = props => {
     setSelectedNetwork,
     yourLocalBalance,
     tx,
+    isPlaying,
+    animateIt
   } = props;
 
   return (
@@ -61,6 +63,7 @@ const Auction2 = props => {
         localChainId={localChainId}
         selectedChainId={selectedChainId}
         tx={tx}
+        isPlaying={isPlaying}
       />
 
       <section id="hero" className="d-flex align-items-center">
@@ -79,6 +82,7 @@ const Auction2 = props => {
             web3Modal={web3Modal}
             loadWeb3Modal={loadWeb3Modal}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
+            animateIt={animateIt}
           />
         </div>
       </section>

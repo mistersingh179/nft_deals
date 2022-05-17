@@ -95,6 +95,7 @@ const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <----
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
+// equal comparison because we boolean & .env has string
 const USE_BURNER_WALLET = process.env.REACT_APP_USE_BURNER_WALLET === "true"; // toggle burner wallet feature
 console.log("*** USE_BURNER_WALLET", USE_BURNER_WALLET);
 const USE_NETWORK_SELECTOR = true;
@@ -349,6 +350,15 @@ function App(props) {
 
   usePing(address);
 
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const animateIt = () => {
+    setIsPlaying(true);
+    window.setTimeout(() => {
+      setIsPlaying(false);
+    }, 500);
+  };
+
   return (
     <CurrencyProvider>
       <Switch>
@@ -381,6 +391,8 @@ function App(props) {
             USE_BURNER_WALLET={USE_BURNER_WALLET}
             yourLocalBalance={yourLocalBalance}
             tx={tx}
+            isPlaying={isPlaying}
+            animateIt={animateIt}
           />
         </Route>
         <Route exact path="/auctions/">

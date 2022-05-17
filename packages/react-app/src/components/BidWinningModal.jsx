@@ -141,6 +141,7 @@ const BidWinningModal = props => {
         </Row>
         <Row justify="center" style={{ marginBottom: 24 }}>
           <Col span={18} align="middle">
+            <p>Input your email to receive outbid notifications:</p>
             <EmailCapture address={address} />
           </Col>
         </Row>

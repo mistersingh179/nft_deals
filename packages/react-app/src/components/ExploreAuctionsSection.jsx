@@ -10,6 +10,34 @@ import { Link } from "react-router-dom";
 import displayEther from "./DisplayEther";
 import DisplayEther from "./DisplayEther";
 
+const DurationOrComingSoon = props => {
+  const {
+    readContracts,
+    localProvider,
+    auctionContractAddress,
+    auctionOptions,
+  } = props;
+  if (auctionOptions.expiration.eq(0)) {
+    return (
+      <>
+        Ends in:{" "}
+        <span>Coming Soon</span>
+      </>
+    )
+  } else {
+    return (
+      <>
+        Ends in:{" "}
+        <Duration
+          readContracts={readContracts}
+          auctionContractAddress={auctionContractAddress}
+          localProvider={localProvider}
+        />
+      </>
+    );
+  }
+};
+
 const AuctionCardDesc = props => {
   const {
     readContracts,
@@ -17,23 +45,17 @@ const AuctionCardDesc = props => {
     auctionContractAddress,
     auctionOptions,
   } = props;
-  if (auctionOptions._weHavePossessionOfNft === false) {
-    return <p>Coming Soon</p>;
-  }
+
   return (
     <>
       <p>Collection Floor Price: Ξ {auctionOptions.stats.floor_price}</p>
-      <p>
-        Top Bid: Ξ{displayWeiAsEther(auctionOptions.maxBid)}
-      </p>
-      <p>
-        Ends in:{" "}
-        <Duration
-          readContracts={readContracts}
-          auctionContractAddress={auctionContractAddress}
-          localProvider={localProvider}
-        />
-      </p>
+      <p>Top Bid: Ξ {displayWeiAsEther(auctionOptions.maxBid)}</p>
+      <DurationOrComingSoon
+        readContracts={readContracts}
+        auctionContractAddress={auctionContractAddress}
+        localProvider={localProvider}
+        auctionOptions={auctionOptions}
+      />
     </>
   );
 };
@@ -48,8 +70,6 @@ const AuctionCol = props => {
     mainnetProvider,
   } = props;
 
-  console.log('*** targetNetwork: ', targetNetwork, mainnetProvider);
-
   const auctionOptions = useAuctionOptions(
     readContracts,
     auctionContractAddress,
@@ -61,10 +81,7 @@ const AuctionCol = props => {
 
   return (
     <Col className="gutter-row" span={8}>
-      <Link
-        to={`/auction2/${auctionContractAddress}`}
-        disabled={!auctionOptions._weHavePossessionOfNft}
-      >
+      <Link to={`/auction2/${auctionContractAddress}`}>
         <Card
           hoverable
           style={{

@@ -22,6 +22,11 @@ import "./AuctionFactory.sol";
 
 contract Auction is IERC721Receiver, AccessControl, Multicall {
     using Strings for uint;
+    using EnumerableSet for EnumerableSet.AddressSet;
+
+    EnumerableSet.AddressSet private redCarpetSet;
+    enum ListState { CLOSE, OPEN}
+    ListState public redCarpetState = ListState.OPEN;
 
     bytes32 public constant TREASURY_ROLE = keccak256("TREASURY_ROLE");
     bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
@@ -84,6 +89,9 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
         AuctionFactory auctionFactory;
         bool qualifiesForRewards;
         bool paused;
+        uint redCarpetLength;
+        uint redCarpetState;
+        bool presentInRedCarpet;
     }
 
     constructor(
@@ -238,6 +246,9 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
             console.log("you qualify for rewards");
             uint reward = currentReward();
             if(reward > 0){
+                if(redCarpetSet.contains(msg.sender)){
+                    reward = reward * 2;
+                }
                 auctionFactory.giveReward(msg.sender, reward);
             }
         }else {
@@ -449,6 +460,30 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
         data.auctionFactory = auctionFactory;
         data.qualifiesForRewards = qualifiesForRewards;
         data.paused = paused;
+        data.redCarpetLength = redCarpetSet.length();
+        data.redCarpetState = uint(redCarpetState);
+        data.presentInRedCarpet = redCarpetSet.contains(me);
         return data;
+    }
+
+    function getRedCarpet() view public returns(address[] memory) {
+        return redCarpetSet.values();
+    }
+
+    function getRedCarpetLength() view public returns(uint) {
+        return redCarpetSet.length();
+    }
+
+    function joinRedCarpet() public{
+        require(redCarpetState == ListState.OPEN, "Red Carpet is Closed");
+        redCarpetSet.add(msg.sender);
+    }
+
+    function checkRedCarpet(address _address) view public returns(bool) {
+        return redCarpetSet.contains(_address);
+    }
+
+    function changeRedCarpetState(uint _newState) public onlyRole(MODERATOR_ROLE)  {
+        redCarpetState = ListState(_newState);
     }
 }

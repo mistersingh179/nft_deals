@@ -19,8 +19,9 @@ const useAuctionOptions = (
 
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
   useEffect(() => {
+    const priceInCents = parseInt(parseFloat(price).toFixed(2) * 100);
     setAuctionOptions(prevObj => {
-      return { ...prevObj, priceInCents: BigNumber.from(price * 100) };
+      return { ...prevObj, priceInCents: BigNumber.from(priceInCents) };
     });
   }, [price]);
 
@@ -58,6 +59,9 @@ const useAuctionOptions = (
     imageUrl: "",
     stats: {},
     priceInCents: ethers.BigNumber.from(0),
+    redCarpetLength: 0,
+    redCarpetState: 1,
+    presentInRedCarpet: false
   });
 
   const updateAuctionOptions = (name, value) => {

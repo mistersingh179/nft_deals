@@ -5692,7 +5692,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0xaF7e17F3C895bcabA2237Bd9e3E10Fe539664E50",
+          "address": "0xfC56414E8FB47C4C58C5A8e5A80E4a657B4946f9",
           "abi": [
             {
               "inputs": [
@@ -6273,7 +6273,7 @@
           ]
         },
         "Auction": {
-          "address": "0x408FB861A970BbE3ca0C198475e51bBd92051947",
+          "address": "0x0D37dD75779e13D7e3618E6Ace1982C097BA99B7",
           "abi": [
             {
               "inputs": [
@@ -6668,6 +6668,38 @@
               "type": "function"
             },
             {
+              "inputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "_newState",
+                  "type": "uint256"
+                }
+              ],
+              "name": "changeRedCarpetState",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "address",
+                  "name": "_address",
+                  "type": "address"
+                }
+              ],
+              "name": "checkRedCarpet",
+              "outputs": [
+                {
+                  "internalType": "bool",
+                  "name": "",
+                  "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
               "inputs": [],
               "name": "claimFinalBidAmount",
               "outputs": [],
@@ -6907,6 +6939,21 @@
                       "internalType": "bool",
                       "name": "paused",
                       "type": "bool"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "redCarpetLength",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "uint256",
+                      "name": "redCarpetState",
+                      "type": "uint256"
+                    },
+                    {
+                      "internalType": "bool",
+                      "name": "presentInRedCarpet",
+                      "type": "bool"
                     }
                   ],
                   "internalType": "struct Auction.AllData",
@@ -6920,6 +6967,32 @@
             {
               "inputs": [],
               "name": "getDynamicProtolFeeInBasisPoints",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getRedCarpet",
+              "outputs": [
+                {
+                  "internalType": "address[]",
+                  "name": "",
+                  "type": "address[]"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getRedCarpetLength",
               "outputs": [
                 {
                   "internalType": "uint256",
@@ -7015,6 +7088,13 @@
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "joinRedCarpet",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
@@ -7156,6 +7236,19 @@
                   "internalType": "bool",
                   "name": "",
                   "type": "bool"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "redCarpetState",
+              "outputs": [
+                {
+                  "internalType": "enum Auction.ListState",
+                  "name": "",
+                  "type": "uint8"
                 }
               ],
               "stateMutability": "view",

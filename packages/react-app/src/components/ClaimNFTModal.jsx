@@ -6,15 +6,24 @@ import gameOver from "../img/game_over.gif";
 import nopeRooster from "../img/nope_rooster.gif";
 import { useCallback, useContext } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
+import { ethers } from "ethers";
+const {
+  constants: { AddressZero },
+} = ethers;
 
-const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
+const blockExplorerLink = (address, blockExplorer) =>
+  `${blockExplorer || "https://etherscan.io/"}address/${address}`;
 
 const ClaimNFTModal = props => {
   const { showClaimNftModal, setShowClaimNftModal } = props;
   const { localProvider, address, writeContracts, tx, blockExplorer } = props;
 
   const { slug: auctionContractAddress } = useParams();
-  const auctionContractWriter = useAuctionContract(writeContracts, auctionContractAddress, localProvider);
+  const auctionContractWriter = useAuctionContract(
+    writeContracts,
+    auctionContractAddress,
+    localProvider,
+  );
   const handleOk = evt => {
     setShowClaimNftModal(false);
   };
@@ -25,7 +34,7 @@ const ClaimNFTModal = props => {
   const auctionOptions = useContext(AuctionOptionsContext);
 
   const youAreWinner = () => {
-    return auctionOptions.winningAddress == address;
+    return auctionOptions.winningAddress == address && address != AddressZero;
   };
 
   const auctionHasExpired = () => {
@@ -53,17 +62,31 @@ const ClaimNFTModal = props => {
             {auctionOptions._weHavePossessionOfNft && (
               <>
                 <h4>
-                  <Button type={"primary"} className="ant-btn-lg transfer-btn" onClick={transferNftHandler}>
+                  <Button
+                    type={"primary"}
+                    className="ant-btn-lg transfer-btn"
+                    onClick={transferNftHandler}
+                  >
                     Transfer NFT
                   </Button>
                 </h4>
-                <p>The NFT will arrive in your wallet address after this transaction is confirmed.</p>
+                <p>
+                  The NFT will arrive in your wallet address after this
+                  transaction is confirmed.
+                </p>
               </>
             )}
 
             {!auctionOptions._weHavePossessionOfNft && (
               <>
-                <a className="rewards-contract" target="_blank" href={blockExplorerLink(auctionContractAddress, blockExplorer)}>
+                <a
+                  className="rewards-contract"
+                  target="_blank"
+                  href={blockExplorerLink(
+                    auctionContractAddress,
+                    blockExplorer,
+                  )}
+                >
                   View this transaction on Etherscan
                 </a>
               </>
@@ -96,8 +119,8 @@ const ClaimNFTModal = props => {
             />
             <h4>But you could still be outbid...</h4>
             <p>
-              Be sure to come back within 24 hours to see if you won. In the meantime, follow us on Twitter for the
-              latest announcements:
+              Be sure to come back within 24 hours to see if you won. In the
+              meantime, follow us on Twitter for the latest announcements:
             </p>
             <div className="social-links mt-4">
               <a href="https://twitter.com/NFT_Deals_xyz" className="twitter">
@@ -129,10 +152,15 @@ const ClaimNFTModal = props => {
       <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
         <Col span={22} align="middle">
           <h1>Try Again Next Time</h1>
-          <img src={gameOver} className="winner-modal-badge" alt={"game over"} />
+          <img
+            src={gameOver}
+            className="winner-modal-badge"
+            alt={"game over"}
+          />
           <h4>You did not win this auction.</h4>
           <p>
-            But there will be more auctions, so come back to bid on the next one. In the meantime, follow us on Twitter for the latest
+            But there will be more auctions, so come back to bid on the next
+            one. In the meantime, follow us on Twitter for the latest
             announcements:
           </p>
           <div className="social-links mt-4">

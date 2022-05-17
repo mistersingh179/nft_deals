@@ -49,7 +49,6 @@ const EmailCapture = props => {
 
   return (
     <>
-      <p>Input your email to receive outbid notifications:</p>
       <Input.Group compact>
         <Input
           style={{ width: "calc(100% - 100px)" }}

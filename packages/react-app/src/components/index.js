@@ -39,3 +39,4 @@ export { default as NftInteractionRow } from "./NftInteractionRow";
 export { default as ExploreAuctionsSection } from "./ExploreAuctionsSection";
 export { default as EmailCapture } from "./EmailCapture";
 export { default as DisplayEther } from "./DisplayEther";
+export { default as JoinRedCarpetRow } from "./JoinRedCarpetRow";

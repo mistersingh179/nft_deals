@@ -54,7 +54,7 @@ module.exports = {
    */
   gasReporter: {
     token: "ETH",
-    gasPrice: "70",
+    gasPrice: "28",
     gasPriceApi:
       "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice&apikey=4GNTDCMXVGECYNSES575CKBTAVFUE2GFXK",
     currency: "USD",

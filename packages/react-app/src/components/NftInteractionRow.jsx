@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Col, Row, Space, Tooltip } from "antd";
 import Duration from "./Duration";
 import { ReactComponent as WEthLogo } from "../img/wrapped_ethereum_icon.svg";
-import { ApproveBidButtonsCombo } from "./index";
+import { ApproveBidButtonsCombo, JoinRedCarpetRow } from "./index";
 import BidHistoryButtonModalCombo from "./BidHistoryButtonModalCombo";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 import { ethers } from "ethers";
@@ -22,6 +22,7 @@ const NftInteractionRow = props => {
   const { address, writeContracts, tx } = props;
   const { mainnetProvider, blockExplorer } = props;
   const { web3Modal, loadWeb3Modal, logoutOfWeb3Modal } = props;
+  const { animateIt } = props;
 
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useContext(AuctionOptionsContext);
@@ -78,11 +79,14 @@ const NftInteractionRow = props => {
               </Tooltip>
             </h3>
             <h1 id="end-timer">
-              <Duration
-                readContracts={readContracts}
-                auctionContractAddress={auctionContractAddress}
-                localProvider={localProvider}
-              />
+              {auctionOptions.expiration.eq(0) && "Coming Soon"}
+              {auctionOptions.expiration.gt(0) && (
+                <Duration
+                  readContracts={readContracts}
+                  auctionContractAddress={auctionContractAddress}
+                  localProvider={localProvider}
+                />
+              )}
             </h1>
           </div>
         </div>
@@ -96,7 +100,9 @@ const NftInteractionRow = props => {
             </h3>
             <h1>
               <DisplayEther
-                wei={auctionOptions.maxBid.add(auctionOptions.minimumBidIncrement)}
+                wei={auctionOptions.maxBid.add(
+                  auctionOptions.minimumBidIncrement,
+                )}
                 priceInCents={auctionOptions.priceInCents}
               />
             </h1>
@@ -119,19 +125,32 @@ const NftInteractionRow = props => {
             </h1>
           </div>
         </div>
-        <ApproveBidButtonsCombo
-          writeContracts={writeContracts}
-          readContracts={readContracts}
-          address={address}
-          localProvider={localProvider}
-          auctionContractAddress={auctionContractAddress}
-          tx={tx}
-          price={price}
-          blockExplorer={blockExplorer}
-          web3Modal={web3Modal}
-          loadWeb3Modal={loadWeb3Modal}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-        />
+        {auctionOptions.expiration.eq(0) && (
+          <JoinRedCarpetRow
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            tx={tx}
+            address={address}
+            localProvider={localProvider}
+            animateIt={animateIt}
+          />
+        )}
+        {auctionOptions.expiration.gt(0) && (
+          <ApproveBidButtonsCombo
+            writeContracts={writeContracts}
+            readContracts={readContracts}
+            address={address}
+            localProvider={localProvider}
+            auctionContractAddress={auctionContractAddress}
+            tx={tx}
+            price={price}
+            blockExplorer={blockExplorer}
+            web3Modal={web3Modal}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+          />
+        )}
+
         <Row>
           <Col lg={{ offset: 0, span: 10 }} xs={{ span: 24 }}>
             <BidHistoryButtonModalCombo

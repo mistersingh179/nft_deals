@@ -5,7 +5,7 @@ import { Space } from "antd";
 import { AccountDrawer, LoginLogoutButton } from "./index";
 import { useTopNavClass } from "../hooks";
 import { useState } from "react";
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const TheHeader = props => {
   const { localProvider, address, writeContracts, tx, blockExplorer } = props;
@@ -14,6 +14,7 @@ const TheHeader = props => {
   const { targetNetwork, USE_NETWORK_SELECTOR } = props;
   const { networkOptions, selectedNetwork, setSelectedNetwork } = props;
   const { NETWORKCHECK, localChainId, selectedChainId } = props;
+  const { isPlaying } = props;
 
   const topNavClass = useTopNavClass();
 
@@ -74,7 +75,9 @@ const TheHeader = props => {
             web3Modal={web3Modal}
             loadWeb3Modal={loadWeb3Modal}
             logoutOfWeb3Modal={logoutOfWeb3Modal}
-            className="get-started-btn scrollto"
+            className={`get-started-btn scrollto ${
+              isPlaying ? "shaking-button" : ""
+            }`}
           />
           <AccountDrawer
             address={address}
