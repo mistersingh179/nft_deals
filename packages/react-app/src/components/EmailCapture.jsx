@@ -39,7 +39,7 @@ const EmailCapture = props => {
     } catch (e) {
       console.log("*** unable to save email address: ", e);
     } finally {
-      setMessage(`Our bot will notify ${email} if you're outbid.`);
+      setMessage(`Our bot will notify ${email}`);
     }
   };
   console.log("*** message: ", message);

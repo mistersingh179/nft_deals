@@ -47,7 +47,8 @@ export default function Address(props) {
   const etherscanLink = blockExplorerLink(address, props.blockExplorer);
   let displayAddress = address?.substr(0, 5) + "..." + address?.substr(-4);
 
-  if (user_address == AddressZero){
+  // winner is zero
+  if (address == AddressZero){
     return "No one yet"
   }
     if (user_address == address) {
