@@ -33,7 +33,7 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - we are using it for `mainnet` provider in app.jsx
 - we are also using it for `mainnet` in web3ModalSetup
 
-## how do i add a package?
+## how do i add/install a package?
 
 - from root directory use yarn to add package in the workspace you so desire
 - it should update the yarn.lock at the root level

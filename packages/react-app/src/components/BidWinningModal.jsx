@@ -13,12 +13,13 @@ import {
 } from "antd";
 import rewardsImage from "../img/rewards.png";
 import { displayWeiAsEther } from "../helpers";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useContext, useState } from "react";
 import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import EmailCapture from "./EmailCapture";
+import DisplayEther from "./DisplayEther";
 
 const BidWinningModal = props => {
   const { showWinningModal, setShowWinningModal } = props;
@@ -66,9 +67,9 @@ const BidWinningModal = props => {
         auctionOptions.stats.floor_price + "",
       ); // standardizing opensea value to big number holding wei
       const maxBid = auctionOptions.maxBid;
-      return displayWeiAsEther(floor_price.sub(maxBid));
+      return floor_price.sub(maxBid);
     } else {
-      return "0";
+      return BigNumber.from(0);
     }
   };
 
@@ -97,6 +98,27 @@ const BidWinningModal = props => {
       {auctionOptions.currentReward.toString()} more points.
     </>
   );
+
+  const FlipMessage = props => {
+    return (
+      <>
+        <p>
+          The highest bid is{" "}
+          <DisplayEther
+            wei={auctionOptions.maxBid}
+            priceInCents={auctionOptions.priceInCents}
+          />
+          . If you win this NFT, you can likely flip it for{" "}
+          <DisplayEther
+            wei={nftEthProfit()}
+            priceInCents={auctionOptions.priceInCents}
+          />{" "}
+          in profit.
+        </p>
+        <h6>That's a {roi()}x ROI! 🤑</h6>
+      </>
+    );
+  };
 
   const RewardsMessage = () => {
     return (
@@ -131,12 +153,7 @@ const BidWinningModal = props => {
               alt={"rewards"}
             />
             <h5>You will win this NFT if you're not outbid within 24 hours!</h5>
-            <p>
-              The highest bid is Ξ{displayWeiAsEther(auctionOptions.maxBid)}. If
-              you win this NFT, you can likely flip it for Ξ{nftEthProfit()} in
-              profit.
-            </p>
-            <h6>That's a {roi()}x ROI! 🤑</h6>
+            {nftEthProfit().gte(0) && <FlipMessage />}
           </Col>
         </Row>
         <Row justify="center" style={{ marginBottom: 24 }}>
