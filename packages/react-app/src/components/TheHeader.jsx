@@ -61,7 +61,7 @@ const TheHeader = props => {
             </li>
             <li>
               <a href="javascript:void(0)" onClick={feedbackButtonHandler}>
-                Give Feedback
+                Bonus Rewards
               </a>
               <FeedbackModal
                 showFeedbackModal={showFeedbackModal}
