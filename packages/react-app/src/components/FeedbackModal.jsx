@@ -37,7 +37,7 @@ const FeedbackModal = props => {
       </Row>
       <Row justify="center" style={{ marginTop: 0, marginBottom: 12 }}>
         <Col span={24} align="middle">
-          <TwitterTweetEmbed tweetId={"1524447901690302466"} />
+          <TwitterTweetEmbed tweetId={"1527343719040819200"} />
         </Col>
       </Row>
     </Modal>
