@@ -89,3 +89,17 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - use its[acution's] nftOwner also the deployer account and update details of auction
 - note: details can be updated only before it has started
 - now start the auction
+
+## contract is not verified by etherscan even though it is similar to verified contract?
+- verify manually
+- create `params.js` in `hardhat` package folder
+- have file export an array of params, but addresses as strings
+- run `yarn verify --network rinkeby --constructor-args params.js 0x02cf585277B3324Df90cBE0e2bD3e540a8eca2E3`
+- here the positional argument is the contracts address we are verifying
+- documentation of plugin here `https://hardhat.org/plugins/nomiclabs-hardhat-etherscan.html`
+
+## what accounts am i using and do i have money in them?
+- `yarn accounts` will show the 20 accounts we are getting.
+- these are from mnemonic, also in code by `provider.getSigners()` etc.
+- `yarn account` will give first account which is deployer account with balances on each network.
+

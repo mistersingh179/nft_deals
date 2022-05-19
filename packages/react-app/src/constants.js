@@ -72,8 +72,8 @@ export const NETWORKS = {
     color: "#2bbdf7",
     chainId: 137,
     price: 1,
-    gasPrice: 1000000000,
-    rpcUrl: "https://polygon-rpc.com/",
+    gasPrice: 50000000000, // 50 gwei
+    rpcUrl: `https://polygon-mainnet.infura.io/v3/${INFURA_ID}`,
     blockExplorer: "https://polygonscan.com/",
   },
   mumbai: {
@@ -81,8 +81,8 @@ export const NETWORKS = {
     color: "#92D9FA",
     chainId: 80001,
     price: 1,
-    gasPrice: 1000000000,
-    rpcUrl: "https://rpc-mumbai.maticvigil.com",
+    gasPrice: 50000000000, // 50 gwei
+    rpcUrl: `https://polygon-mumbai.infura.io/v3/${INFURA_ID}`,
     faucet: "https://faucet.polygon.technology/",
     blockExplorer: "https://mumbai.polygonscan.com/",
   },

@@ -148,17 +148,21 @@ module.exports = {
       },
     },
     polygon: {
-      url: "https://polygon-rpc.com",
-      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXx/polygon/mainnet", // <---- YOUR MORALIS ID! (not limited to infura)
-      gasPrice: 3200000000,
+      // url: "https://polygon-rpc.com",
+      // <---- YOUR MORALIS ID! (not limited to infura)
+      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXX/polygon/mainnet",
+      url: `https://polygon-mainnet.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
+      gasPrice: 40000000000, // 40 gwei
       accounts: {
         mnemonic: mnemonic(),
       },
     },
     mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
-      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/polygon/mumbai", // <---- YOUR MORALIS ID! (not limited to infura)
-      gasPrice: 3200000000,
+      // url: "https://rpc-mumbai.maticvigil.com",
+      // <---- YOUR MORALIS ID! (not limited to infura)
+      // url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXX/polygon/mumbai",
+      url: `https://polygon-mumbai.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
+      gasPrice: 40000000000, // 40 gwei
       accounts: {
         mnemonic: mnemonic(),
       },
@@ -312,13 +316,16 @@ module.exports = {
   },
   namedAccounts: {
     deployer: {
-      default: 0, // here this will by default take the first account as deployer
+      // here this will by default take the first account as deployer
+      default: 0,
     },
   },
   etherscan: {
     apiKey: {
       mainnet: process.env.ETHER_SCAN_API_KEY_TOKEN,
       rinkeby: process.env.ETHER_SCAN_API_KEY_TOKEN,
+      polygon: "NPZAWF7YDX24KHDUQ3RG6J6VWBB281IHIG", // got from polygonscan.com
+      polygonMumbai: "NPZAWF7YDX24KHDUQ3RG6J6VWBB281IHIG",
       // add other network's API key here
     },
   },

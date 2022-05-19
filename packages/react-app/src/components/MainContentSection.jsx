@@ -27,11 +27,11 @@ const MainContentSection = props => {
                   <i className="bx bx-money-withdraw"></i>
                 </div>
                 <h4>
-                  <a>Rebate if Outbid</a>
+                  <a>Refund if Outbid</a>
                 </h4>
                   <p>
                     You get money back if someone outbids you. 
-                    That rebate is based on the time remaining in the auction when you 
+                    That refund is based on the time remaining in the auction when you
                     bid. <a target="_blank" href="https://coral-credit-8f4.notion.site/Outbid-Rebate-Explainer-418da5f676f44d44910e831b2a81b8f4">The 
                     earlier you bid, the more money you get back.</a>
                   </p>

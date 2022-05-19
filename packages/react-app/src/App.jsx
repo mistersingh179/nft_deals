@@ -43,7 +43,7 @@ import {
   AuctionList,
   Foo,
 } from "./views";
-import { useStaticJsonRPC } from "./hooks";
+import { useContractConfig, useStaticJsonRPC } from './hooks'
 
 import logo from "./img/NFTD_Logo_2.png";
 
@@ -113,7 +113,7 @@ function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [
-    ...new Set([initialNetwork.name, "mainnet", "rinkeby", "localhost"]),
+    ...new Set([initialNetwork.name, "mainnet", "rinkeby", "localhost", "polygon", "mumbai"]),
   ];
 
   const [injectedProvider, setInjectedProvider] = useState();
@@ -187,7 +187,6 @@ function App(props) {
     userSigner.provider &&
     userSigner.provider._network &&
     userSigner.provider._network.chainId;
-
   // For more hooks, check out 🔗eth-hooks at: https://www.npmjs.com/package/eth-hooks
 
   // The transactor wraps transactions and provides notificiations
@@ -199,12 +198,12 @@ function App(props) {
   // Just plug in different 🛰 providers to get your balance on different chains:
   const yourMainnetBalance = useBalance(mainnetProvider, address);
 
-  // const contractConfig = useContractConfig();
+  const contractConfig = useContractConfig();
 
-  const contractConfig = {
-    deployedContracts: deployedContracts || {},
-    externalContracts: externalContracts || {},
-  };
+  // const contractConfig = {
+  //   deployedContracts: deployedContracts || {},
+  //   externalContracts: externalContracts || {},
+  // };
 
   // Load in your local 📝 contract and read a value from it:
   const readContracts = useContractLoader(localProvider, contractConfig);
@@ -454,6 +453,7 @@ function App(props) {
                   tx={tx}
                   writeContracts={writeContracts}
                   readContracts={readContracts}
+                  localChainId={localChainId}
                 />
               </Route>
               <Route exact path="/AuctionFactory">

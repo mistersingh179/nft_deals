@@ -18,7 +18,7 @@ function NetworkSwitch({ networkOptions, selectedNetwork, setSelectedNetwork }) 
 
   return (
     <div>
-      <Dropdown.Button overlay={menu} placement="bottomRight" trigger={["click"]}>
+      <Dropdown.Button overlay={menu} placement="topRight" trigger={["click"]}>
         <span style={{ textTransform: "capitalize" }}>{selectedNetwork}</span>
       </Dropdown.Button>
     </div>

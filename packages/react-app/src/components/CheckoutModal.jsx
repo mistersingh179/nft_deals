@@ -50,7 +50,7 @@ const CheckoutModal = props => {
 
   const rebateExplainer = (
     <>
-      You get money back if someone outbids you! That rebate is based on the
+      You get money back if someone outbids you! That refund is based on the
       time remaining in the auction when you bid. The earlier you bid, the more
       money you get back.{" "}
       <a
@@ -78,7 +78,7 @@ const CheckoutModal = props => {
         <div className="rebateDecrease">
           <Tooltip
             placement="right"
-            title="The rebate rate drops every hour remaining in the auction to encourage early bidding."
+            title="The refund rate drops every hour remaining in the auction to encourage early bidding."
           >
             -{tf}% in {durationToExpire.minutes()}m
           </Tooltip>
@@ -89,7 +89,7 @@ const CheckoutModal = props => {
 
   const rebateInfo = (
     <>
-      Rebate If Outbid{" "}
+      Refund If Outbid{" "}
       <Tooltip placement="right" title={rebateExplainer}>
         <i className="bi bi-info-circle info-icon"></i>
       </Tooltip>
