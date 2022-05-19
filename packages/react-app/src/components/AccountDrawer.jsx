@@ -88,10 +88,7 @@ const AccountDrawer = props => {
             justify={"start"}
             style={{ fontSize: 16, padding: 8 }}
           >
-            <Col span={3}>
-              <WEthLogo className="weth-drawer-icon" />
-            </Col>
-            <Col span={4}>
+            <Col span={8}>
               <Space>
                 <Text>WETH</Text>
               </Space>
@@ -107,10 +104,7 @@ const AccountDrawer = props => {
             justify={"start"}
             style={{ fontSize: 16, padding: 8 }}
           >
-            <Col span={3}>
-              <EthLogo className="weth-drawer-icon" />
-            </Col>
-            <Col span={4}>
+            <Col span={8}>
               <Space>
                 <Text>ETH</Text>
               </Space>
@@ -156,7 +150,7 @@ const AccountDrawer = props => {
             justify={"start"}
             style={{ fontSize: 16, padding: 8 }}
           >
-            <Col span={3}>
+            <Col span={4}>
               <img src={rewardsImage} className="rewards-icon" />
             </Col>
             <Col span={4}>
@@ -175,7 +169,7 @@ const AccountDrawer = props => {
             justify={"start"}
             style={{ fontSize: 16, padding: 8 }}
           >
-            <Col span={3}>
+            <Col span={4}>
               <Tooltip title="Rewards will be convertible into our token when it launches.">
                 <img src={alphaBackToken} className="rewards-icon" />
               </Tooltip>
