@@ -65,6 +65,7 @@ const BidEvents = props => {
               address: event.args.from,
               hash: event.transactionHash,
               when: event.when,
+              key: event.transactionHash
             });
           });
         }
@@ -84,7 +85,8 @@ const BidEvents = props => {
           address: from,
           amount: amount,
           hash: event.transactionHash,
-          when: moment()
+          when: moment(),
+          key: event.transactionHash
         });
       };
       console.log("*** adding events handler for new Bids", auctionContract);
