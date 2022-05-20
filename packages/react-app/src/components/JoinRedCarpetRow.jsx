@@ -89,6 +89,7 @@ const JoinRedCarpetRow = props => {
           The Red Carpet has {redCarpetLength}{" "}
           {plural("bidder", redCarpetLength)}. The auction will launch if a
           total of {threshold} bidders join the list by {thresholdDate}.{" "}
+          Red Carpet Addresses will get 2x rewards on every bid.
         </Col>
       </Row>
       <Row style={{ marginBottom: 20 }}>
