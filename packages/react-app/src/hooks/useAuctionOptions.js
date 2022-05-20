@@ -105,7 +105,7 @@ const useAuctionOptions = (
               updateAuctionOptions(key, allData[key]);
             }
           });
-          console.log("*** allData: ", allData);
+          window.allData = allData; // for Debug Purposes
         }
       } catch (e) {
         console.error("*** error: ", e);
@@ -140,8 +140,6 @@ const useAuctionOptions = (
         const ipfsHash = tokenURI.split("ipfs://")[1];
         const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
         imageUrl = await getImageFromUrl(ipfsUrl);
-        console.log("*** imageUrl: ", imageUrl);
-
         if (imageUrl.indexOf("http") == 0) {
           updateAuctionOptions("imageUrl", imageUrl);
         } else if (imageUrl.indexOf("ipfs://") == 0) {

@@ -57,7 +57,7 @@ const BidHistoryButtonModalCombo = props => {
             mainnetProvider={mainnetProvider}
             localProvider={localProvider}
             eventsCount={5}
-            blockCount={5000}
+            blockCount={500000}
             address={address}
             blockExplorer={blockExplorer}
           />

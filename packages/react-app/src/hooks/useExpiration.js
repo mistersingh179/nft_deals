@@ -19,17 +19,12 @@ export default (readContracts, auctionContractAddress, localProvider) => {
         const block = await localProvider.getBlock();
         let secondsLeftInAuction = await auctionContract.secondsLeftInAuction();
         secondsLeftInAuction = secondsLeftInAuction.toNumber();
-        console.log("*** seconds left in auction: ", secondsLeftInAuction);
         if (secondsLeftInAuction === 0) {
           setDurationToExpire(moment.duration(0, "seconds"));
         } else {
           const behindBy = moment().unix() - block.timestamp;
-          console.log("*** behind by: ", behindBy);
           let adjustSecondsLeftInAuction = secondsLeftInAuction - behindBy;
-          console.log(
-            "*** seconds left in auction: ",
-            adjustSecondsLeftInAuction,
-          );
+          console.log(adjustSecondsLeftInAuction);
           setDurationToExpire(
             moment.duration(adjustSecondsLeftInAuction, "seconds"),
           );
@@ -43,7 +38,6 @@ export default (readContracts, auctionContractAddress, localProvider) => {
   useEffect(() => {
     let intervalHandler;
     const decrementDuration = async () => {
-      console.log("*** decrementing");
       setDurationToExpire(previous => {
         if (!previous) {
           return previous;
@@ -54,10 +48,8 @@ export default (readContracts, auctionContractAddress, localProvider) => {
         }
       });
     };
-    console.log("*** registering");
     intervalHandler = window.setInterval(decrementDuration, 1000);
     return () => {
-      console.log("*** unregistering");
       window.clearInterval(intervalHandler);
     };
   }, [auctionContractAddress]);

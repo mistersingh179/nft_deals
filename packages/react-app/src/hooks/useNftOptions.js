@@ -90,7 +90,6 @@ const useNftOptions = (nftContractAddress, localProvider, tokenId) => {
         const ipfsHash = tokenUri.split("ipfs://")[1]
         const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`
         imageUrl = await getImageFromUrl(ipfsUrl)
-        console.log('*** imageUrl: ', imageUrl)
 
         if(imageUrl.indexOf('http') == 0){
           updateOptions('imageUrl', imageUrl)
