@@ -29,6 +29,9 @@ const useAuctionOptions = (
             Accept: "application/json",
           },
         });
+        if(result && result.data && result.data.status == "0"){
+          throw('eror');
+        }
         const price = result.data.result.ethusd;
         const priceInCents = parseInt(parseFloat(price).toFixed(2) * 100);
         setAuctionOptions(prevObj => {

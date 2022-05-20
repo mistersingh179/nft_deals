@@ -16,7 +16,7 @@ const useAuctionContract = (readContracts, auctionContractAddress, localProvider
       }
 
     }
-  }, [readContracts && readContracts.Auction, auctionContractAddress]);
+  }, [readContracts && readContracts.Auction, auctionContractAddress, localProvider]);
 
   return auctionContract
 }
