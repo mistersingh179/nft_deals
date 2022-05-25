@@ -49,8 +49,19 @@ const JoinRedCarpetRow = props => {
     });
   };
 
+  const alreadyOnWaitList = async () => {
+    console.log("Do nothing; already on wait list.");
+    return;
+  }
+
   const AlreadyInMessage = props => {
-    return <span>You are on the Red Carpet List.</span>;
+    return <Button
+              type="secondary wait-list-btn"
+              onClick={alreadyOnWaitList}
+              size={"large"}
+              style={{ width: "100%" }}>
+                You're on the Wait List. Go tell a friend!
+          </Button>;
   };
 
   const JoinRedCarpetButton = props => {
@@ -64,7 +75,7 @@ const JoinRedCarpetRow = props => {
           size={"large"}
           style={{ width: "100%" }}
         >
-          Join Red Carpet List
+          Join The Wait List
         </Button>
       </Tooltip>
     );
@@ -86,10 +97,8 @@ const JoinRedCarpetRow = props => {
     <>
       <Row style={{ marginBottom: 20 }}>
         <Col span={24}>
-          The Red Carpet has {redCarpetLength}{" "}
-          {plural("bidder", redCarpetLength)}. The auction will launch if a
-          total of {threshold} bidders join the list by {thresholdDate}.{" "}
-          Red Carpet Addresses will get 2x rewards on every bid.
+          Join the Wait List to get 2x rewards on every bid!{" "}
+          There are {redCarpetLength} {plural("player", redCarpetLength)} waiting for this auction to launch.
         </Col>
       </Row>
       <Row style={{ marginBottom: 20 }}>

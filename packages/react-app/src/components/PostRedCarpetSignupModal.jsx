@@ -36,28 +36,28 @@ const PostRedCarpetSignupModal = props => {
     <>
       <Modal
         title="Red Carpet List Confirmation"
+        className="winner-modal"
         visible={showPostRedCarpetSignupModal}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
         <Row justify="center">
-          <Col span={18} align="middle">
-            <h1>Congratulations</h1>
+          <Col span={20} align="middle">
+            <h1>Rewards Activated</h1>
             <img
               src={rewardsImage}
               className="winner-modal-badge"
               alt={"rewards"}
             /><br/>
-            You have been added to the Red Carpet List. When this auction
-            launches you will get 2x rewards.{""}
+            You are on the Wait List and will get
+            2x rewards per bid.{""}
           </Col>
         </Row>
         <Row justify="center" style={{ marginTop:12, marginBottom: 24 }}>
-          <Col span={18} align="middle">
+          <Col span={20} align="middle">
             <p>
-              Input your email and we will let you know when this auction
-              launches:
+              Input your email to get notified when this auction launches.
             </p>
             <EmailCapture address={address} />
           </Col>

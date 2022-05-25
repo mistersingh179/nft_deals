@@ -23924,3 +23924,8 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin-bottom: -3px;  
   font-size: 90%;
 }
+.wait-list-btn{
+  color: #4b02db;
+  border-color: #4b02db;
+  background-color: #fff;
+}

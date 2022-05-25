@@ -26,7 +26,7 @@ const EmailCapture = props => {
         result.data.emailAddress,
       );
       setEmail(result.data.emailAddress);
-      setMessage(`The bot is already setup to notify ${result.data.emailAddress}`);
+      setMessage(`You already have notifications setup for ${result.data.emailAddress}`);
     } catch (e) {
       console.log("unable to save email address: ", e);
     }
@@ -45,7 +45,7 @@ const EmailCapture = props => {
     } catch (e) {
       console.log("*** unable to save email address: ", e);
     } finally {
-      setMessage(`Our bot will notify ${email}`);
+      setMessage(`You'll receive notifications at ${email}`);
     }
   };
   console.log("*** message: ", message);
