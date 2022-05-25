@@ -43,7 +43,7 @@ import {
   AuctionList,
   Foo,
 } from "./views";
-import { useContractConfig, useStaticJsonRPC } from './hooks'
+import { useContractConfig, useStaticJsonRPC } from "./hooks";
 
 import logo from "./img/NFTD_Logo_2.png";
 
@@ -113,7 +113,14 @@ function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [
-    ...new Set([initialNetwork.name, "mainnet", "rinkeby", "localhost", "polygon", "mumbai"]),
+    ...new Set([
+      initialNetwork.name,
+      "mainnet",
+      "rinkeby",
+      "localhost",
+      "polygon",
+      "mumbai",
+    ]),
   ];
 
   const [injectedProvider, setInjectedProvider] = useState();
@@ -340,6 +347,14 @@ function App(props) {
   };
 
   const location = useLocation();
+  const { search } = location;
+  useEffect(() => {
+    const query = new URLSearchParams(search);
+    const chain = query.get("chain");
+    if (chain && networkOptions.find(network => network === chain)) {
+      setSelectedNetwork(chain);
+    }
+  }, [search]);
 
   useEffect(() => {
     if (LogRocket && address !== ethers.constants.AddressZero) {

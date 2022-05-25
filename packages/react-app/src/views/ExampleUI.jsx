@@ -15,11 +15,7 @@ import { SyncOutlined } from "@ant-design/icons";
 
 import { Address, Balance, Events } from "../components";
 
-import { use } from '@maticnetwork/maticjs'
-import { Web3ClientPlugin } from '@maticnetwork/maticjs-ethers'
 
-// install ethers plugin
-use(Web3ClientPlugin);
 
 export default function ExampleUI({
   purpose,
