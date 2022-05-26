@@ -1,13 +1,20 @@
-import {Button, Modal, Tooltip, Typography} from "antd";
+import { Button, Modal, Tooltip, Typography } from "antd";
 import BidEvents from "./BidEvents";
-import {useState} from "react";
+import { useMemo, useState } from 'react'
 const { Text } = Typography;
 
-const blockExplorerLink = (address, blockExplorer) => `${blockExplorer || "https://etherscan.io/"}address/${address}`;
+const blockExplorerLink = (address, blockExplorer) =>
+  `${blockExplorer || "https://etherscan.io/"}address/${address}`;
 
 const BidHistoryButtonModalCombo = props => {
-  const { readContracts, auctionContractAddress, mainnetProvider, localProvider, address, blockExplorer } =
-    props;
+  const {
+    readContracts,
+    auctionContractAddress,
+    mainnetProvider,
+    localProvider,
+    address,
+    blockExplorer,
+  } = props;
   const [showBidHistoryModal, setShowBidHistoryModal] = useState(false);
   const handleOk = evt => {
     setShowBidHistoryModal(false);
@@ -15,8 +22,31 @@ const BidHistoryButtonModalCombo = props => {
   const handleCancel = evt => {
     setShowBidHistoryModal(false);
   };
-  const auctionEtherscanLink = blockExplorerLink(auctionContractAddress, props.blockExplorer);
-
+  const auctionEtherscanLink = blockExplorerLink(
+    auctionContractAddress,
+    props.blockExplorer,
+  );
+  const lookBackBlockSize = useMemo(() => {
+    if (
+      localProvider &&
+      localProvider._network &&
+      localProvider._network.chainId
+    ) {
+      const chainId = localProvider._network.chainId;
+      // console.log("*** running lookBackBlockSize, ", chainId);
+      if (chainId === 137) {
+        return 3400;
+      } else if (chainId === 80001) {
+        return 3400;
+      } else {
+        return 500000;
+      }
+    } else {
+      return 500000;
+    }
+  }, [
+    localProvider
+  ]);
   const recentBidsTitle = (
     <Text>
       Recent Bids{" "}
@@ -32,11 +62,11 @@ const BidHistoryButtonModalCombo = props => {
   return (
     <>
       <Button
-         className="btn btn-secondary btn-sm btn-block bid-details-btn"
-         onClick={evt => setShowBidHistoryModal(true)}
+        className="btn btn-secondary btn-sm btn-block bid-details-btn"
+        onClick={evt => setShowBidHistoryModal(true)}
       >
         <i className="bi bi-card-checklist btn-icon"></i>
-        Recent Bids 
+        Recent Bids
       </Button>
       <Modal
         className="bid-history-modal"
@@ -45,19 +75,24 @@ const BidHistoryButtonModalCombo = props => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[
-          <Button className="etherscan-link" type="link" href={auctionEtherscanLink} target="_blank">
+          <Button
+            className="etherscan-link"
+            type="link"
+            href={auctionEtherscanLink}
+            target="_blank"
+          >
             View all bids on Etherscan
           </Button>,
         ]}
       >
         <p>
           <BidEvents
-            readContracts = {readContracts}
+            readContracts={readContracts}
             auctionContractAddress={auctionContractAddress}
             mainnetProvider={mainnetProvider}
             localProvider={localProvider}
             eventsCount={5}
-            blockCount={500000}
+            blockCount={lookBackBlockSize}
             address={address}
             blockExplorer={blockExplorer}
           />
