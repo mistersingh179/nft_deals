@@ -90,7 +90,19 @@ console.log(
   "***process.env.REACT_APP_INITIAL_NETWORK: ",
   process.env.REACT_APP_INITIAL_NETWORK,
 );
-const initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+
+let initialNetwork = NETWORKS[process.env.REACT_APP_INITIAL_NETWORK]; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+try {
+  const qs = window.location.search;
+  if (qs) {
+    const chain = qs.split("?chain=")[1];
+    if (chain) {
+      initialNetwork = NETWORKS[chain];
+    }
+  }
+} catch (e) {
+  console.log("unable to set initial network");
+}
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
