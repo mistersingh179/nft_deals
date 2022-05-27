@@ -2,36 +2,29 @@ import { Card, Col, Divider, Row } from "antd";
 import bayc300 from "../img/BAYC300.png";
 import Meta from "antd/es/card/Meta";
 import { useEffect, useState } from "react";
-import { useAuctionOptions } from "../hooks";
+import { useAllAuctionsData, useAuctionOptions } from "../hooks";
 import { useBlockNumber } from "eth-hooks";
 import { displayWeiAsEther, nftNameFixer, parseTokenUri } from "../helpers";
-import Duration from "./Duration";
 import { Link } from "react-router-dom";
-import displayEther from "./DisplayEther";
-import DisplayEther from "./DisplayEther";
+import getImageUrl from "../helpers/getImageUrl";
+import getOpenSeaStats from "../helpers/getOpenSeaStats";
+import FormatDuration from "./FormatDuration";
 
 const DurationOrComingSoon = props => {
-  const {
-    readContracts,
-    localProvider,
-    auctionContractAddress,
-    auctionOptions,
-  } = props;
-  if (auctionOptions.expiration.eq(0)) {
+  const { auction } = props;
+  if (auction.expiration.eq(0)) {
     return (
       <>
-        Ends in:{" "}
-        <span>Coming Soon</span>
+        Ends in: <span>Coming Soon</span>
       </>
-    )
+    );
   } else {
     return (
       <>
         Ends in:{" "}
-        <Duration
-          readContracts={readContracts}
-          auctionContractAddress={auctionContractAddress}
-          localProvider={localProvider}
+        <FormatDuration
+          secondsRemaining={auction.secondsLeftInAuction}
+          showSeconds={false}
         />
       </>
     );
@@ -39,49 +32,42 @@ const DurationOrComingSoon = props => {
 };
 
 const AuctionCardDesc = props => {
-  const {
-    readContracts,
-    localProvider,
-    auctionContractAddress,
-    auctionOptions,
-  } = props;
-
+  const { auction } = props;
+  const [stats, setStats] = useState({});
+  useEffect(async () => {
+    const s = await getOpenSeaStats(auction.name);
+    setStats(s);
+  }, [auction.name]);
+  const floorPrice = () =>
+    stats.floor_price ? "Ξ " + stats.floor_price : "Unavailable";
   return (
     <>
-      <p>Collection Floor Price: Ξ {auctionOptions.stats.floor_price}</p>
-      <p>Top Bid: Ξ {displayWeiAsEther(auctionOptions.maxBid)}</p>
-      <DurationOrComingSoon
-        readContracts={readContracts}
-        auctionContractAddress={auctionContractAddress}
-        localProvider={localProvider}
-        auctionOptions={auctionOptions}
-      />
+      <p>Collection Floor Price: {floorPrice()}</p>
+      <p>Top Bid: Ξ {displayWeiAsEther(auction.maxBid)}</p>
+      <DurationOrComingSoon auction={auction} />
     </>
   );
 };
 
-const AuctionCol = props => {
-  const {
-    readContracts,
-    localProvider,
-    address,
-    auctionContractAddress,
-    targetNetwork,
-    mainnetProvider,
-  } = props;
+const ChainName = ({ name }) => {
+  const capitalizeFirstLetter = string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+  return <>{capitalizeFirstLetter(name)}</>;
+};
 
-  const auctionOptions = useAuctionOptions(
-    readContracts,
-    auctionContractAddress,
-    localProvider,
-    address,
-    targetNetwork,
-    mainnetProvider,
-  );
+const AuctionCol = ({ auction }) => {
+  const [imageUrl, setImageUrl] = useState("");
+  useEffect(async () => {
+    const url = await getImageUrl(auction.tokenURI);
+    setImageUrl(url);
+  }, [auction.tokenURI]);
 
   return (
     <Col className="gutter-row" span={8}>
-      <Link to={`/auction2/${auctionContractAddress}`}>
+      <Link
+        to={`/auction2/${auction.contractAddress}?chain=${auction.chainName}`}
+      >
         <Card
           hoverable
           style={{
@@ -90,20 +76,12 @@ const AuctionCol = props => {
             marginBottom: "1em",
             marginTop: "1em",
           }}
-          cover={<img src={auctionOptions.imageUrl} className={"img-fluid"} />}
+          actions={[<ChainName name={auction.chainName} />]}
+          cover={<img src={imageUrl} className={"img-fluid"} />}
         >
           <Meta
-            title={
-              nftNameFixer(auctionOptions.name) + " #" + auctionOptions.tokenId
-            }
-            description={
-              <AuctionCardDesc
-                readContracts={readContracts}
-                localProvider={localProvider}
-                auctionOptions={auctionOptions}
-                auctionContractAddress={auctionContractAddress}
-              />
-            }
+            title={nftNameFixer(auction.name) + " #" + auction.tokenId}
+            description={<AuctionCardDesc auction={auction} />}
           />
         </Card>
       </Link>
@@ -120,19 +98,8 @@ const ExploreAuctionsSection = props => {
     mainnetProvider,
   } = props;
   const blockNumber = useBlockNumber(localProvider);
+  const auctions = useAllAuctionsData(address);
 
-  const [auctions, setAuctions] = useState([]);
-
-  useEffect(async () => {
-    if (readContracts && readContracts.AuctionFactory) {
-      const auctions = await readContracts.AuctionFactory.auctions();
-      setAuctions(auctions);
-    }
-  }, [
-    readContracts,
-    readContracts && readContracts.AuctionFactory,
-    blockNumber,
-  ]);
 
   return (
     <section id="hero" className="d-flex align-items-center">
@@ -144,16 +111,11 @@ const ExploreAuctionsSection = props => {
         </Row>
         <Divider />
         <Row gutter={[16, 16]}>
-          {auctions.map(auctionContractAddress => {
+          {auctions.map(auction => {
             return (
               <AuctionCol
-                key={auctionContractAddress}
-                readContracts={readContracts}
-                localProvider={localProvider}
-                address={address}
-                auctionContractAddress={auctionContractAddress}
-                targetNetwork={targetNetwork}
-                mainnetProvider={mainnetProvider}
+                key={auction.chainName + "-" + auction.contractAddress}
+                auction={auction}
               />
             );
           })}

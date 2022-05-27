@@ -7,7 +7,7 @@ import { useTopNavClass } from "../hooks";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { NotificationOutlined, NotificationTwoTone } from "@ant-design/icons";
-import NotificationsModal from './NotificationsModal'
+import NotificationsModal from "./NotificationsModal";
 
 const TheHeader = props => {
   const { localProvider, address, writeContracts, tx, blockExplorer } = props;
@@ -17,6 +17,7 @@ const TheHeader = props => {
   const { networkOptions, selectedNetwork, setSelectedNetwork } = props;
   const { NETWORKCHECK, localChainId, selectedChainId } = props;
   const { isPlaying } = props;
+  const { showClaimIcon } = props;
 
   const topNavClass = useTopNavClass();
 
@@ -31,7 +32,7 @@ const TheHeader = props => {
     setShowFeedbackModal(true);
   };
   const notifButtonHandler = async evt => {
-    setShowNotificationsModal(true)
+    setShowNotificationsModal(true);
   };
 
   return (
@@ -45,20 +46,22 @@ const TheHeader = props => {
             <li>
               <Link to="/auctions">View Auctions</Link>
             </li>
-            <li>
-              <a href="javascript:void(0)" onClick={claimButtonHandler}>
-                Claim NFT
-              </a>
-              <ClaimNFTModal
-                showClaimNftModal={showClaimNftModal}
-                setShowClaimNftModal={setShowClaimNftModal}
-                localProvider={localProvider}
-                address={address}
-                writeContracts={writeContracts}
-                tx={tx}
-                blockExplorer={blockExplorer}
-              />
-            </li>
+            {showClaimIcon && (
+              <li>
+                <a href="javascript:void(0)" onClick={claimButtonHandler}>
+                  Claim NFT
+                </a>
+                <ClaimNFTModal
+                  showClaimNftModal={showClaimNftModal}
+                  setShowClaimNftModal={setShowClaimNftModal}
+                  localProvider={localProvider}
+                  address={address}
+                  writeContracts={writeContracts}
+                  tx={tx}
+                  blockExplorer={blockExplorer}
+                />
+              </li>
+            )}
             <li>
               <a href="javascript:void(0)" onClick={feedbackButtonHandler}>
                 Bonus Rewards

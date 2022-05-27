@@ -64,6 +64,7 @@ const Auction2 = props => {
         selectedChainId={selectedChainId}
         tx={tx}
         isPlaying={isPlaying}
+        showClaimIcon={true}
       />
 
       <section id="hero" className="d-flex align-items-center">

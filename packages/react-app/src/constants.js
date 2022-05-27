@@ -221,3 +221,11 @@ export const displayNameMappings = {
   "BoredApeYachtClub": "Bored Ape Yacht Club",
   "You": "You by BFF",
 }
+
+export const chainToName = {
+  1: "mainnet",
+  4: "rinkeby",
+  31337: "localhost",
+  80001: "mumbai",
+  137: "polygon",
+};

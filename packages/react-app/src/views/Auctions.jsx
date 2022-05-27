@@ -62,6 +62,7 @@ const Auctions = props => {
         localChainId={localChainId}
         selectedChainId={selectedChainId}
         tx={tx}
+        showClaimIcon={false}
       />
 
       <ExploreAuctionsSection
