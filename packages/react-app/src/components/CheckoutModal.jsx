@@ -80,7 +80,7 @@ const CheckoutModal = props => {
             placement="right"
             title="The refund rate drops every hour remaining in the auction to encourage early bidding."
           >
-            -{tf}% in {durationToExpire.minutes()}m
+            ~{result-4}% in {durationToExpire.minutes()}m
           </Tooltip>
         </div>
       </>
