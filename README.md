@@ -103,3 +103,9 @@ https://create-react-app.dev/docs/deployment#serving-apps-with-client-side-routi
 - these are from mnemonic, also in code by `provider.getSigners()` etc.
 - `yarn account` will give first account which is deployer account with balances on each network.
 
+## how to verify on tenderly
+- it doesnt need params, just code
+- `npx hardhat --network mainnet tenderly:verify Auction=0xf2c50dA3C1462873d8604a2E9Dc92FcC6f80924a`
+- above will verify that address on that network and give url
+- we can click url and add to our project and then debug transacations & setup alerts
+- all commands from hardhat folder

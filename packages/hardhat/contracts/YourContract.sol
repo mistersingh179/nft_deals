@@ -11,17 +11,17 @@ pragma solidity ^0.8.13;
  */
 
 import "hardhat/console.sol";
-import "@openzeppelin/contracts/utils/Multicall.sol";
+//import "@openzeppelin/contracts/utils/Multicall.sol";
 
 // import "@openzeppelin/contracts/access/Ownable.sol"; 
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
 
-contract YourContract is Multicall {
+contract YourContract {
 
   event SetPurpose(address sender, string purpose);
 
   string public purpose = "Building Unstoppable Apps";
-  string public name = 'foo bar';
+  string public name = 'foo bar2';
 
   struct Foo{
       string a;
@@ -36,7 +36,8 @@ contract YourContract is Multicall {
       foo.c = 'hi';
       return foo;
   }
-  constructor() payable {
+  constructor(string memory _purpose) payable {
+      purpose = _purpose;
     // what should we do on deploy?
   }
 
