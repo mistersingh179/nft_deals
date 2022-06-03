@@ -214,12 +214,14 @@ export const NETWORK = chainId => {
 
 export const nftNameOpenSeaMappings = {
   "You": "bff-you",
-  "Moonbirds": "proof-moonbirds"
+  "Moonbirds": "proof-moonbirds",
+  "goblintown": "goblintownwtf",
 }
 
 export const displayNameMappings = {
   "BoredApeYachtClub": "Bored Ape Yacht Club",
   "You": "You by BFF",
+  "goblintown": "goblintown.wtf",
 }
 
 export const chainToName = {
