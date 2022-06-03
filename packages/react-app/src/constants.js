@@ -220,6 +220,7 @@ export const nftNameOpenSeaMappings = {
 
 export const displayNameMappings = {
   "BoredApeYachtClub": "Bored Ape Yacht Club",
+  "MutantApeYachtClub": "Mutant Ape Yacht Club",
   "You": "You by BFF",
   "goblintown": "goblintown.wtf",
 }
