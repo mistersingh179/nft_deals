@@ -2,8 +2,16 @@ import YouTubeEmbed from "./YouTubeEmbed";
 import { consensysLogo, protocolLabsLogo, tachyonLogo } from "../img";
 import FAQ from "./FAQ";
 import { anon1, anon2, rod, sandeep } from "../img/team";
+import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
+import { useContext } from "react";
 
 const MainContentSection = props => {
+  const auctionOptions = useContext(AuctionOptionsContext);
+  const isNoRefundAuction =
+    auctionOptions.auctionFeeType === 1 &&
+    auctionOptions.staticFeeInBasisPoints.eq(10000);
+  const isRefundAuction = !isNoRefundAuction;
+
   return (
     <main id="main">
       <section id="services" className="services section-bg">
@@ -12,7 +20,12 @@ const MainContentSection = props => {
             <h2>How It Works</h2>
             <p>
               Only NFT Deals lets you{" "}
-              <strong>win premium NFTs at deep discounts</strong>. Here's how it works: each bid raises the auction price by a fixed amount of wETH and extends the timer by 24 hours. The top bid when time runs out wins the auction and gets the NFT. The huge discount is possible because the seller earns from each bid – rather than the final winning bid.
+              <strong>win premium NFTs at deep discounts</strong>. Here's how it
+              works: each bid raises the auction price by a fixed amount of wETH
+              and extends the timer by 24 hours. The top bid when time runs out
+              wins the auction and gets the NFT. The huge discount is possible
+              because the seller earns from each bid – rather than the final
+              winning bid.
             </p>
           </div>
 
@@ -22,7 +35,7 @@ const MainContentSection = props => {
               data-aos="zoom-in"
               data-aos-delay="100"
             >
-              <div className="icon-box">
+              {isRefundAuction && <div className="icon-box">
                 <div className="icon">
                   <i className="bx bx-money-withdraw"></i>
                 </div>
@@ -30,12 +43,30 @@ const MainContentSection = props => {
                   <a>Refund if Outbid</a>
                 </h4>
                   <p>
-                    You get money back if someone outbids you. 
-                    That refund is based on the time remaining in the auction when you
-                    bid. <a target="_blank" href="https://coral-credit-8f4.notion.site/Outbid-Rebate-Explainer-418da5f676f44d44910e831b2a81b8f4">The 
-                    earlier you bid, the more money you get back.</a>
+                    You get money back if someone outbids you. That refund
+                    is based on the auction type time remaining in the auction
+                    when you bid.{" "}
+                    <a
+                      target="_blank"
+                      href="https://coral-credit-8f4.notion.site/Outbid-Rebate-Explainer-418da5f676f44d44910e831b2a81b8f4"
+                    >
+                      The earlier you bid, the more money you get back.
+                    </a>
                   </p>
-              </div>
+                )
+              </div>}
+              {isNoRefundAuction && <div className="icon-box">
+                <div className="icon">
+                  <i className="bx bx-money-withdraw"></i>
+                </div>
+                <h4>
+                  <a>If Outbid</a>
+                </h4>
+                  <p>
+                    This offer is non-refundable.{' '}
+                    You need to hold your spot for 24 hours for the auction to end and you to win the NFT.{' '}
+                  </p>
+              </div>}
             </div>
 
             <div
@@ -91,10 +122,10 @@ const MainContentSection = props => {
                   <a>Bid-to-Earn</a>
                 </h4>
                 <p>
-                  Earn rewards every time you bid. 
-                  Rewards are based on the number of hours remaining in this auction. 
-                  Bid early, get more. Rewards will be used to calculate 
-                  airdrops, access to exclusive auctions, and more.
+                  Earn rewards every time you bid. Rewards are based on the
+                  number of hours remaining in this auction. Bid early, get
+                  more. Rewards will be used to calculate airdrops, access to
+                  exclusive auctions, and more.
                 </p>
               </div>
             </div>
@@ -107,7 +138,8 @@ const MainContentSection = props => {
           <div className="section-title">
             <h2>Quick Explainer Video</h2>
             <p className="explainer-video">
-              Watch this 2-min. video to learn how to bid and win on NFT Deals auctions.
+              Watch this 2-min. video to learn how to bid and win on NFT Deals
+              auctions.
             </p>
             <div className="embed-container">
               <YouTubeEmbed embedId={"pyQ0SU-0JJc"} />
@@ -175,10 +207,16 @@ const MainContentSection = props => {
                     "NFT Show & Tell" on YouTube for fun.
                   </p>
                   <div className="social">
-                    <a target="_blank" href="https://twitter.com/rodrigofuentes7">
+                    <a
+                      target="_blank"
+                      href="https://twitter.com/rodrigofuentes7"
+                    >
                       <i className="bx bxl-twitter" />
                     </a>
-                    <a target="_blank" href="https://www.linkedin.com/in/jrodrigofuentes/">
+                    <a
+                      target="_blank"
+                      href="https://www.linkedin.com/in/jrodrigofuentes/"
+                    >
                       {" "}
                       <i className="bx bxl-linkedin" />{" "}
                     </a>
@@ -207,7 +245,10 @@ const MainContentSection = props => {
                     <a target="_blank" href="https://twitter.com/sandeeparneja">
                       <i className="bx bxl-twitter" />
                     </a>
-                    <a target="_blank" href="https://www.linkedin.com/in/sandeeparneja/">
+                    <a
+                      target="_blank"
+                      href="https://www.linkedin.com/in/sandeeparneja/"
+                    >
                       {" "}
                       <i className="bx bxl-linkedin" />{" "}
                     </a>
@@ -262,22 +303,33 @@ const MainContentSection = props => {
           <div className="section-title">
             <h2>Stay In Touch</h2>
             <p>
-              The NFT Deals community is focused on bringing together NFT 
-              degens, newbies, traders, flippers, and creators to power 
-              the future of auction technology. Over time, our novel 
-              auction protocol should become increasingly decentralized 
-              so that it is governed by a DAO that empowers even the 
-              smallest entrepreneurs to earn income by hosting their own 
-              NFT auction house. Join us.
+              The NFT Deals community is focused on bringing together NFT
+              degens, newbies, traders, flippers, and creators to power the
+              future of auction technology. Over time, our novel auction
+              protocol should become increasingly decentralized so that it is
+              governed by a DAO that empowers even the smallest entrepreneurs to
+              earn income by hosting their own NFT auction house. Join us.
             </p>
             <div className="social-links mt-4">
-              <a target="_blank" href="https://twitter.com/NFT_Deals_xyz" className="twitter">
+              <a
+                target="_blank"
+                href="https://twitter.com/NFT_Deals_xyz"
+                className="twitter"
+              >
                 <i className="bx bxl-twitter" />
               </a>
-              <a target="_blank" href="https://discord.gg/uKQgkteu72" className="discord">
+              <a
+                target="_blank"
+                href="https://discord.gg/uKQgkteu72"
+                className="discord"
+              >
                 <i className="bx bxl-discord" />
               </a>
-              <a target="_blank" href="https://medium.com/nftdeals/" className="medium">
+              <a
+                target="_blank"
+                href="https://medium.com/nftdeals/"
+                className="medium"
+              >
                 <i className="bx bxl-medium" />
               </a>
             </div>

@@ -15,6 +15,12 @@ const CheckoutModal = props => {
   const yourLocalBalance = useBalance(localProvider, address);
   const [readTos, setReadTos] = useState(false);
   const auctionOptions = useContext(AuctionOptionsContext);
+  const isNoRefundAuction =
+    auctionOptions.auctionFeeType === 1 &&
+    auctionOptions.staticFeeInBasisPoints.eq(10000);
+  const isRefundAuction = !isNoRefundAuction;
+  const isOffer = auctionOptions.minimumBidIncrement.eq(0);
+  const isBidding = !isOffer;
 
   const handleOk = async evt => {
     setshowCheckoutModal(false);
@@ -65,7 +71,7 @@ const CheckoutModal = props => {
 
   const RebateAmount = props => {
     // 100 - (100 + 200)/100
-    const tfInBp = auctionOptions.dynamicProtocolFeeInBasisPoints.toNumber();
+    const tfInBp = auctionOptions.feeInBasisPoints.toNumber();
     const tf = (tfInBp / 100).toFixed(2);
     const result = (100 - tf).toFixed(2);
     const durationToExpire = moment.duration(
@@ -109,7 +115,7 @@ const CheckoutModal = props => {
     },
     {
       key: "2",
-      col1: "Your Bid Amount",
+      col1: "Your Tx Amount",
       col2: (
         <>
           <WEthLogo className="weth-bid-icon" />{" "}
@@ -121,15 +127,18 @@ const CheckoutModal = props => {
     },
     {
       key: "3",
-      col1: rebateInfo,
-      col2: <RebateAmount />,
-    },
-    {
-      key: "4",
       col1: rewardsInfo,
       col2: auctionOptions.currentReward.toNumber(),
-    },
+    }
   ];
+
+  if(isRefundAuction){
+    confirmBidDataSource.push({
+      key: "4",
+      col1: rebateInfo,
+      col2: <RebateAmount />,
+    },)
+  }
 
   const confirmBidColumns = [
     {
@@ -146,14 +155,14 @@ const CheckoutModal = props => {
     <>
       <Modal
         className="winner-modal"
-        title="Confirm Bid"
+        title="Confirm Transaction"
         visible={showCheckoutModal}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={22} align="center">
-            <h1>Confirm Bid</h1>
+            <h1>Confirm Transaction</h1>
           </Col>
           <Col span={22} align="left">
             <h6 className="confirmBidItem">
@@ -182,11 +191,12 @@ const CheckoutModal = props => {
               disabled={readTos == false || weHaveEnoughWeth() == false}
               onClick={handleOk}
             >
-              Bid Now
+              {isBidding && "Bid Now"}
+              {isOffer && "Place Offer"}
             </Button>
           </Col>
         </Row>
-        {weHaveEnoughWeth() == false && <ErrorAlertRow />}        
+        {weHaveEnoughWeth() == false && <ErrorAlertRow />}
       </Modal>
     </>
   );

@@ -79,6 +79,7 @@ describe("Auction", () => {
     const lastAuctionAddress = auctions[auctions.length - 1];
     auction = await ethers.getContractAt("Auction", lastAuctionAddress);
     console.log("auction address: ", auction.address);
+    await auction.connect(adminOne).setAuctionFeeType(0);
 
     let approvalHolder = await bestNft.getApproved(tokenId);
     console.log("for tokenId: ", tokenId, "approval is with: ", approvalHolder);
@@ -208,6 +209,7 @@ describe("Auction", () => {
     const newAuctionAddress = auctions[auctions.length - 1];
     console.log("this is address of new auction: ", newAuctionAddress);
     const newAuction = await ethers.getContractAt("Auction", newAuctionAddress);
+    await newAuction.connect(adminOne).setAuctionFeeType(0);
     await bestNft.connect(chrome).approve(newAuctionAddress, newTokenId);
 
     expect(await bestNft.ownerOf(newTokenId)).to.be.equal(chrome.address);

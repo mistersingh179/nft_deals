@@ -57,6 +57,9 @@ const useAuctionOptions = (
   );
 
   const [auctionOptions, setAuctionOptions] = useState({
+    auctionFeeType: 1,
+    staticFeeInBasisPoints: ethers.BigNumber.from(10000),
+    feeInBasisPoints: ethers.BigNumber.from(10000),
     dynamicProtocolFeeInBasisPoints: ethers.BigNumber.from(0),
     listerTakeInPercentage: ethers.BigNumber.from(0),
     winningAddress: zeroAddress,

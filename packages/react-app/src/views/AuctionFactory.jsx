@@ -32,9 +32,9 @@ export default function AuctionFactory({
   const [nftTokenId, setNftTokenId] = useState("");
   const [nftOwner, setNftOwner] = useState("");
   const [auctionOptions, setAuctionOptions] = useState({
-    startingBid: '0',
+    startingBid: '1000000000000000000',
     auctionTimeIncrementOnBid: (24*60*60)+"",
-    minimumBidIncrement: '300000000000000',
+    minimumBidIncrement: '0',
   });
   const [auctionFactoryAddress, setAuctionFactoryAddress] = useState('');
   const blockNumber = useBlockNumber(localProvider);

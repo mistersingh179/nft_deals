@@ -110,6 +110,7 @@ describe("AuctionEnd2End and more", () => {
     const auctions = await auctionFactory.auctions();
     const lastAuctionAddress = auctions[auctions.length - 1];
     auction = await ethers.getContractAt("Auction", lastAuctionAddress);
+    await auction.connect(adminOne).setAuctionFeeType(0);
     console.log("we have auction at: ", auction.address);
     // eslint-disable-next-line no-unused-expressions
     expect(auction.address).to.be.properAddress;
@@ -370,6 +371,7 @@ describe("AuctionEnd2End and more", () => {
     const auctions = await auctionFactory.auctions();
     const lastAuctionAddress = auctions[auctions.length - 1];
     auction = await ethers.getContractAt("Auction", lastAuctionAddress);
+    await auction.connect(adminOne).setAuctionFeeType(0);
     await bestNft.connect(firefox).approve(auction.address, tokenId);
     await auction.connect(firefox).startAuction();
 

@@ -25,11 +25,15 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
     using EnumerableSet for EnumerableSet.AddressSet;
 
     EnumerableSet.AddressSet private redCarpetSet;
-    enum ListState { CLOSE, OPEN}
+    enum ListState { CLOSE, OPEN }
     ListState public redCarpetState = ListState.OPEN;
 
     bytes32 public constant TREASURY_ROLE = keccak256("TREASURY_ROLE");
     bytes32 public constant MODERATOR_ROLE = keccak256("MODERATOR_ROLE");
+
+    enum FlexibilityType { DYNAMIC, STATIC }
+    FlexibilityType public auctionFeeType = FlexibilityType.STATIC;
+    uint public staticFeeInBasisPoints = 10_000;
 
     uint public listerTakeInPercentage;
     IERC20 public immutable weth;
@@ -62,6 +66,9 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
     event AuctionExtended(uint from, uint to);
 
     struct AllData {
+        FlexibilityType auctionFeeType;
+        uint staticFeeInBasisPoints;
+        uint feeInBasisPoints;
         uint listerTakeInPercentage;
         uint dynamicProtocolFeeInBasisPoints;
         IERC20 weth;
@@ -283,8 +290,8 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
         _sendMoney(winningAddress, amountToRefund);
         giveReward();
 
-        uint dynamicProtocolFeeInBasisPoints = getDynamicProtolFeeInBasisPoints();
-        uint protocolFee = calculateFeeFromBasisPoints(totalNextBid, dynamicProtocolFeeInBasisPoints);
+        uint feeInBasisPoints = getFeeInBasisPoints();
+        uint protocolFee = calculateFeeFromBasisPoints(totalNextBid, feeInBasisPoints);
         listerFee = (protocolFee * listerTakeInPercentage) / 100;
         platformFee = protocolFee - listerFee;
 
@@ -366,6 +373,8 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
     function _sendMoney(address recipient, uint amount) private {
         if(recipient == address(0)){
             console.log('wont sent money as recipient is 0');
+        } else if(amount == 0){
+            console.log('wont send money as amount is 0');
         }else{
             console.log('in sendmoney');
             console.log(recipient);
@@ -413,6 +422,24 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
         minimumBidIncrement = _minimumBidIncrement;
     }
 
+    function setStaticFeeInBasisPoints(uint _staticFeeInBasisPoints) onlyRole(MODERATOR_ROLE) public {
+        staticFeeInBasisPoints = _staticFeeInBasisPoints;
+    }
+
+    function setAuctionFeeType(FlexibilityType _auctionFeeType) onlyRole(MODERATOR_ROLE) public {
+        auctionFeeType = _auctionFeeType;
+    }
+
+    function getFeeInBasisPoints() view public returns(uint){
+        if(auctionFeeType == FlexibilityType.DYNAMIC){
+            return getDynamicProtolFeeInBasisPoints();
+        }else if(auctionFeeType == FlexibilityType.STATIC){
+            return staticFeeInBasisPoints;
+        }else {
+            return 10_000;
+        }
+    }
+
     function getDynamicProtolFeeInBasisPoints() view public returns(uint){
         console.log("in getDynamicProtolFeeInBasisPoints");
         uint hoursLeft = hoursLeftInAuction();
@@ -429,7 +456,9 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
 
     function getAllData(address me) public view returns(AllData memory) {
         AllData memory data;
-
+        data.auctionFeeType = auctionFeeType;
+        data.staticFeeInBasisPoints = staticFeeInBasisPoints;
+        data.feeInBasisPoints = getFeeInBasisPoints();
         data.dynamicProtocolFeeInBasisPoints = getDynamicProtolFeeInBasisPoints();
         data.listerTakeInPercentage = listerTakeInPercentage;
         data.weth = weth;

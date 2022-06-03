@@ -14,13 +14,13 @@ const TransactionPendingModal = props => {
     <>
       <Modal
         className="winner-modal"
-        title="Latest Bids"
+        title="Latest Txs"
         visible={showTransactionModal}
         closeIcon={<></>}
       >
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={18} align="middle">
-            <h1>Processing Bid</h1>
+            <h1>Processing Tx</h1>
             <div class="sk-folding-cube">
               <div class="sk-cube1 sk-cube"></div>
               <div class="sk-cube2 sk-cube"></div>
@@ -30,7 +30,7 @@ const TransactionPendingModal = props => {
             <h5>You're closer to winning this NFT! </h5>
             <p>
               Please review and approve this transaction in your wallet.
-              Then your bid should be confirmed on the blockchain soon. 
+              Then your tx should be confirmed on the blockchain soon.
             </p>
             <Button
               className="etherscan-link"

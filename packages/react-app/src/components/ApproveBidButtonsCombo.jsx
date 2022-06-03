@@ -30,6 +30,8 @@ const ApproveBidButtonsCombo = props => {
   );
   const [fundsApproved, setFundsApproved] = useState(ethers.BigNumber.from(0));
   const blockNumber = useBlockNumber(localProvider);
+  const isOffer = auctionOptions.minimumBidIncrement.eq(0);
+  const isBidding = !isOffer;
 
   const canvasStyles = {
     position: "fixed",
@@ -185,7 +187,8 @@ const ApproveBidButtonsCombo = props => {
             size={"large"}
             onClick={evt => setShowCheckoutModal(true)}
           >
-            Place Bid
+            {isOffer && "Place Offer"}
+            {isBidding && "Place Bid"}
           </Button>
           <TransactionPendingModal
             showTransactionModal={showTransactionModal}

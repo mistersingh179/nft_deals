@@ -27,6 +27,8 @@ const NftInteractionRow = props => {
   const { slug: auctionContractAddress } = useParams();
   const auctionOptions = useContext(AuctionOptionsContext);
   const blockExplorerLink = useBlockExplorerLink(blockExplorer);
+  const isOffer = auctionOptions.minimumBidIncrement.eq(0);
+  const isBidding = !isOffer;
 
   return (
     <div className="row">
@@ -55,7 +57,8 @@ const NftInteractionRow = props => {
           <div className="col-md-6 bid-box">
             <Space>
               <h3>
-                Top Bid{" "}
+                {isOffer && "Offer Amount "}
+                {isBidding && "Top Bid "}
                 <Tooltip title="The top bidder when the timer ends will win the auction.">
                   <i className="bi bi-info-circle bid-info"></i>
                 </Tooltip>
@@ -91,7 +94,7 @@ const NftInteractionRow = props => {
           </div>
         </div>
         <div className="row">
-          <div className="col-md-6 bid-box">
+          {isBidding && <div className="col-md-6 bid-box">
             <h3>
               Next Bid{" "}
               <Tooltip title="You cannot choose a bid amount. The next possible bid is a fixed amount above the current bid.">
@@ -106,7 +109,7 @@ const NftInteractionRow = props => {
                 priceInCents={auctionOptions.priceInCents}
               />
             </h1>
-          </div>
+          </div>}
           <div className="col-md-6 bid-box">
             <h3>
               Current Winner{" "}
