@@ -11,21 +11,23 @@ const MainContentSection = props => {
     auctionOptions.auctionFeeType === 1 &&
     auctionOptions.staticFeeInBasisPoints.eq(10000);
   const isRefundAuction = !isNoRefundAuction;
+  const isOffer = auctionOptions.minimumBidIncrement.eq(0);
+  const isBidding = !isOffer;
 
   return (
     <main id="main">
       <section id="services" className="services section-bg">
         <div className="container" data-aos="fade-up">
           <div className="section-title">
-            <h2>How It Works</h2>
+            <h2>How is this not a scam?</h2>
+            <h5>
+              The huge discount is possible because the seller earns fees from each{" "} 
+              bid – rather than just the final winning bid.
+            </h5>              
             <p>
-              Only NFT Deals lets you{" "}
-              <strong>win premium NFTs at deep discounts</strong>. Here's how it
-              works: each bid raises the auction price by a fixed amount of wETH
-              and extends the timer by 24 hours. The top bid when time runs out
-              wins the auction and gets the NFT. The huge discount is possible
-              because the seller earns from each bid – rather than the final
-              winning bid.
+              As a result, the winning{" "}
+              bidder can get a discount, and the seller can earn{" "}
+              more than floor price from cumulative bid fees. Here are some key traits of this auction. 
             </p>
           </div>
 
@@ -44,7 +46,7 @@ const MainContentSection = props => {
                 </h4>
                   <p>
                     You get money back if someone outbids you. That refund
-                    is based on the auction type time remaining in the auction
+                    is based on the auction type & time remaining in the auction
                     when you bid.{" "}
                     <a
                       target="_blank"
@@ -53,18 +55,18 @@ const MainContentSection = props => {
                       The earlier you bid, the more money you get back.
                     </a>
                   </p>
-                )
               </div>}
               {isNoRefundAuction && <div className="icon-box">
                 <div className="icon">
                   <i className="bx bx-money-withdraw"></i>
                 </div>
                 <h4>
-                  <a>If Outbid</a>
+                  <a>Pay-to-Bid Auction</a>
                 </h4>
                   <p>
-                    This offer is non-refundable.{' '}
-                    You need to hold your spot for 24 hours for the auction to end and you to win the NFT.{' '}
+                    Unlike a standard auction (where only the winning bidder is required to pay), {" "}
+                    this auction requires all bidders to pay {" "}
+                    their bid amount.
                   </p>
               </div>}
             </div>
@@ -79,7 +81,7 @@ const MainContentSection = props => {
                   <i className="bx bx-timer" />
                 </div>
                 <h4>
-                  <a>Timer Restarts</a>
+                  <a>Timer Extension</a>
                 </h4>
                 <p>
                   Each bid will extend the auction by 24 hours. This allows
@@ -99,10 +101,10 @@ const MainContentSection = props => {
                   <i className="bx bx-party" />
                 </div>
                 <h4>
-                  <a>Winner, Winner</a>
+                  <a>How to Win</a>
                 </h4>
                 <p>
-                  If you are the top bid when the timer runs out, you win the
+                  If you placed the last bid when the timer runs out, you win the
                   NFT. Click on "Claim NFT" in the menu bar to transfer the NFT
                   to your wallet.
                 </p>

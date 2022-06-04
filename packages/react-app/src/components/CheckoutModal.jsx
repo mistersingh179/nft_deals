@@ -80,15 +80,12 @@ const CheckoutModal = props => {
     );
     return (
       <>
-        <div>{result}%</div>
-        <div className="rebateDecrease">
-          <Tooltip
-            placement="right"
-            title="The refund rate drops every hour remaining in the auction to encourage early bidding."
-          >
-            ~{result-4}% in {durationToExpire.minutes()}m
-          </Tooltip>
-        </div>
+        <Tooltip
+          placement="right"
+          title="The refund rate decreases ~4% every hour to encourage early bidding."
+        >
+          <div>{result}%</div>
+        </Tooltip>
       </>
     );
   };
@@ -115,7 +112,7 @@ const CheckoutModal = props => {
     },
     {
       key: "2",
-      col1: "Your Tx Amount",
+      col1: "Your Bid Amount",
       col2: (
         <>
           <WEthLogo className="weth-bid-icon" />{" "}
@@ -155,14 +152,14 @@ const CheckoutModal = props => {
     <>
       <Modal
         className="winner-modal"
-        title="Confirm Transaction"
+        title="Confirm Bid"
         visible={showCheckoutModal}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
           <Col span={22} align="center">
-            <h1>Confirm Transaction</h1>
+            <h1>Confirm Bid</h1>
           </Col>
           <Col span={22} align="left">
             <h6 className="confirmBidItem">
@@ -179,11 +176,11 @@ const CheckoutModal = props => {
         </Row>
         <Row justify="center" style={{ marginTop: 24, marginBottom: 12 }}>
           <Col span={22} align="left">
-            <Checkbox onChange={evt => setReadTos(evt.target.checked)}>
+            <Checkbox className="normal-line-height" onChange={evt => setReadTos(evt.target.checked)}>
               By checking this box, I agree to NFT Deals'{" "}
               <a target="_blank" href="https://nftdeals.xyz/tos">
-                Terms of Service
-              </a>
+                Terms of Service {" "}
+              </a> {isNoRefundAuction && "and that my entire bid is a non-refundable payment to participate in this auction."}
             </Checkbox>
             <Button
               className="btn-primary bid-btn"
@@ -191,8 +188,7 @@ const CheckoutModal = props => {
               disabled={readTos == false || weHaveEnoughWeth() == false}
               onClick={handleOk}
             >
-              {isBidding && "Bid Now"}
-              {isOffer && "Place Offer"}
+              Bid Now
             </Button>
           </Col>
         </Row>

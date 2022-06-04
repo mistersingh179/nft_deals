@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Col, Row, Space, Tooltip } from "antd";
+import { Col, Divider, Row, Space, Tooltip } from "antd";
 import Duration from "./Duration";
 import { ReactComponent as WEthLogo } from "../img/wrapped_ethereum_icon.svg";
 import { ApproveBidButtonsCombo, JoinRedCarpetRow } from "./index";
@@ -53,63 +53,7 @@ const NftInteractionRow = props => {
         </h1>
         <SubTitle auctionOptions={auctionOptions} price={price} />
 
-        <div className="row">
-          <div className="col-md-6 bid-box">
-            <Space>
-              <h3>
-                {isOffer && "Offer Amount "}
-                {isBidding && "Top Bid "}
-                <Tooltip title="The top bidder when the timer ends will win the auction.">
-                  <i className="bi bi-info-circle bid-info"></i>
-                </Tooltip>
-              </h3>
-            </Space>
-            <h1>
-              <DisplayEther
-                wei={auctionOptions.maxBid}
-                priceInCents={auctionOptions.priceInCents}
-              />
-            </h1>
-          </div>
-          <div className="col-md-6 bid-box">
-            <h3>
-              Ends in{" "}
-              <Tooltip
-                title="A new top bid will extend the auction by 24 hours. There’s no advantage to waiting
-                      until the last few minutes."
-              >
-                <i className="bi bi-info-circle bid-info"></i>
-              </Tooltip>
-            </h3>
-            <h1 id="end-timer">
-              {auctionOptions.expiration.eq(0) && "Coming Soon"}
-              {auctionOptions.expiration.gt(0) && (
-                <Duration
-                  readContracts={readContracts}
-                  auctionContractAddress={auctionContractAddress}
-                  localProvider={localProvider}
-                />
-              )}
-            </h1>
-          </div>
-        </div>
-        <div className="row">
-          {isBidding && <div className="col-md-6 bid-box">
-            <h3>
-              Next Bid{" "}
-              <Tooltip title="You cannot choose a bid amount. The next possible bid is a fixed amount above the current bid.">
-                <i className="bi bi-info-circle bid-info"></i>
-              </Tooltip>
-            </h3>
-            <h1>
-              <DisplayEther
-                wei={auctionOptions.maxBid.add(
-                  auctionOptions.minimumBidIncrement,
-                )}
-                priceInCents={auctionOptions.priceInCents}
-              />
-            </h1>
-          </div>}
+        {isOffer && <div className="row">
           <div className="col-md-6 bid-box">
             <h3>
               Current Winner{" "}
@@ -127,7 +71,83 @@ const NftInteractionRow = props => {
               />
             </h1>
           </div>
+        </div>}
+
+        <div className="row">
+          <div className="col-md-6 bid-box">
+            <Space>
+              <h3>
+                {isOffer && "Bid Amount "}
+                {isBidding && "Last Bid "}
+                <Tooltip title="The last bidder when the timer ends will win the auction.">
+                  <i className="bi bi-info-circle bid-info"></i>
+                </Tooltip>
+              </h3>
+            </Space>
+            <h1>
+              <DisplayEther
+                wei={auctionOptions.maxBid}
+                priceInCents={auctionOptions.priceInCents}
+              />
+            </h1>
+          </div>
+          <div className="col-md-6 bid-box">
+            <h3>
+              Ends in{" "}
+              <Tooltip
+                title="A new bid will extend the auction by 24 hours. There’s no advantage to waiting
+                      until the last few minutes."
+              >
+                <i className="bi bi-info-circle bid-info"></i>
+              </Tooltip>
+            </h3>
+            <h1 id="end-timer">
+              {auctionOptions.expiration.eq(0) && "Coming Soon"}
+              {auctionOptions.expiration.gt(0) && (
+                <Duration
+                  readContracts={readContracts}
+                  auctionContractAddress={auctionContractAddress}
+                  localProvider={localProvider}
+                />
+              )}
+            </h1>
+          </div>
         </div>
+        {isBidding && <div className="row">
+          <div className="col-md-6 bid-box">
+            <h3>
+              Next Bid{" "}
+              <Tooltip title="You cannot choose a bid amount. The next possible bid is a fixed amount above the current bid.">
+                <i className="bi bi-info-circle bid-info"></i>
+              </Tooltip>
+            </h3>
+            <h1>
+              <DisplayEther
+                wei={auctionOptions.maxBid.add(
+                  auctionOptions.minimumBidIncrement,
+                )}
+                priceInCents={auctionOptions.priceInCents}
+              />
+            </h1>
+          </div>
+          <div className="col-md-6 bid-box">
+            <h3>
+              Current Winner{" "}
+              <Tooltip title="The address which can claim the NFT on expiration provided it is not outbid.">
+                <i className="bi bi-info-circle bid-info"></i>
+              </Tooltip>
+            </h3>
+            <h1>
+              <CurrentWinner
+                className="current-winner"
+                user_address={address}
+                address={auctionOptions.winningAddress}
+                ensProvider={mainnetProvider}
+                blockExplorer={blockExplorer}
+              />
+            </h1>
+          </div>
+        </div>}
         {auctionOptions.expiration.eq(0) && (
           <JoinRedCarpetRow
             writeContracts={writeContracts}

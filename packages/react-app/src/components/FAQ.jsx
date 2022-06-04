@@ -47,7 +47,7 @@ export default function Account(props) {
                                 If you are outbid, you are refunded 90% of your bid. In other words, there’s a small fee to participate in this auction.
                                 </p>
                             </Panel>
-                            <Panel header="I’m the top bidder. What happens if I get outbid?" key="7">
+                            <Panel header="I’m the last bidder. What happens if I get outbid?" key="7">
                                 <p>
                                     Ninety percent (90%) of your bid is auto-refunded, and you can bid again if you would like to win the auction.
                                 </p>

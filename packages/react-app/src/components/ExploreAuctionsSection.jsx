@@ -43,7 +43,7 @@ const AuctionCardDesc = props => {
   return (
     <>
       <p>Collection Floor Price: {floorPrice()}</p>
-      <p>Top Bid: Ξ {displayWeiAsEther(auction.maxBid)}</p>
+      <p>Last Bid: Ξ {displayWeiAsEther(auction.maxBid)}</p>
       <DurationOrComingSoon auction={auction} />
     </>
   );

@@ -23929,3 +23929,9 @@ div.ant-typography-edit-content.ant-typography-rtl {
   border-color: #4b02db;
   background-color: #fff;
 }
+.normal-line-height{
+  line-height: normal;
+}
+.auction-rules{
+  padding-left: 1.3em;
+}

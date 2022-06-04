@@ -49,10 +49,10 @@ const BidHistoryButtonModalCombo = props => {
   ]);
   const recentBidsTitle = (
     <Text>
-      Recent Txs{" "}
+      Recent Bids{" "}
       <Tooltip
         placement="right"
-        title="This table shows the last five txs according to on-chain data from the last 5,000 blocks."
+        title="This table shows the last five bids according to on-chain data from the last 5,000 blocks."
       >
         <i className="bi bi-info-circle info-icon"></i>
       </Tooltip>
@@ -66,7 +66,7 @@ const BidHistoryButtonModalCombo = props => {
         onClick={evt => setShowBidHistoryModal(true)}
       >
         <i className="bi bi-card-checklist btn-icon"></i>
-        Recent Txs
+        Recent Bids
       </Button>
       <Modal
         className="bid-history-modal"
@@ -81,7 +81,7 @@ const BidHistoryButtonModalCombo = props => {
             href={auctionEtherscanLink}
             target="_blank"
           >
-            View all txs on Etherscan
+            View all Bids on Etherscan
           </Button>,
         ]}
       >

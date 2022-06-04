@@ -187,8 +187,7 @@ const ApproveBidButtonsCombo = props => {
             size={"large"}
             onClick={evt => setShowCheckoutModal(true)}
           >
-            {isOffer && "Place Offer"}
-            {isBidding && "Place Bid"}
+            Place Bid
           </Button>
           <TransactionPendingModal
             showTransactionModal={showTransactionModal}

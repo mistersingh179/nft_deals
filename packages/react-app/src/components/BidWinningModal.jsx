@@ -103,7 +103,7 @@ const BidWinningModal = props => {
     return (
       <>
         <p>
-          The highest bid is{" "}
+          The latest bid is{" "}
           <DisplayEther
             wei={auctionOptions.maxBid}
             priceInCents={auctionOptions.priceInCents}
