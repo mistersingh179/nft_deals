@@ -59,6 +59,8 @@ describe("AuctionWithZeroMinIncrement", () => {
       adminOne.address, // _adminOneAddress
       adminTwo.address, // _adminTwoAddress
       auctionFactory.address, // _auctionFactoryAddress
+      1, // auctionFeeType
+      10000, // staticFeeInBasisPoints
     ]);
 
     for (let i = 0; i < wallets.length; i += 1) {

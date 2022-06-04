@@ -59,7 +59,9 @@ contract AuctionFactory is AccessControl, Multicall {
         address nftContract,
         uint startBidAmount,
         uint _auctionTimeIncrementOnBid,
-        uint _minimumBidIncrement
+        uint _minimumBidIncrement,
+        Auction.FlexibilityType _auctionFeeType,
+        uint _staticFeeInBasisPoints
     ) external{
         Auction auction = new Auction(
             nftContract, // _nftContractAddress
@@ -71,7 +73,9 @@ contract AuctionFactory is AccessControl, Multicall {
             wethAddress, // address given to us when constructed per chain.
             adminOneAddress,
             adminTwoAddress,
-            address(this)
+            address(this),
+            _auctionFeeType,
+            _staticFeeInBasisPoints
         );
         _saveNewAuction(msg.sender, address(auction));
     }

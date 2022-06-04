@@ -5,6 +5,8 @@ const startBidAmount = 1000;
 const auctionTimeIncrementOnBid = 24 * 60 * 60;
 const minimumBidIncrement = 1000;
 const approvalAmount = "100000000000000000000000";
+const staticFeeInBasisPoints = "10000";
+const auctionFeeType = 1;
 
 describe("AuctionFactory", () => {
   let weth;
@@ -90,6 +92,8 @@ describe("AuctionFactory", () => {
           startBidAmount,
           auctionTimeIncrementOnBid,
           minimumBidIncrement,
+          auctionFeeType,
+          staticFeeInBasisPoints,
         );
 
       await auctionFactory
@@ -100,6 +104,8 @@ describe("AuctionFactory", () => {
           startBidAmount,
           auctionTimeIncrementOnBid,
           minimumBidIncrement,
+          auctionFeeType,
+          staticFeeInBasisPoints,
         );
 
       await auctionFactory
@@ -110,6 +116,8 @@ describe("AuctionFactory", () => {
           startBidAmount,
           auctionTimeIncrementOnBid,
           minimumBidIncrement,
+          auctionFeeType,
+          staticFeeInBasisPoints,
         );
     });
 
@@ -214,6 +222,8 @@ describe("AuctionFactory", () => {
           startBidAmount,
           auctionTimeIncrementOnBid,
           minimumBidIncrement,
+          auctionFeeType,
+          staticFeeInBasisPoints,
         );
       const auctions = await auctionFactory.auctions();
       const latestAuction = auctions[auctions.length - 1];

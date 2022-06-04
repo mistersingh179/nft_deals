@@ -55,6 +55,8 @@ describe("UpdateAuction", () => {
       adminOne.address, // _adminOneAddress
       adminTwo.address, // _adminTwoAddress
       auctionFactory.address, // _auctionFactoryAddress
+      1, // auctionFeeType
+      10000, // staticFeeInBasisPoints
     ]);
     return { weth, bestNft, auctionFactory, auction };
   };
@@ -77,8 +79,39 @@ describe("UpdateAuction", () => {
     const wallets = provider.getWallets();
     const walletOne = wallets[0];
     expect(await auction.minimumBidIncrement()).to.not.equal(1);
-    await auction.updateAuction(1, 1, bestNft.address, 0, walletOne.address, 0);
+    await auction.updateAuction(
+      1,
+      1,
+      bestNft.address,
+      0,
+      walletOne.address,
+      0,
+      1, // fee type static
+      10000, // static fee percentage
+    );
     expect(await auction.minimumBidIncrement()).to.equal(1);
+  });
+
+  it("fee type & static fee can be updated before starting", async () => {
+    const { bestNft, auction } = await loadFixture(
+      AuctionFromConstructorFixture,
+    );
+    const wallets = provider.getWallets();
+    const walletOne = wallets[0];
+    expect(await auction.auctionFeeType()).to.not.equal(0);
+    expect(await auction.staticFeeInBasisPoints()).to.not.equal(500);
+    await auction.updateAuction(
+      1,
+      1,
+      bestNft.address,
+      0,
+      walletOne.address,
+      0,
+      0, // auctionFeeType
+      500, // staticFeeInBasisPoints
+    );
+    expect(await auction.auctionFeeType()).to.equal(0);
+    expect(await auction.staticFeeInBasisPoints()).to.equal(500);
   });
 
   it("auction can not be updated once started", async () => {

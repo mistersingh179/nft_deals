@@ -13,6 +13,8 @@ describe("AuctionEnd2End and more", () => {
   const auctionTimeIncrementOnBid = 24 * 60 * 60;
   const minimumBidIncrement = 1000;
   const approvalAmount = "100000000000000000000000";
+  const staticFeeInBasisPoints = "10000";
+  const auctionFeeType = 1;
 
   let weth;
   let bestNft;
@@ -105,6 +107,8 @@ describe("AuctionEnd2End and more", () => {
         startBidAmount,
         auctionTimeIncrementOnBid,
         minimumBidIncrement,
+        auctionFeeType,
+        staticFeeInBasisPoints,
       );
 
     const auctions = await auctionFactory.auctions();
@@ -366,6 +370,8 @@ describe("AuctionEnd2End and more", () => {
         startBidAmount,
         auctionTimeIncrementOnBid,
         minimumBidIncrement,
+        auctionFeeType,
+        staticFeeInBasisPoints,
       );
 
     const auctions = await auctionFactory.auctions();

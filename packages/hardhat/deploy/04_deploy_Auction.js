@@ -55,6 +55,8 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
       adminOneAddress[chainId],
       adminTwoAddress[chainId],
       theAuctionFactoryContract.address,
+      1, // _auctionFeeType
+      10000, // _staticFeeInBasisPoints
     ],
     log: true,
     waitConfirmations: 5,

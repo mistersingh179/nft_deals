@@ -111,7 +111,9 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
         address _wethAddress,
         address _adminOneAddress,
         address _adminTwoAddress,
-        address _auctionFactoryAddress){
+        address _auctionFactoryAddress,
+        FlexibilityType _auctionFeeType,
+        uint _staticFeeInBasisPoints){
             nftContract = IERC721(_nftContractAddress);
             tokenId = _tokenId;
             nftOwner = _nftOwner;
@@ -129,6 +131,9 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
             weth = IERC20(_wethAddress);
             auctionFactory = AuctionFactory(_auctionFactoryAddress);
 
+            auctionFeeType = _auctionFeeType;
+            staticFeeInBasisPoints = _staticFeeInBasisPoints;
+
             _setupRole(DEFAULT_ADMIN_ROLE, _adminOneAddress);
             _setupRole(DEFAULT_ADMIN_ROLE, _adminTwoAddress);
 
@@ -144,7 +149,9 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
         address _nftContractAddress,
         uint _tokenId,
         address _nftOwner,
-        uint startBidAmount
+        uint startBidAmount,
+        FlexibilityType _auctionFeeType,
+        uint _staticFeeInBasisPoints
     ) auctionHasNotStarted youAreTheNftOwner public {
         nftContract = IERC721(_nftContractAddress);
         tokenId = _tokenId;
@@ -156,6 +163,8 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
         minimumBidIncrement = _minimumBidIncrement;
         highestBid = startBidAmount;
         maxBid = highestBid;
+        auctionFeeType = _auctionFeeType;
+        staticFeeInBasisPoints = _staticFeeInBasisPoints;
     }
 
     function startAuction() youAreTheNftOwner auctionHasNotStarted external{
@@ -420,6 +429,10 @@ contract Auction is IERC721Receiver, AccessControl, Multicall {
 
     function setMinimumBidIncrement(uint _minimumBidIncrement) onlyRole(MODERATOR_ROLE) public {
         minimumBidIncrement = _minimumBidIncrement;
+    }
+
+    function setAuctionTimeIncrementOnBid(uint _auctionTimeIncrementOnBid) onlyRole(MODERATOR_ROLE) public {
+        auctionTimeIncrementOnBid = _auctionTimeIncrementOnBid;
     }
 
     function setStaticFeeInBasisPoints(uint _staticFeeInBasisPoints) onlyRole(MODERATOR_ROLE) public {

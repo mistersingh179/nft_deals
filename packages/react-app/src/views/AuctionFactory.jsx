@@ -1,4 +1,19 @@
-import {Button, Card, Col, DatePicker, Divider, Form, Input, Progress, Row, Slider, Space, Spin, Switch} from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Input,
+  Progress,
+  Row,
+  Select,
+  Slider,
+  Space,
+  Spin,
+  Switch,
+} from 'antd'
 import React, {useEffect, useState} from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
@@ -35,6 +50,8 @@ export default function AuctionFactory({
     startingBid: '1000000000000000000',
     auctionTimeIncrementOnBid: (24*60*60)+"",
     minimumBidIncrement: '0',
+    auctionFeeType: '1',
+    staticFeeInBasisPoints: '10000',
   });
   const [auctionFactoryAddress, setAuctionFactoryAddress] = useState('');
   const blockNumber = useBlockNumber(localProvider);
@@ -47,6 +64,8 @@ export default function AuctionFactory({
         auctionOptions.startingBid,
         auctionOptions.auctionTimeIncrementOnBid,
         auctionOptions.minimumBidIncrement,
+        auctionOptions.auctionFeeType,
+        auctionOptions.auctionTimeIncrementOnBid,
       ), update => {
         console.log('*** create auction: ', update);
       }
@@ -131,6 +150,7 @@ export default function AuctionFactory({
             onChange={e => setNftTokenId(e.target.value)}
           />
           <NftImage nftContractAddress={nftContractAddress}
+                    fetchImageDirect={true}
                     tokenId={nftTokenId}
                     localProvider={localProvider}
                     height={200} />
@@ -180,7 +200,7 @@ export default function AuctionFactory({
           </Row>
           <Row gutter={16}>
             <Col span={6}>
-              Auction min wei increment
+              Bid min wei increment
             </Col>
             <Col span={18}>
               <Input
@@ -188,6 +208,26 @@ export default function AuctionFactory({
                 placeholder="Minimum increment of bid in wei"
                 onChange={e => updateAuctionOptions('minimumBidIncrement', e.target.value)}
               />
+              {auctionOptions.minimumBidIncrement == 0 && <Text type={'secondary'}>"King of Hill"</Text>}
+              {auctionOptions.minimumBidIncrement > 0 && <Text type={'secondary'}>"Auction"</Text>}
+            </Col>
+          </Row>
+          <Row gutter={16}>
+            <Col span={6}>
+              Auction Fee Type
+            </Col>
+            <Col span={18}>
+              <Select defaultValue={auctionOptions.auctionFeeType} style={{ width: '100%' }}
+                      onChange={value => updateAuctionOptions('auctionFeeType', value)}>
+                <Select.Option value="0">Dynamic (~4% for every hour)</Select.Option>
+                <Select.Option value="1">Static</Select.Option>
+              </Select>
+              <br/><br/>
+              {auctionOptions.auctionFeeType == '1' && <Input
+                value={auctionOptions.staticFeeInBasisPoints}
+                placeholder="Static Fee In Basis Points"
+                onChange={e => updateAuctionOptions('staticFeeInBasisPoints', e.target.value)}
+              />}
             </Col>
           </Row>
         </Space>

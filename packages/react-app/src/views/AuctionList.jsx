@@ -1,4 +1,17 @@
-import {Button, Card, DatePicker, Divider, Input, Progress, Slider, Space, Spin, Switch, Table} from "antd";
+import {
+  Button,
+  Card, Col,
+  DatePicker,
+  Divider,
+  Input, Modal,
+  Progress,
+  Row,
+  Slider,
+  Space,
+  Spin,
+  Switch,
+  Table,
+} from 'antd'
 import React, {useEffect, useState} from "react";
 import { utils } from "ethers";
 import { SyncOutlined } from "@ant-design/icons";
@@ -10,6 +23,8 @@ import {useBlockNumber, useContractReader} from "eth-hooks";
 import {Link, useLocation} from "react-router-dom";
 import NftImage from "../components/NftImage";
 import moment from "moment";
+import rewardsImage from '../img/rewards.png'
+import EmailCapture from '../components/EmailCapture'
 
 const { ethers } = require("ethers");
 
@@ -26,6 +41,7 @@ export default function AuctionList({
   writeContracts,
   blockExplorer,
 }) {
+  const [showUpdateAuctionModal, setShowUpdateAuctionModal] = useState(false)
   const blockNumber = useBlockNumber(localProvider);
   const [auctions, setAuctions] = useState([]);
   const [auctionsDataByAddress, setAuctionsDataByAddress] = useState({});
@@ -153,6 +169,31 @@ export default function AuctionList({
     }
   }
 
+  const handleOk = evt => {
+    setShowUpdateAuctionModal(false);
+  };
+  const handleCancel = evt => {
+    setShowUpdateAuctionModal(false);
+  };
+
+
+  const UpdateAuctionModal = props => {
+    return (
+      <Modal
+        title="Update Auction"
+        visible={showUpdateAuctionModal}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <Row justify="center" style={{ marginTop: 24, marginBottom: 24 }}>
+          <Col span={18} align="middle">
+            <h1>Update Auction</h1>
+          </Col>
+        </Row>
+      </Modal>
+    )
+  }
+
   const columns = [
 
   {
@@ -207,6 +248,13 @@ export default function AuctionList({
     key: 'action',
     render: (text, record) => (
       <div>
+        {/*<Button disabled={(record.expiration > 0)}*/}
+        {/*  style={{marginBottom:4}}*/}
+        {/*  onClick={() => setShowUpdateAuctionModal(true)}>*/}
+        {/*  Update Auction*/}
+        {/*</Button>*/}
+        {/*<UpdateAuctionModal />*/}
+        <br/>
         <Button disabled={record.weHaveApproval || record.expiration > 0 ? true: false}
                 style={{marginBottom:4}}
                 onClick={approve.bind(this, record.nftContract, record.tokenId, record.key)}>
@@ -261,3 +309,5 @@ export default function AuctionList({
     </div>
   );
 }
+
+
