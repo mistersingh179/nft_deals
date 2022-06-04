@@ -2563,7 +2563,7 @@
       "chainId": "4",
       "contracts": {
         "Auction": {
-          "address": "0xde6406bC22a66a22d7eF6a2844CfEa88c537D3E1",
+          "address": "0xE1fB2c690A486f12a72Fcb89Ff4fA6F2de345636",
           "abi": [
             {
               "inputs": [
@@ -3884,7 +3884,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0x1D6E56Bf0FdA0aD08a5e4dECf7E1175830CDB8AE",
+          "address": "0x70519a23a01Abe502D56f05729EBF185bBAd990f",
           "abi": [
             {
               "inputs": [
