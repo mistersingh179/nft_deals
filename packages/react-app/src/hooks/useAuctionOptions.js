@@ -1,10 +1,11 @@
 import { useAuctionContract } from "./index";
 import { BigNumber, ethers } from "ethers";
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useBlockNumber } from "eth-hooks";
 import axios from "axios";
 import { nftNameOpenSeaMappings } from "../constants";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
+import getImageUrl from '../helpers/getImageUrl'
 
 const useAuctionOptions = (
   readContracts,
@@ -29,8 +30,8 @@ const useAuctionOptions = (
             Accept: "application/json",
           },
         });
-        if(result && result.data && result.data.status == "0"){
-          throw('eror');
+        if (result && result.data && result.data.status == "0") {
+          throw "eror";
         }
         const price = result.data.result.ethusd;
         const priceInCents = parseInt(parseFloat(price).toFixed(2) * 100);
@@ -38,12 +39,18 @@ const useAuctionOptions = (
           return { ...prevObj, priceInCents: BigNumber.from(priceInCents) };
         });
       } catch (e) {
-        if(retries.current <5){
-          console.log("*** etherscan data error. retry count is: ", retries.current);
+        if (retries.current < 5) {
+          console.log(
+            "*** etherscan data error. retry count is: ",
+            retries.current,
+          );
           setTimeout(getData, 1000);
           retries.current = retries.current + 1;
-        }else {
-          console.log("*** etherscan data error. no retries as: ", retries.current);
+        } else {
+          console.log(
+            "*** etherscan data error. no retries as: ",
+            retries.current,
+          );
         }
       }
     };
@@ -118,50 +125,11 @@ const useAuctionOptions = (
   }, [auctionContract, blockNumber, address]);
 
   useEffect(() => {
-    const getImageFromUrl = async url => {
-      const result = await axios({
-        method: "get",
-        url: url,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-      const imageUrl = result.data.image;
-      return imageUrl;
-    };
-
     const init = async () => {
       const tokenURI = auctionOptions.tokenURI;
-      var imageUrl;
-      if (tokenURI == 'https://live---metadata-5covpqijaa-uc.a.run.app/metadata/7672'){
-        const imageUrl = 'https://live---metadata-5covpqijaa-uc.a.run.app/images/7672';
+      if(tokenURI){
+        const imageUrl = await getImageUrl(tokenURI);
         updateAuctionOptions("imageUrl", imageUrl);
-      } else if (tokenURI.indexOf("http") == 0) {
-        const imageUrl = await getImageFromUrl(tokenURI);
-        updateAuctionOptions("imageUrl", imageUrl);
-      } else if (tokenURI.indexOf("ipfs://") == 0) {
-        const ipfsHash = tokenURI.split("ipfs://")[1];
-        const ipfsUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
-        imageUrl = await getImageFromUrl(ipfsUrl);
-        if (imageUrl.indexOf("http") == 0) {
-          updateAuctionOptions("imageUrl", imageUrl);
-        } else if (imageUrl.indexOf("ipfs://") == 0) {
-          const ipfsHash = imageUrl.split("ipfs://")[1];
-          imageUrl = `https://ipfs.io/ipfs/${ipfsHash}`;
-          updateAuctionOptions("imageUrl", imageUrl);
-        } else {
-          updateAuctionOptions("imageUrl", "");
-        }
-      } else if (tokenURI.indexOf("data:application/json;base64,") == 0) {
-        const base64DataObj = tokenURI.replace(
-          "data:application/json;base64,",
-          "",
-        );
-        const dataObj = JSON.parse(atob(base64DataObj));
-        const imageUrl = dataObj.image;
-        updateAuctionOptions("imageUrl", imageUrl);
-      } else {
-        updateAuctionOptions("imageUrl", "");
       }
     };
     init();

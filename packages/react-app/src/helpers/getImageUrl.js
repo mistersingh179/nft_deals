@@ -1,4 +1,5 @@
 import axios from "axios";
+import { tokenUriToImageUrlMappings } from "../constants";
 
 const getImageFromExternalJsonUrl = async url => {
   const result = await axios({
@@ -13,10 +14,8 @@ const getImageFromExternalJsonUrl = async url => {
 
 const getImageUrl = async tokenURI => {
   var imageUrl;
-  if (
-    tokenURI === "https://live---metadata-5covpqijaa-uc.a.run.app/metadata/7672"
-  ) {
-    imageUrl = "https://live---metadata-5covpqijaa-uc.a.run.app/images/7672";
+  if (tokenUriToImageUrlMappings[tokenURI]) {
+    imageUrl = tokenUriToImageUrlMappings[tokenURI];
   } else if (tokenURI.indexOf("http") === 0) {
     imageUrl = await getImageFromExternalJsonUrl(tokenURI);
   } else if (tokenURI.indexOf("ipfs://") === 0) {

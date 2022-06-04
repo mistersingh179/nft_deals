@@ -3,6 +3,7 @@ import hardhatContracts from "../contracts/hardhat_contracts.json";
 import { chainToName, NETWORKS } from "../constants";
 import { ethers } from "ethers";
 
+// let chainsToShow = "1,4,137,31337,80001";
 let chainsToShow = process.env.REACT_APP_CHAINS_TO_SHOW || "";
 chainsToShow = chainsToShow.split(",")
 

@@ -226,6 +226,11 @@ export const displayNameMappings = {
   "goblintown": "goblintown.wtf",
 }
 
+export const tokenUriToImageUrlMappings = {
+  "https://live---metadata-5covpqijaa-uc.a.run.app/metadata/7672": "https://live---metadata-5covpqijaa-uc.a.run.app/images/7672",
+  "https://boredapeyachtclub.com/api/mutants/1165": "https://ipfs.io/ipfs/QmZQomF8rRgQ9qX7PL4xRSrJ1d75YwhFaSgi3Ap4WRxZ9h",
+}
+
 export const chainToName = {
   1: "mainnet",
   4: "rinkeby",
