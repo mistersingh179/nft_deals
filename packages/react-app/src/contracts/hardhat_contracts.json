@@ -8927,7 +8927,7 @@
           ]
         },
         "AuctionFactory": {
-          "address": "0xE11C772dBcB9Dde286098A270Cb41d2d09D7e2f4",
+          "address": "0x5b03086C512B0601b4e1C6ce15ce542e075799eA",
           "abi": [
             {
               "inputs": [
@@ -9518,7 +9518,7 @@
           ]
         },
         "Auction": {
-          "address": "0x28D404d4f37e65249cc61DB4a5dBE0DB216C623C",
+          "address": "0x2A03fc5b768a6A4663923eBc0536Cab836F59051",
           "abi": [
             {
               "inputs": [

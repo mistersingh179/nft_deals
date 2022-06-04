@@ -222,14 +222,20 @@ export default function AuctionFactory({
                 <Select.Option value="0">Dynamic (~4% for every hour)</Select.Option>
                 <Select.Option value="1">Static</Select.Option>
               </Select>
-              <br/><br/>
-              {auctionOptions.auctionFeeType == '1' && <Input
+            </Col>
+          </Row>
+          {auctionOptions.auctionFeeType == '1' && <Row gutter={16}>
+            <Col span={6}>
+              Static Fee in Basis Points
+            </Col>
+            <Col span={18}>
+              <Input
                 value={auctionOptions.staticFeeInBasisPoints}
                 placeholder="Static Fee In Basis Points"
                 onChange={e => updateAuctionOptions('staticFeeInBasisPoints', e.target.value)}
-              />}
+              />
             </Col>
-          </Row>
+          </Row>}
         </Space>
 
         <Divider />
