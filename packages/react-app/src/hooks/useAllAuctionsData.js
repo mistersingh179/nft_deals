@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import hardhatContracts from "../contracts/hardhat_contracts.json";
+import bffAbi from "../abis/bffAbi.json";
 import { chainToName, NETWORKS } from "../constants";
 import { ethers } from "ethers";
 
@@ -13,7 +14,7 @@ const useAllAuctionsData = address => {
     console.log("*** getting all auctions data");
     const newData = [];
     for (const chainId of Object.keys(hardhatContracts)) {
-      if(chainsToShow.find(item => item === chainId) === undefined){
+      if (chainsToShow.find(item => item === chainId) === undefined) {
         continue;
       }
       const auctionFactoryJson =
@@ -32,11 +33,14 @@ const useAllAuctionsData = address => {
       const auctionJson =
         hardhatContracts[chainId][chainToName[chainId]].contracts["Auction"];
       for (let auctionAddress of auctions) {
-        const auction = new ethers.Contract(
-          auctionAddress,
-          auctionJson.abi,
-          provider,
-        );
+        // goro or bff
+        let abi;
+        if (auctionAddress === process.env.REACT_APP_BFF_GOROS_ADDRESS) {
+          abi = bffAbi;
+        } else {
+          abi = auctionJson.abi;
+        }
+        const auction = new ethers.Contract(auctionAddress, abi, provider);
         let allData = await auction.getAllData(address);
         allData = {
           ...allData,

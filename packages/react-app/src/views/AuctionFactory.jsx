@@ -65,7 +65,7 @@ export default function AuctionFactory({
         auctionOptions.auctionTimeIncrementOnBid,
         auctionOptions.minimumBidIncrement,
         auctionOptions.auctionFeeType,
-        auctionOptions.auctionTimeIncrementOnBid,
+        auctionOptions.staticFeeInBasisPoints,
       ), update => {
         console.log('*** create auction: ', update);
       }
