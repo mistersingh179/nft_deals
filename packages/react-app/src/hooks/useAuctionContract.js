@@ -3,7 +3,7 @@ import { ethers, utils } from "ethers";
 import bffAbi from "../abis/bffAbi.json";
 
 const useAuctionContract = (
-  readContracts,
+  readOrWriteContracts,
   auctionContractAddress,
   localProvider,
 ) => {
@@ -11,8 +11,8 @@ const useAuctionContract = (
 
   useEffect(async () => {
     if (
-      readContracts &&
-      readContracts.Auction &&
+      readOrWriteContracts &&
+      readOrWriteContracts.Auction &&
       auctionContractAddress &&
       localProvider
     ) {
@@ -21,23 +21,20 @@ const useAuctionContract = (
           auctionContractAddress,
         );
         if (contractCode != "0x") {
-          let auctionAbi;
+          let ac;
+          // check for bff/goro vs others
           if (
-            // bff and goro
             auctionContractAddress === process.env.REACT_APP_BFF_GOROS_ADDRESS
           ) {
-            auctionAbi = bffAbi;
-          } else {
-            auctionAbi = readContracts.Auction.interface.format(
-              utils.FormatTypes.full,
+            ac = new ethers.Contract(
+              auctionContractAddress,
+              bffAbi,
+              localProvider, // only read access
             );
+          } else {
+            ac = readOrWriteContracts.Auction.attach(auctionContractAddress);
           }
-          const ac = new ethers.Contract(
-            auctionContractAddress,
-            auctionAbi,
-            localProvider,
-          );
-          // const ac = readContracts.Auction.attach(auctionContractAddress);
+
           setAuctionContract(ac);
         }
       } catch (e) {
@@ -45,7 +42,7 @@ const useAuctionContract = (
       }
     }
   }, [
-    readContracts && readContracts.Auction,
+    readOrWriteContracts && readOrWriteContracts.Auction,
     auctionContractAddress,
     localProvider,
   ]);
