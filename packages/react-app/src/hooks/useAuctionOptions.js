@@ -5,7 +5,7 @@ import { useBlockNumber } from "eth-hooks";
 import axios from "axios";
 import { nftNameOpenSeaMappings } from "../constants";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
-import getImageUrl from '../helpers/getImageUrl'
+import getImageUrl from "../helpers/getImageUrl";
 
 const useAuctionOptions = (
   readContracts,
@@ -115,7 +115,6 @@ const useAuctionOptions = (
               updateAuctionOptions(key, allData[key]);
             }
           });
-          window.allData = allData; // for Debug Purposes
         }
       } catch (e) {
         console.error("*** error: ", e);
@@ -125,14 +124,20 @@ const useAuctionOptions = (
   }, [auctionContract, blockNumber, address]);
 
   useEffect(() => {
+    let active = true;
     const init = async () => {
       const tokenURI = auctionOptions.tokenURI;
-      if(tokenURI){
+      if (tokenURI) {
         const imageUrl = await getImageUrl(tokenURI);
-        updateAuctionOptions("imageUrl", imageUrl);
+        if (active) {
+          updateAuctionOptions("imageUrl", imageUrl);
+        }
       }
     };
-    init();
+    void init();
+    return () => {
+      active = false;
+    };
   }, [auctionOptions.tokenURI]);
 
   useEffect(() => {

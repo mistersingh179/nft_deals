@@ -20,7 +20,7 @@ export const AuctionOptionsProvider = props => {
     targetNetwork,
     mainnetProvider,
   );
-
+  window.auctionOptions = auctionOptions;
   return (
     <AuctionOptionsContext.Provider value={auctionOptions}>
       {children}
