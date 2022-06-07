@@ -144,7 +144,8 @@ const MainContentSection = props => {
               auctions.
             </p>
             <div className="embed-container">
-              <YouTubeEmbed embedId={"pyQ0SU-0JJc"} />
+              {isOffer && <YouTubeEmbed embedId={"Ww3CSMpVKjg"} />}
+              {isBidding && <YouTubeEmbed embedId={"pyQ0SU-0JJc"} />}
             </div>
           </div>
         </div>
