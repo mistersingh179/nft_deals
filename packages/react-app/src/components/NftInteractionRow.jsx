@@ -71,6 +71,19 @@ const NftInteractionRow = props => {
               />
             </h1>
           </div>
+          <div className="col-md-6 bid-box">
+            <h3>
+              Rewards{" "}
+              <Tooltip title="You get 2 Free Bids after placing a Paid Bid. You can use those Free Bids on future auctions – even for higher value NFTs! Of course, you cannot get Free Bids from placing a Free Bid.">
+                <i className="bi bi-info-circle bid-info"></i>
+              </Tooltip>
+            </h3>
+            <h1 className="grad-animated-text">
+              <Tooltip title="You get 2 Free Bids after placing a Paid Bid. You can use those Free Bids on future auctions – even for higher value NFTs! Of course, you cannot get Free Bids from placing a Free Bid.">
+                2 Free Bids
+              </Tooltip>
+            </h1>
+          </div>          
         </div>}
 
         <div className="row">

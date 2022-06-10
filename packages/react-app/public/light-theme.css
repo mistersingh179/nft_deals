@@ -23935,3 +23935,17 @@ div.ant-typography-edit-content.ant-typography-rtl {
 .auction-rules{
   padding-left: 1.3em;
 }
+.grad-animated-text{
+  background: linear-gradient(45deg, #DF5FAF, #440eb4, #6320EE, #c9288d);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animated_text 6s ease-in-out infinite;
+  -moz-animation: animated_text 6s ease-in-out infinite;
+  -webkit-animation: animated_text 6s ease-in-out infinite;
+}
+@keyframes animated_text {
+	0% { background-position: 0px 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0px 50%; }
+}

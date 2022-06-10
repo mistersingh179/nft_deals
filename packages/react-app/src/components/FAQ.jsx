@@ -19,7 +19,7 @@ export default function Account(props) {
 
                         <Collapse bordered={false} defaultActiveKey={['1']}>
                             <Panel header="This looks too good to be true. What’s the catch?" key="1">
-                                <p>There is no catch! The massive discount against a collection’s floor price is possible because we operate a novel auction format where you pay-to-bid and bid-to-earn.
+                                <p>There is no catch! The massive discount against a collection’s floor price is possible because we operate a novel auction format where you pay-to-bid and earn Free Bids for future auctions.
                                 </p>
                             </Panel>
                             <Panel header="What if there are not many bids?" key="2">
@@ -39,27 +39,19 @@ export default function Account(props) {
                             </Panel>
                             <Panel header="What is “Next Bid”?" key="5">
                                 <p>
-                                    This amount represents the price should you bid in the auction. Unlike other auction models, where you determine your desired price, this auction automatically calculates the next possible bid.
+                                    In a "Fixed Increment" auction format, this amount represents the price should you bid in the auction. Unlike other auction models, where you determine your desired price, this auction automatically calculates the next possible bid.
                                 </p>
                             </Panel>                        
-                            <Panel header="What is “Pay to Bid”?" key="6">
+                            <Panel header="What are the fees to bid?" key="6">
+                                <p>In a 'Last Bid Standing' type auction, each bid is a non-refundable payment to participate in this auction.</p>
                                 <p>
-                                If you are outbid, you are refunded 90% of your bid. In other words, there’s a small fee to participate in this auction.
-                                </p>
-                            </Panel>
-                            <Panel header="I’m the last bidder. What happens if I get outbid?" key="7">
-                                <p>
-                                    Ninety percent (90%) of your bid is auto-refunded, and you can bid again if you would like to win the auction.
-                                </p>
-                            </Panel>
-                            <Panel header="What is “Bid-to-Earn?”" key="8">
-                                <p>
-                                    You earn rewards whenever you bid – even if you’re outbid.
+                                    In a 'Fixed Increment + Outbid Refund' type auction, the smart contract returns a portion of your bid back based on the amount of time remaining in the auction when you bid.{" "}
+                                    <a class="inline-anchor" target="_blank" href="https://coral-credit-8f4.notion.site/Outbid-Rebate-Explainer-418da5f676f44d44910e831b2a81b8f4">The earlier you bid, the more money you get back.</a> The remainder of your bid is the fee to participate in this auction. By spreading the fees across many bidders, the huge discount is made possible.
                                 </p>
                             </Panel>
                             <Panel header="What are the rewards?" key="9">
                                 <p>
-                                    Rewards are a sum of points associated to your wallet that are accumulated based on your activity, such as bidding. Later, those rewards will be convertible into our $NFTD token when it launches.
+                                    Rewards include "Free Bids," which are usable in future auctions. Other Rewards include points that are accumulated based on your activity, such as bidding. Later, those rewards will be convertible into our $NFTD token when it launches.
                                 </p>
                             </Panel>
                             <Panel header="Do you have a whitepaper on the tokenomics?" key="10">
@@ -79,7 +71,7 @@ export default function Account(props) {
                             </Panel>
                             <Panel header="What about gas fees?" key="13">
                                 <p>
-                                    At the early stages of an auction, the top bid may be less than the amount of gas required to process the transaction. But, still, the total amount paid (bid + gas fees) will still be a fantastic deal on an NFT that you win here.
+                                    At the early stages of an auction, the bid may be less than the amount of gas required to process the transaction. But, still, the total amount paid (bid + gas fees) will still be a fantastic deal on an NFT that you win here.
                                 </p>
                             </Panel>
                             <Panel header="Is there a reserve price?" key="14">

@@ -121,13 +121,10 @@ const MainContentSection = props => {
                   <i className="bx bx-coin-stack" />
                 </div>
                 <h4>
-                  <a>Bid-to-Earn</a>
+                  <a>Bid Farm™</a>
                 </h4>
                 <p>
-                  Earn rewards every time you bid. Rewards are based on the
-                  number of hours remaining in this auction. Bid early, get
-                  more. Rewards will be used to calculate airdrops, access to
-                  exclusive auctions, and more.
+                Everyone's a winner, because you get 2 Free Bids after placing a Paid Bid. And – yes! – you can apply those Free Bids to any future auction for higher value NFTs! Of course, you cannot get Free Bids from placing a Free Bid.
                 </p>
               </div>
             </div>

@@ -508,11 +508,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .explainer-banner {
-    background: linear-gradient(233deg, #DF5FAF, #440eb4, #6320EE, #c9288d);
-    background-size: 800% 800%;
+    /* background: linear-gradient(233deg, #DF5FAF, #440eb4, #6320EE, #c9288d); */
+    background: #6320EE;
+    /* background-size: 800% 800%;
     -webkit-animation: bannerAnimation 10s ease infinite;
     -moz-animation: bannerAnimation 10s ease infinite;
-    animation: bannerAnimation 10s ease infinite;
+    animation: bannerAnimation 10s ease infinite; */
     border-radius: 10px;
     margin-bottom: 30px;
 }
