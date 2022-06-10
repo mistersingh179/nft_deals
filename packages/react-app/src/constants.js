@@ -217,6 +217,7 @@ export const nftNameOpenSeaMappings = {
   "Moonbirds": "proof-moonbirds",
   "MutantApeYachtClub": "mutant-ape-yacht-club",
   "goblintown": "goblintownwtf",
+  "Cyberkongz VX": "cyberkongz-vx-polygon",
 }
 
 export const displayNameMappings = {
@@ -229,6 +230,7 @@ export const displayNameMappings = {
 export const tokenUriToImageUrlMappings = {
   "https://live---metadata-5covpqijaa-uc.a.run.app/metadata/7672": "https://live---metadata-5covpqijaa-uc.a.run.app/images/7672",
   "https://boredapeyachtclub.com/api/mutants/1165": "https://ipfs.io/ipfs/QmZQomF8rRgQ9qX7PL4xRSrJ1d75YwhFaSgi3Ap4WRxZ9h",
+  "http://kongz.herokuapp.com/api/metadata-vx/12370": "https://cyberkongz.fra1.cdn.digitaloceanspaces.com/public/12370/12370_preview.jpg",
 }
 
 export const chainToName = {
