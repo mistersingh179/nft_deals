@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: YourContract
-    network: localhost
+    network: rinkeby
     source:
-      address: "{{localhost_YourContractAddress}}"
+      address: "{{rinkeby_YourContractAddress}}"
       abi: YourContract
-      startBlock: 1
+      startBlock: 10778683
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -18,15 +18,35 @@ dataSources:
         - Sender
       abis:
         - name: YourContract
-          file: ./abis/localhost_YourContract.json
+          file: ./abis/rinkeby_YourContract.json
       eventHandlers:
         - event: SetPurpose(address,string)
           handler: handleSetPurpose
       file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: AuctionFactory
+    network: rinkeby
+    source:
+      address: "{{rinkeby_AuctionFactoryAddress}}"
+      abi: AuctionFactory
+      startBlock: 10795142
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Auction
+      abis:
+        - name: AuctionFactory
+          file: ./abis/rinkeby_AuctionFactory.json
+      eventHandlers:
+        - event: AuctionGenerated(address,address)
+          handler: handleAuctionGenerated
+      file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
     name: Auction
-    network: localhost
+    network: rinkeby
     source:
       abi: Auction
     mapping:
@@ -37,7 +57,7 @@ templates:
         - Bid
       abis:
         - name: Auction
-          file: ./abis/localhost_Auction.json
+          file: ./abis/rinkeby_Auction.json
       eventHandlers:
         - event: Bid(address,address,uint256,uint256)
           handler: handleBidGenerated

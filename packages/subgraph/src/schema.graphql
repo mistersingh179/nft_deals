@@ -13,3 +13,20 @@ type Sender @entity {
   createdAt: BigInt!
   purposeCount: BigInt!
 }
+
+type Auction @entity {
+  id: ID!
+  listerAddress: Bytes!
+  contractAddress: Bytes!
+  bids: [Bid!]! @derivedFrom(field: "auction")
+  createdAt: BigInt!
+  bidsCount: BigInt!
+}
+
+type Bid @entity {
+  id: ID!
+  fromAddress: Bytes!
+  amount: BigInt!
+  auction: Auction!
+  createdAt: BigInt!
+}

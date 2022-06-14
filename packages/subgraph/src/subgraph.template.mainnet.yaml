@@ -1,0 +1,63 @@
+specVersion: 0.0.2
+schema:
+  file: ./src/schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: AuctionFactory
+    network: mainnet
+    source:
+      address: "{{mainnet_AuctionFactoryAddress}}"
+      abi: AuctionFactory
+      startBlock: 14905047
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Auction
+      abis:
+        - name: AuctionFactory
+          file: ./abis/mainnet_AuctionFactory.json
+      eventHandlers:
+        - event: AuctionGenerated(address,address)
+          handler: handleAuctionGenerated
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: AuctionFactoryOld
+    network: mainnet
+    source:
+      address: "0x1F905c8D5b1dA0E062717CdD82691c521D6A0EC8"
+      abi: AuctionFactory
+      startBlock: 14756103
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Auction
+      abis:
+        - name: AuctionFactory
+          file: ./abis/mainnet_AuctionFactory.json
+      eventHandlers:
+        - event: AuctionGenerated(address,address)
+          handler: handleAuctionGenerated
+      file: ./src/mapping.ts
+templates:
+  - kind: ethereum/contract
+    name: Auction
+    network: mainnet
+    source:
+      abi: Auction
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Bid
+      abis:
+        - name: Auction
+          file: ./abis/mainnet_Auction.json
+      eventHandlers:
+        - event: Bid(address,address,uint256,uint256)
+          handler: handleBidGenerated
+      file: ./src/mapping.ts
