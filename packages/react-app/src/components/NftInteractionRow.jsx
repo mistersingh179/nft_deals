@@ -29,6 +29,11 @@ const NftInteractionRow = props => {
   const blockExplorerLink = useBlockExplorerLink(blockExplorer);
   const isOffer = auctionOptions.minimumBidIncrement.eq(0);
   const isBidding = !isOffer;
+  let displayToken = auctionOptions.tokenId.toString();
+  if(displayToken.length > 10){
+    displayToken = displayToken.substr(0, 5) + "..." + displayToken?.substr(-4);
+  }
+
 
   return (
     <div className="row">
@@ -39,7 +44,7 @@ const NftInteractionRow = props => {
       >
         <h1>
           {auctionOptions.name && nftNameFixer(auctionOptions.name)} #
-          {auctionOptions.tokenId.toString()}{" "}
+          {displayToken}{" "}
           <Tooltip title="Click to verify this NFT's contract address.">
             <a
               target="_blank"

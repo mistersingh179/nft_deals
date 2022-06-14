@@ -222,6 +222,7 @@ export const nftNameOpenSeaMappings = {
   "MutantApeYachtClub": "mutant-ape-yacht-club",
   "goblintown": "goblintownwtf",
   "Cyberkongz VX": "cyberkongz-vx-polygon",
+  "ICE Viking":"decentral-games-ice",
 }
 
 export const displayNameMappings = {
@@ -229,6 +230,7 @@ export const displayNameMappings = {
   "MutantApeYachtClub": "Mutant Ape Yacht Club",
   "You": "You by BFF",
   "goblintown": "goblintown.wtf",
+  "ICE Viking": "Decentral Games ICE Poker",
 }
 
 export const tokenUriToImageUrlMappings = {
