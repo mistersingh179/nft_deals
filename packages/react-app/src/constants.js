@@ -17,6 +17,7 @@ export const NETWORKS = {
     blockExplorer: "",
     // rpcUrl: "http://" + (global.window ? window.location.hostname : "localhost") + ":8545",
     rpcUrl: "http://localhost:8545",
+    graphUrl: "http://localhost:8000/subgraphs/name/mistersingh179/foo",
   },
   mainnet: {
     name: "mainnet",
@@ -24,6 +25,7 @@ export const NETWORKS = {
     chainId: 1,
     rpcUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
     blockExplorer: "https://etherscan.io/",
+    graphUrl: "https://api.thegraph.com/subgraphs/name/mistersingh179/foomainnet\n"
   },
   kovan: {
     name: "kovan",
@@ -40,6 +42,7 @@ export const NETWORKS = {
     rpcUrl: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
     faucet: "https://faucet.rinkeby.io/",
     blockExplorer: "https://rinkeby.etherscan.io/",
+    graphUrl: "https://api.thegraph.com/subgraphs/name/mistersingh179/foo",
   },
   ropsten: {
     name: "ropsten",
@@ -75,6 +78,7 @@ export const NETWORKS = {
     gasPrice: 50000000000, // 50 gwei
     rpcUrl: `https://polygon-mainnet.infura.io/v3/${INFURA_ID}`,
     blockExplorer: "https://polygonscan.com/",
+    graphUrl: "https://api.thegraph.com/subgraphs/name/mistersingh179/foopolygon",
   },
   mumbai: {
     name: "mumbai",

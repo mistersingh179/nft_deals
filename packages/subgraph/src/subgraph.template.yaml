@@ -23,6 +23,26 @@ dataSources:
         - event: SetPurpose(address,string)
           handler: handleSetPurpose
       file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: AuctionFactory
+    network: localhost
+    source:
+      address: "{{localhost_AuctionFactoryAddress}}"
+      abi: AuctionFactory
+      startBlock: 1
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Auction
+      abis:
+        - name: AuctionFactory
+          file: ./abis/localhost_AuctionFactory.json
+      eventHandlers:
+        - event: AuctionGenerated(address,address)
+          handler: handleAuctionGenerated
+      file: ./src/mapping.ts
 templates:
   - kind: ethereum/contract
     name: Auction

@@ -55,7 +55,7 @@ export function handleBidGenerated(event: BidGenerated): void {
     auction.save();
   }
 
-  const bid = new Bid(event.transaction.hash.toHex());
+  const bid = new Bid(`${event.transaction.hash.toHexString()}-${event.transaction.index.toHexString()}`);
   bid.fromAddress = event.params.from;
   bid.amount = event.params.amount;
   bid.auction = event.address.toHexString();

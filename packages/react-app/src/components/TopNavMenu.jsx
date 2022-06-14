@@ -22,6 +22,9 @@ const TopNavMenu = props => {
         <Menu.Item key="/auctions">
           <Link to="/auctions">Auctions</Link>
         </Menu.Item>
+        <Menu.Item key="/subgraph">
+          <Link to="/subgraph">Subgraph</Link>
+        </Menu.Item>
         <Menu.Item key="/debug">
           <Link to="/debug">Debug Contracts</Link>
         </Menu.Item>

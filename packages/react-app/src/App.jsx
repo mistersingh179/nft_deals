@@ -1,4 +1,5 @@
 import { Button, Col, Input, Menu, Row, Tabs } from "antd";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 import "antd/dist/antd.css";
 import {
@@ -103,6 +104,11 @@ try {
 } catch (e) {
   console.log("unable to set initial network");
 }
+
+const client = new ApolloClient({
+  uri: initialNetwork.graphUrl,
+  cache: new InMemoryCache(),
+});
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -386,7 +392,8 @@ function App(props) {
   };
 
   return (
-    <CurrencyProvider>
+    <ApolloProvider client={client}>
+      <CurrencyProvider>
       <Switch>
         <Route exact path="/">
           <Redirect to={"auctions"} />
@@ -647,7 +654,7 @@ function App(props) {
               </Route>
               <Route path="/subgraph">
                 <Subgraph
-                  subgraphUri={props.subgraphUri}
+                  subgraphUri={initialNetwork.graphUrl}
                   tx={tx}
                   writeContracts={writeContracts}
                   mainnetProvider={mainnetProvider}
@@ -727,6 +734,7 @@ function App(props) {
         </Route>
       </Switch>
     </CurrencyProvider>
+    </ApolloProvider>
   );
 }
 

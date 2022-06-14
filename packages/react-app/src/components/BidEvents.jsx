@@ -1,113 +1,52 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { ethers, utils, BigNumber } from "ethers";
+import React, { useState, useEffect, useContext } from "react";
+import { BigNumber } from "ethers";
 import { Table } from "antd";
-import { Address, DisplayEther } from './index'
-import { useBlockNumber } from "eth-hooks";
-import CurrentWinnerBidHistory from "../components/CurrentWinnerBidHistory";
+import { Address, DisplayEther } from "./index";
 import moment from "moment";
-import AuctionOptionsContext from '../contexts/AuctionOptionsContext'
+import AuctionOptionsContext from "../contexts/AuctionOptionsContext";
+import { gql, useQuery } from "@apollo/client";
+
+const GET_AUCTION_BIDS_GQL = gql(`
+  query($addr: String) {
+    auction(id: $addr) {
+      bids(orderBy: createdAt, orderDirection: desc, first: 5) {
+        id
+        createdAt
+        amount
+        fromAddress
+      }
+    }
+  }
+`);
 
 const BidEvents = props => {
   const {
-    readContracts,
     auctionContractAddress,
     mainnetProvider,
-    localProvider,
-    address,
-    blockExplorer,
   } = props;
-  const eventsCount = props.eventsCount || 5;
-  const blockCount = props.blockCount || 10;
-  const blockNumber = useBlockNumber(localProvider);
   const auctionOptions = useContext(AuctionOptionsContext);
 
   const [bidEvents, setBidEvents] = useState([]);
 
-  const addBidEvent = eventObj => {
-    setBidEvents(prevState => {
-      const alreadyExists = prevState.find(
-        prevObj => prevObj.hash == eventObj.hash,
-      );
-      if (alreadyExists) {
-        console.log(
-          "*** skipping as we already have this item: ",
-          eventObj.hash,
-        );
-        return prevState;
-      } else {
-        return [eventObj, ...prevState].slice(0, eventsCount);
-      }
-    });
-  };
-
+  const { loading, data } = useQuery(GET_AUCTION_BIDS_GQL, {
+    pollInterval: 2500,
+    variables: { addr: auctionContractAddress.toLowerCase() },
+  });
   useEffect(() => {
-    async function getOldEvents() {
-      if (readContracts && readContracts.Auction && auctionContractAddress) {
-        const auctionContract = readContracts.Auction.attach(
-          auctionContractAddress,
-        );
-        let events = await auctionContract.queryFilter(
-          "Bid",
-          -blockCount,
-          "latest",
-        );
-        console.log("*** old events", events.length);
-        events = events.slice(-eventsCount);
-        console.log("*** old events", events.length);
-        if (bidEvents.length == 0) {
-          for (let i = 0; i < events.length; i++) {
-            const b = await events[i].getBlock();
-            events[i]['when'] = moment(b.timestamp, "X");
-          }
-          events.map(event => {
-            addBidEvent({
-              amount: event.args.amount,
-              address: event.args.from,
-              hash: event.transactionHash,
-              when: event.when,
-              key: event.transactionHash
-            });
-          });
-        }
-      }
+    if (data && data.auction && data.auction.bids) {
+      console.log("*** updating bid events: ", data.auction.bids);
+      setBidEvents(data.auction.bids);
     }
-    getOldEvents();
-  }, [readContracts, auctionContractAddress]);
-
-  useEffect(() => {
-    if (readContracts && readContracts.Auction && auctionContractAddress) {
-      const auctionContract = readContracts.Auction.attach(
-        auctionContractAddress,
-      );
-      const bidEventHandler = async (from, previousWinnersAddress, amount, secondsLeftInAuction, event) => {
-        console.log("*** got bid event with data: ", from, amount, event);
-        addBidEvent({
-          address: from,
-          amount: amount,
-          hash: event.transactionHash,
-          when: moment(),
-          key: event.transactionHash
-        });
-      };
-      console.log("*** adding events handler for new Bids", auctionContract);
-      auctionContract.on("Bid", bidEventHandler);
-      return () => {
-        console.log("*** removing events handler for Bids", auctionContract);
-        auctionContract.off("Bid", bidEventHandler);
-      };
-    }
-  }, [localProvider, readContracts, auctionContractAddress]);
-
-  const displayTable = props.minimized;
+  }, [data]);
 
   const bidEventColumns = [
     {
       title: "Address",
-      dataIndex: "address",
-      key: "address",
-      render: (text, record) => (
+      dataIndex: "fromAddress",
+      key: "fromAddress",
+      render: text => (
         <Address
-          address={record.address}
+          address={text}
           ensProvider={mainnetProvider}
           fontSize={16}
         />
@@ -117,25 +56,30 @@ const BidEvents = props => {
       title: "Amount",
       dataIndex: "amount",
       key: "amount",
-      render: text => <DisplayEther wei={text} priceInCents={auctionOptions.priceInCents} />,
+      render: text => (
+        <DisplayEther
+          wei={BigNumber.from(text)}
+          priceInCents={auctionOptions.priceInCents}
+        />
+      ),
     },
     {
       title: "When",
-      dataIndex: "when",
-      key: "when",
-      render: text => {
-        console.log("*** when: ", text);
-        return text ? text.calendar() : '';
-      },
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: text => moment(text, "X").calendar(),
     },
   ];
 
   return (
-    <Table
-      columns={bidEventColumns}
-      dataSource={bidEvents}
-      pagination={false}
-    />
+    <>
+      {loading && "Loading"}
+      {!loading && <Table
+        columns={bidEventColumns}
+        dataSource={bidEvents}
+        pagination={false}
+      />}
+    </>
   );
 };
 
