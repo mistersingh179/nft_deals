@@ -4,6 +4,7 @@ import bffAbi from "../abis/bffAbi.json";
 import { chainToName, NETWORKS } from "../constants";
 import { ethers } from "ethers";
 
+// let chainsToShow = "1,137";
 // let chainsToShow = "1,4,137,31337,80001";
 let chainsToShow = process.env.REACT_APP_CHAINS_TO_SHOW || "";
 chainsToShow = chainsToShow.split(",")
@@ -41,14 +42,18 @@ const useAllAuctionsData = address => {
           abi = auctionJson.abi;
         }
         const auction = new ethers.Contract(auctionAddress, abi, provider);
-        let allData = await auction.getAllData(address);
-        allData = {
-          ...allData,
-          chainId: chainId,
-          chainName: chainToName[chainId],
-          contractAddress: auctionAddress,
-        };
-        newData.push(allData);
+        try{
+          let allData = await auction.getAllData(address);
+          allData = {
+            ...allData,
+            chainId: chainId,
+            chainName: chainToName[chainId],
+            contractAddress: auctionAddress,
+          };
+          newData.push(allData);
+        }catch(e){
+          console.error("*** unable to get data for auction: ", auctionAddress, e)
+        }
       }
     }
     setAllAuctionsData(newData);
